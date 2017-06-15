@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Disorder_District.mission_manager
+namespace Essence.classes
 {
     public class ObjectiveInfo : Script
     {

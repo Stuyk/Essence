@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Disorder_District.mission_manager
+namespace Essence.classes
 {
     public class Mission : Script
     {

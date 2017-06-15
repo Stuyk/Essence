@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Disorder_District.mission_manager
+namespace Essence.classes
 {
-    class MissionManager : Script
+    public class MissionManager : Script
     {
         public MissionManager()
         {

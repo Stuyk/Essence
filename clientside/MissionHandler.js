@@ -23,11 +23,6 @@ var objectiveBlips = [];
 var teammates = new Array();
 var team = "";
 API.onServerEventTrigger.connect(function (event, args) {
-    if (event === "getGroundHeight") {
-        var groundHeight = API.getGroundHeight(args[0]);
-        API.triggerServerEvent("recieveGroundHeight", groundHeight);
-        return;
-    }
     if (!event.includes("Mission")) {
         return;
     }
