@@ -113,7 +113,6 @@ namespace Essence.classes
             }
         }
 
-
         public Vehicle() { }
 
         public Vehicle(DataRow db)
@@ -127,6 +126,7 @@ namespace Essence.classes
             Handle = API.createVehicle(Type, LastPosition, LastRotation, colorA, colorB);
         }
 
+        /** Used internally to update the vehicles last position for when a player logs out. */
         private void updateVehiclePosition()
         {
             Vector3 vehPos = API.getEntityPosition(Handle);

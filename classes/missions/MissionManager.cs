@@ -59,11 +59,6 @@ namespace Essence.classes
         [Command("invite")]
         public void cmdInvitePlayerToMission(Client player, string target)
         {
-            if (!checkIfInMission(player))
-            {
-                return;
-            }
-
             Mission mission = API.getEntityData(player, "Mission");
 
             if (!mission.PauseState)
@@ -90,6 +85,18 @@ namespace Essence.classes
                 return;
             }
 
+            if (targetPlayer == player)
+            {
+                API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Stop trying to invite yourself you fuck.", "Error");
+                return;
+            }
+
+            if (API.hasEntityData(targetPlayer, "Mission"))
+            {
+                API.sendChatMessageToPlayer(player, "~r~That player is already in a party. Tell them to ~w~/leaveparty~r~, if you want them to join.");
+                return;
+            }
+
             API.sendChatMessageToPlayer(targetPlayer, string.Format("{0} invited you to a mission. Type '/joinparty' to join.", player.name));
             API.sendChatMessageToPlayer(player, string.Format("Invited {0} to your party.", targetPlayer.name));
             API.setEntityData(targetPlayer, "Mission", mission);
@@ -112,8 +119,9 @@ namespace Essence.classes
         [Command("joinparty")]
         public void cmdAcceptMission(Client player)
         {
-            if (!checkIfInMission(player))
+            if (!API.hasEntityData(player, "Mission"))
             {
+                API.sendChatMessageToPlayer(player, "~r~You don't have any missions to join.");
                 return;
             }
 

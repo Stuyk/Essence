@@ -93,6 +93,7 @@ namespace Essence.classes
         {
             if (players.Contains(player))
             {
+                setupTeamSync();
                 return;
             }
 

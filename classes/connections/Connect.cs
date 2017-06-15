@@ -16,9 +16,6 @@ namespace Essence.classes
 
         private void API_onPlayerConnected(Client player)
         {
-            int dimension = new Random().Next(900000, 999999);
-            API.consoleOutput(string.Format("{0} has connected. Set to dimension: {1}", player.name, dimension));
-            API.setEntityDimension(player, dimension);
             API.freezePlayer(player, true);
             API.setEntityTransparency(player, 0);
         }

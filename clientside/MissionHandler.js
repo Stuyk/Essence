@@ -20,7 +20,7 @@ var objectives = new Array();
 var objectiveMarkers = [];
 var objectiveBlips = [];
 // Array of current allied players on team.
-var teammates = new Array();
+var teammates = new Set();
 var team = "";
 API.onServerEventTrigger.connect(function (event, args) {
     if (!event.includes("Mission")) {
@@ -201,13 +201,12 @@ function cleanupMarkers() {
 * Cleanup Teammates.
 */
 function cleanupTeammates() {
-    if (teammates.length <= 0) {
+    if (teammates.size <= 0) {
         return;
     }
-    for (var i = 0; i < teammates.length; i++) {
-        API.deleteEntity(teammates[i].Blip);
-    }
-    teammates = [];
+    teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
+    teammates = new Set();
+    team = "";
 }
 /**
  * Remove an objective based on location.
@@ -235,11 +234,22 @@ class Teammate {
         this.teammateID = id;
         this.teammateBlip = API.createBlip(API.getEntityPosition(id));
         this.teammateName = API.getPlayerName(id);
+        this.teammateOldHealth = API.getPlayerHealth(id);
         API.setBlipSprite(this.teammateBlip, 1);
         API.setBlipColor(this.teammateBlip, blipColor);
     }
     updateBlip() {
+        if (!API.doesEntityExist(this.teammateID)) {
+            return;
+        }
+        if (!API.doesEntityExist(this.teammateBlip)) {
+            return;
+        }
         API.setBlipPosition(this.teammateBlip, API.getEntityPosition(this.teammateID));
+        if (this.teammateOldHealth === API.getPlayerHealth(this.teammateID)) {
+            return;
+        }
+        this.teammateOldHealth = API.getPlayerHealth(this.teammateID);
         let playerHealth = API.getPlayerHealth(this.teammateID);
         // Set Green
         if (playerHealth >= 80) {
@@ -271,6 +281,7 @@ class Teammate {
             API.setBlipColor(this.teammateBlip, 85);
             this.teammateName = `~h~~u~${API.getPlayerName(this.teammateID)}`;
         }
+        updateTeamVariable();
     }
     get Name() {
         return this.teammateName;
@@ -338,7 +349,7 @@ API.onUpdate.connect(function () {
     if (headNotification !== null) {
         headNotification.run();
     }
-    if (teammates.length >= 1) {
+    if (teammates.size >= 1) {
         displayCurrentPlayers();
         updateAllyPositions();
     }
@@ -387,10 +398,6 @@ function missionObjectives() {
 }
 // Display player list.
 function displayCurrentPlayers() {
-    team = "";
-    for (var i = 0; i < teammates.length; i++) {
-        team = team.concat(teammates[i].Name + "~n~");
-    }
     API.drawText(`~b~Current Team ~w~~n~${team}`, screenX - 100, 20, 0.4, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 150);
 }
 // Display current objectives progress.
@@ -400,43 +407,55 @@ function displayObjectiveProgress() {
     }
 }
 function updateAllyPositions() {
-    if (teammates.length <= 0) {
+    if (teammates.size <= 0) {
         return;
     }
-    for (var i = 0; i < teammates.length; i++) {
-        teammates[i].updateBlip();
-    }
+    teammates.forEach((value) => {
+        value.updateBlip();
+    });
 }
 /** Used to add a player to the array stack. **/
 function addPlayer(target) {
-    let exists = false;
-    for (var i = 0; i < teammates.length; i++) {
-        if (teammates[i].Name === API.getPlayerName(target)) {
-            exists = true;
+    var instance = null;
+    teammates.forEach((value, index) => {
+        if (value.ID.value === target.value) {
+            instance = value;
+            return false; // Break
         }
-    }
-    if (exists) {
+        return true; // Return
+    });
+    if (instance !== null) {
         return;
     }
     var teammate = new Teammate(target);
-    teammates.push(teammate);
+    teammates.add(teammate);
+    updateTeamVariable();
+}
+function updateTeamVariable() {
+    team = "";
+    teammates.forEach((value) => {
+        team = team.concat(value.Name + "~n~");
+        API.sendChatMessage(`${team}`);
+    });
 }
 /**
  *  Used to remove a player from the array stack.
  * @param target
  */
 function removePlayer(target) {
-    let index = null;
-    for (var i = 0; i < teammates.length; i++) {
-        if (teammates[i].Name === API.getPlayerName(target)) {
-            index = i;
-            break;
+    var instance = null;
+    teammates.forEach((value, index) => {
+        if (value.ID.value === target.value) {
+            instance = value;
+            return false; // Break
         }
-    }
-    if (index === null) {
+        return true; // Return
+    });
+    if (instance === null) {
         return;
     }
-    teammates.splice(index, 1);
+    teammates.delete(instance);
+    updateTeamVariable();
 }
 //// OBJECTIVE TYPES
 /** This is a point to point location objective type. */

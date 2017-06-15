@@ -22,6 +22,15 @@ namespace Essence.classes
 
         private List<Vehicle> vehicles;
 
+        // Return Player Vehicles
+        public List<Vehicle> PlayerVehicles
+        {
+            get
+            {
+                return vehicles;
+            }
+        }
+
         // Active player client.
         public Client PlayerClient
         {
@@ -103,24 +112,6 @@ namespace Essence.classes
             Bank = Convert.ToInt32(db["Bank"]);
             Money = Convert.ToInt32(db["Money"]);
             LastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
-
-            // Make sure our player gets to Dimension zero.
-            DateTime dimensionTimeout = DateTime.Now.AddMilliseconds(5000);
-            Thread thread = new Thread(() =>
-            {
-                while (API.getEntityDimension(player) != 0)
-                {
-                    API.setEntityDimension(player, 0);
-
-                    if (DateTime.Now > dimensionTimeout)
-                    {
-                        API.kickPlayer(player, "~r~Your dimension was not set properly. Try logging in again.");
-                        return;
-                    }
-                }
-            });
-            thread.Start();
-            thread.Join();
             // Don't move on until the players dimension is ready.
 
             // Make our player controllable again.
