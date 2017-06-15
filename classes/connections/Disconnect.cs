@@ -25,20 +25,26 @@ namespace Essence.classes
             }
 
             API.consoleOutput(string.Format("Disconnected registered user, {0}", player.name));
-            logoutUser(player);
+            Player instance = (Player)API.getEntityData(player, "Instance");
+            logoutPlayer(instance);
+            removePlayerVehicles(instance);
         }
 
         // Looks up the player by their ID and updates them based on their unique id.
-        private void logoutUser(Client player)
+        private void logoutPlayer(Player instance)
         {
             // Pull our users instance.
-            Player instance = (Player)API.getEntityData(player, "Instance");
-
+            
             string before = "UPDATE Players SET";
             string[] varNames = { "LoggedIn", "X", "Y", "Z" };
             string after = string.Format("WHERE Id='{0}'", instance.ID);
-            object[] args = { "0", player.position.X, player.position.Y, player.position.Z };
+            object[] args = { "0", instance.PlayerClient.position.X, instance.PlayerClient.position.Y, instance.PlayerClient.position.Z };
             db.compileQuery(before, after, varNames, args);
+        }
+
+        private void removePlayerVehicles(Player instance)
+        {
+            instance.removePlayerVehicles();
         }
     }
 }

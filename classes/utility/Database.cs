@@ -12,27 +12,12 @@ namespace Essence.classes
 {
     public class Database : Script
     {
-        // These will match our opening query.
-        // They're what we will use to pull player information down from the database.
-        public enum PlayerInfo
-        {
-            Id,
-            Username,
-            Password,
-            Name,
-            Strength,
-            Dexterity,
-            Charisma,
-            Health,
-            Armor
-        }
-
         // Path To Our Database / Connection String
         static string path = "resources/Essence/database/database.db";
         static string connString = string.Format("Data Source={0};Version=3", path);
 
-        // Make sure this matches the PlayerInfo enum.
-        static string openingQuery = @"CREATE TABLE IF NOT EXISTS
+        // Contains Player Information
+        static string playerTable = @"CREATE TABLE IF NOT EXISTS
                             [Players] (
                             [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                             [Username] NVARCHAR(2048) NULL,
@@ -48,6 +33,22 @@ namespace Essence.classes
                             [Armor] INTEGER DEFAULT 0,
                             [Ip] INTEGER,
                             [RegistrationDate])";
+
+        // Contains Vehicle Information - Owner is the owner's Player Table ID.
+        static string vehicleTable = @"CREATE TABLE IF NOT EXISTS
+                            [Vehicles] (
+                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [Owner] INTEGER DEFAULT 0,
+                            [Type] NVARCHAR(2048) NULL,
+                            [X] FLOAT DEFAULT 0,
+                            [Y] FLOAT DEFAULT 0,
+                            [Z] FLOAT DEFAULT 0,
+                            [RX] FLOAT DEFAULT 0,
+                            [RY] FLOAT DEFAULT 0,
+                            [RZ] FLOAT DEFAULT 0,
+                            [ColorA] INTEGER DEFAULT 131,
+                            [ColorB] INTEGER DEFAULT 131
+                            )";
 
         // What happens when we start databasehandler resource.
         public Database()
@@ -88,7 +89,8 @@ namespace Essence.classes
                 }
             }
 
-            executeQuery(openingQuery);
+            executeQuery(playerTable);
+            executeQuery(vehicleTable);
 
             DataTable table = executeQueryWithResult("SELECT * FROM Players");
         }

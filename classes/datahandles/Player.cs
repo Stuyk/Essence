@@ -20,6 +20,8 @@ namespace Essence.classes
         private Vector3 lastPosition;
         private Client player;
 
+        private List<Vehicle> vehicles;
+
         // Active player client.
         public Client PlayerClient
         {
@@ -52,6 +54,7 @@ namespace Essence.classes
             set
             {
                 money = value;
+                API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
             }
             get
             {
@@ -91,6 +94,8 @@ namespace Essence.classes
         {
             // Pass the login to the console.
             API.consoleOutput(string.Format("{0} has successfully logged in.", player.name));
+            // Used for drawing hud items -->
+            API.setEntitySyncedData(player, "ESS_LoggedIn", true);
             // Setup Class Data.
             API.setEntityData(player, "Instance", this);
             PlayerClient = player;
@@ -124,6 +129,48 @@ namespace Essence.classes
             API.setEntityPosition(player, LastPosition);
 
             API.consoleOutput(string.Format("{0} has been set to dimension 0.", player.name));
+
+            // Setup Player Vehicles
+            createPlayerVehicles();
+        }
+
+        /** Spawn Player Vehicles */
+        public void createPlayerVehicles()
+        {
+            vehicles = new List<Vehicle>();
+
+            string[] varNames = { "Owner" };
+            string before = "SELECT * FROM Vehicles WHERE";
+            object[] data = { ID };
+            DataTable result = db.compileSelectQuery(before, varNames, data);
+
+            if (result.Rows.Count < 1)
+            {
+                return;
+            }
+
+            foreach (DataRow row in result.Rows)
+            {
+                Vehicle vehInfo = new Vehicle(row);
+                vehicles.Add(vehInfo);
+            }
+        }
+
+        /** Remove Player Vehicles **/
+        public void removePlayerVehicles()
+        {
+            if (vehicles.Count <= 0)
+            {
+                return;
+            }
+
+            foreach (Vehicle vehInfo in vehicles)
+            {
+                // Update vehicle position before deleting.
+                vehInfo.LastPosition = API.getEntityPosition(vehInfo.Handle);
+                // Delete the entity.
+                API.deleteEntity(vehInfo.Handle);
+            }
         }
 
         /** Deposit money into the player's bank. */
