@@ -112,6 +112,7 @@ namespace Essence.classes
         {
             foreach (Client player in players)
             {
+                API.triggerClientEvent(player, "Mission_Cleanup_Players");
                 foreach (Client ally in players)
                 {
                     API.triggerClientEvent(player, "Mission_Add_Player", ally);
@@ -130,11 +131,7 @@ namespace Essence.classes
             API.triggerClientEvent(player, "Mission_Abandon");
             API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Abandoned the Party", "Fail");
 
-            foreach (Client ally in players)
-            {
-                API.sendChatMessageToPlayer(ally, string.Format("{0} ~r~has left the mission.", player.name));
-                API.triggerClientEvent(ally, "Mission_Remove_Player", player);
-            }
+            setupTeamSync();
 
             API.consoleOutput(string.Format("[{0}] {1} has left a mission.", partyInstance, player.name));
 

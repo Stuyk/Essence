@@ -9,7 +9,7 @@ var missionPauseState = true;
 var backgroundRGBA = [0, 0, 0, 100];
 var textRGBA = [255, 255, 255, 255];
 var overlayRGBA = [1, 87, 155, 255];
-var markerRGBA = [255, 255, 255, 50];
+var markerRGBA = [1, 87, 155, 50];
 var blipColor = 77;
 
 // Time Check
@@ -26,7 +26,7 @@ var objectiveMarkers = [];
 var objectiveBlips = [];
 
 // Array of current allied players on team.
-var teammates = new Set();
+var teammates: Set<Teammate> = new Set();
 var team = "";
 
 
@@ -39,8 +39,8 @@ API.onServerEventTrigger.connect(function (event, args) {
         case "Mission_Add_Player":
             addPlayer(args[0]);
             return;
-        case "Mission_Remove_Player":
-            removePlayer(args[0]);
+        case "Mission_Cleanup_Players":
+            cleanupTeammates();
             return;
         // Mission Instance - Objectives
         case "Mission_New_Objective":
@@ -223,7 +223,7 @@ function cleanupTeammates() {
 
     teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
 
-    teammates = new Set();
+    teammates.clear();
     team = "";
 }
 
@@ -266,9 +266,22 @@ class Teammate {
         this.teammateOldHealth = API.getPlayerHealth(id);
         API.setBlipSprite(this.teammateBlip, 1);
         API.setBlipColor(this.teammateBlip, blipColor);
+        this.adjustColor();
+    }
+
+    public removeBlip() {
+        if (API.doesEntityExist(this.teammateBlip)) {
+            API.deleteEntity(this.teammateBlip);
+            return;
+        }
     }
 
     public updateBlip() {
+        if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(API.getEntityPosition(this.teammateID)) > 500) {
+            API.setBlipTransparency(this.teammateBlip, 0);
+            return;
+        }
+
         if (!API.doesEntityExist(this.teammateID)) {
             return;
         }
@@ -276,6 +289,8 @@ class Teammate {
         if (!API.doesEntityExist(this.teammateBlip)) {
             return;
         }
+
+        API.setBlipTransparency(this.teammateBlip, 255);
 
         API.setBlipPosition(this.teammateBlip, API.getEntityPosition(this.teammateID));
 
@@ -285,6 +300,12 @@ class Teammate {
 
         this.teammateOldHealth = API.getPlayerHealth(this.teammateID)
 
+        this.adjustColor();
+
+        updateTeamVariable();
+    }
+
+    private adjustColor() {
         let playerHealth = API.getPlayerHealth(this.teammateID);
 
         // Set Green
@@ -322,8 +343,6 @@ class Teammate {
             API.setBlipColor(this.teammateBlip, 85);
             this.teammateName = `~h~~u~${API.getPlayerName(this.teammateID)}`
         }
-
-        updateTeamVariable();
     }
 
     get Name(): string {
@@ -495,21 +514,24 @@ function updateAllyPositions() {
 
 /** Used to add a player to the array stack. **/
 function addPlayer(target) {
-    var instance = null;
-    teammates.forEach((value, index) => {
-        if (value.ID.value === target.value) {
-            instance = value;
-            return false; // Break
-        }
-        return true; // Return
-    });
+    var teammate = new Teammate(target);
 
-    if (instance !== null) {
-        return;
+    var exists = false;
+
+    if (teammates.size > 0) {
+        for (var member of teammates) {
+            let value = member.Name;
+            if (value === teammate.Name) {
+                exists = true;
+                break;
+            }
+        }
     }
 
-    var teammate = new Teammate(target);
-    teammates.add(teammate);
+    if (!exists) {
+        teammates.add(teammate);
+    }
+
     updateTeamVariable();
 }
 
@@ -517,30 +539,7 @@ function updateTeamVariable() {
     team = "";
     teammates.forEach((value) => {
         team = team.concat(value.Name + "~n~");
-        API.sendChatMessage(`${team}`);
     });
-}
-
-/**
- *  Used to remove a player from the array stack.
- * @param target
- */
-function removePlayer(target) {
-    var instance: Teammate = null;
-    teammates.forEach((value, index) => {
-        if (value.ID.value === target.value) {
-            instance = value;
-            return false; // Break
-        }
-        return true; // Return
-    });
-
-    if (instance === null) {
-        return;
-    }
-
-    teammates.delete(instance);
-    updateTeamVariable();
 }
 
 //// OBJECTIVE TYPES

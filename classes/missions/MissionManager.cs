@@ -19,13 +19,11 @@ namespace Essence.classes
 
         private void API_onPlayerDisconnected(Client player, string reason)
         {
-            if (!checkIfInMission(player))
+            if (API.hasEntityData(player, "Mission"))
             {
-                return;
+                Mission mission = API.getEntityData(player, "Mission");
+                mission.abandonMission(player);
             }
-
-            Mission mission = API.getEntityData(player, "Mission");
-            mission.abandonMission(player);
         }
 
         private void API_onClientEventTrigger(Client player, string eventName, params object[] arguments)

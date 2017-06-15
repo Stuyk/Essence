@@ -8,7 +8,7 @@ var missionPauseState = true;
 var backgroundRGBA = [0, 0, 0, 100];
 var textRGBA = [255, 255, 255, 255];
 var overlayRGBA = [1, 87, 155, 255];
-var markerRGBA = [255, 255, 255, 50];
+var markerRGBA = [1, 87, 155, 50];
 var blipColor = 77;
 // Time Check
 var timeSinceLastCheck = new Date().getTime();
@@ -31,8 +31,8 @@ API.onServerEventTrigger.connect(function (event, args) {
         case "Mission_Add_Player":
             addPlayer(args[0]);
             return;
-        case "Mission_Remove_Player":
-            removePlayer(args[0]);
+        case "Mission_Cleanup_Players":
+            cleanupTeammates();
             return;
         // Mission Instance - Objectives
         case "Mission_New_Objective":
@@ -205,7 +205,7 @@ function cleanupTeammates() {
         return;
     }
     teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
-    teammates = new Set();
+    teammates.clear();
     team = "";
 }
 /**
@@ -237,19 +237,35 @@ class Teammate {
         this.teammateOldHealth = API.getPlayerHealth(id);
         API.setBlipSprite(this.teammateBlip, 1);
         API.setBlipColor(this.teammateBlip, blipColor);
+        this.adjustColor();
+    }
+    removeBlip() {
+        if (API.doesEntityExist(this.teammateBlip)) {
+            API.deleteEntity(this.teammateBlip);
+            return;
+        }
     }
     updateBlip() {
+        if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(API.getEntityPosition(this.teammateID)) > 500) {
+            API.setBlipTransparency(this.teammateBlip, 0);
+            return;
+        }
         if (!API.doesEntityExist(this.teammateID)) {
             return;
         }
         if (!API.doesEntityExist(this.teammateBlip)) {
             return;
         }
+        API.setBlipTransparency(this.teammateBlip, 255);
         API.setBlipPosition(this.teammateBlip, API.getEntityPosition(this.teammateID));
         if (this.teammateOldHealth === API.getPlayerHealth(this.teammateID)) {
             return;
         }
         this.teammateOldHealth = API.getPlayerHealth(this.teammateID);
+        this.adjustColor();
+        updateTeamVariable();
+    }
+    adjustColor() {
         let playerHealth = API.getPlayerHealth(this.teammateID);
         // Set Green
         if (playerHealth >= 80) {
@@ -281,7 +297,6 @@ class Teammate {
             API.setBlipColor(this.teammateBlip, 85);
             this.teammateName = `~h~~u~${API.getPlayerName(this.teammateID)}`;
         }
-        updateTeamVariable();
     }
     get Name() {
         return this.teammateName;
@@ -416,46 +431,27 @@ function updateAllyPositions() {
 }
 /** Used to add a player to the array stack. **/
 function addPlayer(target) {
-    var instance = null;
-    teammates.forEach((value, index) => {
-        if (value.ID.value === target.value) {
-            instance = value;
-            return false; // Break
-        }
-        return true; // Return
-    });
-    if (instance !== null) {
-        return;
-    }
     var teammate = new Teammate(target);
-    teammates.add(teammate);
+    var exists = false;
+    if (teammates.size > 0) {
+        for (var member of teammates) {
+            let value = member.Name;
+            if (value === teammate.Name) {
+                exists = true;
+                break;
+            }
+        }
+    }
+    if (!exists) {
+        teammates.add(teammate);
+    }
     updateTeamVariable();
 }
 function updateTeamVariable() {
     team = "";
     teammates.forEach((value) => {
         team = team.concat(value.Name + "~n~");
-        API.sendChatMessage(`${team}`);
     });
-}
-/**
- *  Used to remove a player from the array stack.
- * @param target
- */
-function removePlayer(target) {
-    var instance = null;
-    teammates.forEach((value, index) => {
-        if (value.ID.value === target.value) {
-            instance = value;
-            return false; // Break
-        }
-        return true; // Return
-    });
-    if (instance === null) {
-        return;
-    }
-    teammates.delete(instance);
-    updateTeamVariable();
 }
 //// OBJECTIVE TYPES
 /** This is a point to point location objective type. */
