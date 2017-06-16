@@ -31,17 +31,17 @@ namespace Essence.classes
         {
             API.consoleOutput("Started: LoginHandler");
             SetAllPlayerLoginsToZero();
-           
-            
         }
 
         private void SetAllPlayerLoginsToZero()
         {
+            /*
             string[] varNames = { "LoggedIn" };
             string before = "UPDATE Players SET";
             object[] data = { "0" };
             string after = string.Format("");
             db.compileQuery(before, after, varNames, data);
+            */
         }
 
         [Command("login", Description = "/login [username] [password]")]

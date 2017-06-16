@@ -189,85 +189,84 @@ namespace Essence.classes
 
         public void verifyObjective(Client player)
         {
-            Thread thread = new Thread(() =>
+            // Just to prevent an error from occuring where too many requests get sent. */
+            if (objectives.Count <= 0)
             {
-                // Just to prevent an error from occuring where too many requests get sent. */
-                if (objectives.Count <= 0)
-                {
-                    return;
-                }
+                return;
+            }
 
-                // Get the closest objective to the player.
-                ObjectiveInfo closestObjective = null;
-                foreach (ObjectiveInfo objInfo in objectives)
+            Mission mission = API.getEntityData(player, "Mission");
+
+            // Get the closest objective to the player.
+            ObjectiveInfo closestObjective = null;
+            foreach (ObjectiveInfo objInfo in objectives)
+            {
+                if (objInfo.Type == ObjectiveTypes.Teleport)
                 {
-                    if (objInfo.Type == ObjectiveTypes.Teleport)
+                    closestObjective = objInfo;
+                    break;
+                }
+                else
+                {
+                    if (objInfo.Type == ObjectiveTypes.Location || objInfo.Type == ObjectiveTypes.Capture)
                     {
-                        closestObjective = objInfo;
-                        break;
-                    }
-                    else
-                    {
-                        if (objInfo.Type == ObjectiveTypes.Location || objInfo.Type == ObjectiveTypes.Capture)
+                        if (player.position.DistanceTo(objInfo.Location) <= 5)
                         {
-                            if (player.position.DistanceTo(objInfo.Location) <= 5)
-                            {
-                                closestObjective = objInfo;
-                                break;
-                            }
+                            closestObjective = objInfo;
+                            break;
+                        }
+                    }
+
+                    if (objInfo.Type == ObjectiveTypes.Destroy)
+                    {
+                        if (player.position.DistanceTo(objInfo.Location) >= 20)
+                        {
+                            continue;
                         }
 
-                        if (objInfo.Type == ObjectiveTypes.Destroy)
+                        if (player.isAiming)
                         {
-                            if (player.position.DistanceTo(objInfo.Location) >= 20)
-                            {
-                                continue;
-                            }
-
-                            if (player.isAiming)
-                            {
-                                closestObjective = objInfo;
-                                break;
-                            }
+                            closestObjective = objInfo;
+                            break;
                         }
                     }
                 }
+            }
 
-                // If our closestObjective doesn't seem to exist, we'll just return.
-                if (closestObjective == null)
-                {
-                    return;
-                }
+            // If our closestObjective doesn't seem to exist, we'll just return.
+            if (closestObjective == null)
+            {
+                return;
+            }
 
-                // Send our objective information out, and wait for it to finish or hit a dead end.
-                checkForCompletion(player, closestObjective);
+            // Send our objective information out, and wait for it to finish or hit a dead end.
+            checkForCompletion(player, closestObjective);
 
-                // Check if our tuple returned false.
-                if (!closestObjective.Status)
-                {
-                    return;
-                }
+            // Check if our tuple returned false.
+            if (!closestObjective.Status)
+            {
+                return;
+            }
 
-                // Get the players mission instance.
-                Mission mission = API.getEntityData(player, "Mission");
-                mission.removeObjectiveForAll(closestObjective.Location);
+            // Get the players mission instance.
+            mission.removeObjectiveForAll(closestObjective.Location);
 
-                API.triggerClientEvent(player, "Mission_Head_Notification", "~b~Minor Objective Complete", "Objective");
+            API.triggerClientEvent(player, "Mission_Head_Notification", "~b~Minor Objective Complete", "Objective");
 
-                // Remove dead objectives.
-                objectives.Remove(closestObjective);
+            // Remove dead objectives.
+            objectives.Remove(closestObjective);
 
-                // Check if all of our objectives are complete.
-                if (objectives.Count >= 1)
-                {
-                    return;
-                }
+            mission.setupTeamSync();
 
-                mission.goToNextObjective();
+            // Check if all of our objectives are complete.
+            if (objectives.Count >= 1)
+            {
+                return;
+            }
 
-                pauseState = false;
-            });
-            thread.Start();
+            mission.goToNextObjective();
+
+            pauseState = false;
         }
 
         /*********************************************
@@ -314,13 +313,18 @@ namespace Essence.classes
         {
             if (player.position.DistanceTo(objInfo.Location) <= 8)
             {
-                double sinceWhen = objectiveCooldown.TimeOfDay.TotalSeconds;
-                double timeNow = DateTime.UtcNow.TimeOfDay.TotalSeconds;
-                if (sinceWhen + 3 > timeNow)
+                if (!API.hasEntityData(player, "Mission_Cooldown_Check"))
+                {
+                    API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
+                }
+
+                DateTime lastCheck = API.getEntityData(player, "Mission_Cooldown_Check");
+                DateTime now = DateTime.Now;
+                if (now < lastCheck)
                 {
                     return;
                 }
-                objectiveCooldown = DateTime.UtcNow;
+                API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
                 objInfo.Progress += 5;
                 updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
                 if (objInfo.Progress > 100)

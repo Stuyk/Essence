@@ -50,6 +50,28 @@ namespace Essence.classes
                             [ColorB] INTEGER DEFAULT 131
                             )";
 
+        static string clothingTable = @"CREATE TABLE IF NOT EXISTS
+                            [Clothing] (
+                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [Owner] INTEGER DEFAULT 0,
+                            [Mask] INTEGER DEFAULT 0,
+                            [Torso] INTEGER DEFAULT 0,
+                            [TorsoVariant] INTEGER DEFAULT 0,
+                            [Legs] INTEGER DEFAULT 0,
+                            [LegsVariant] INTEGER DEFAULT 0,
+                            [Bag] INTEGER DEFAULT 0,
+                            [Feet] INTEGER DEFAULT 0,
+                            [FeetVariant] INTEGER DEFAULT 0,
+                            [Accessories] INTEGER DEFAULT 0,
+                            [Undershirt] INTEGER DEFAULT 0,
+                            [UndershirtVariant] INTEGER DEFAULT 0,
+                            [BodyArmor] INTEGER DEFAULT 0,
+                            [BodyArmorVariant] INTEGER DEFAULT 0,
+                            [Top] INTEGER DEFAULT 0,
+                            [TopVariant] INTEGER DEFAULT 0,
+                            [Model] INTEGER DEFAULT 0
+                            )";
+
         // What happens when we start databasehandler resource.
         public Database()
         {
@@ -91,6 +113,7 @@ namespace Essence.classes
 
             executeQuery(playerTable);
             executeQuery(vehicleTable);
+            executeQuery(clothingTable);
 
             DataTable table = executeQueryWithResult("SELECT * FROM Players");
         }

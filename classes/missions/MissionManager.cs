@@ -11,10 +11,27 @@ namespace Essence.classes
 {
     public class MissionManager : Script
     {
+        DateTime lastTime = DateTime.Now.AddMilliseconds(5000);
+
         public MissionManager()
         {
             API.onClientEventTrigger += API_onClientEventTrigger;
             API.onPlayerDisconnected += API_onPlayerDisconnected;
+            API.onUpdate += API_onUpdate;
+        }
+
+        private void API_onUpdate()
+        {
+            if (DateTime.Now > lastTime)
+            {
+                lastTime = DateTime.Now.AddMilliseconds(500);
+                var players = API.getAllPlayers();
+
+                foreach (Client player in players)
+                {
+                    API.setEntitySyncedData(player, "Current_Position", player.position);
+                }
+            }
         }
 
         private void API_onPlayerDisconnected(Client player, string reason)

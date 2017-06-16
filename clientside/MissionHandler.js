@@ -4,6 +4,7 @@ var screenX = API.getScreenResolution().Width;
 var screenY = API.getScreenResolution().Height;
 // Mission PauseState
 var missionPauseState = true;
+var deathPause = false;
 // Stylesheet Properties
 var backgroundRGBA = [0, 0, 0, 100];
 var textRGBA = [255, 255, 255, 255];
@@ -22,6 +23,12 @@ var objectiveBlips = [];
 // Array of current allied players on team.
 var teammates = new Set();
 var team = "";
+API.onResourceStop.connect(() => {
+    fullCleanup();
+});
+API.onPlayerRespawn.connect(() => {
+    deathPause = true;
+});
 API.onServerEventTrigger.connect(function (event, args) {
     if (!event.includes("Mission")) {
         return;
@@ -207,6 +214,7 @@ function cleanupTeammates() {
     teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
     teammates.clear();
     team = "";
+    deathPause = false;
 }
 /**
  * Remove an objective based on location.
@@ -237,6 +245,7 @@ class Teammate {
         this.teammateOldHealth = API.getPlayerHealth(id);
         API.setBlipSprite(this.teammateBlip, 1);
         API.setBlipColor(this.teammateBlip, blipColor);
+        API.setBlipShortRange(this.teammateBlip, true);
         this.adjustColor();
     }
     removeBlip() {
@@ -246,24 +255,24 @@ class Teammate {
         }
     }
     updateBlip() {
-        if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(API.getEntityPosition(this.teammateID)) > 500) {
-            API.setBlipTransparency(this.teammateBlip, 0);
-            return;
-        }
         if (!API.doesEntityExist(this.teammateID)) {
             return;
         }
         if (!API.doesEntityExist(this.teammateBlip)) {
             return;
         }
-        API.setBlipTransparency(this.teammateBlip, 255);
-        API.setBlipPosition(this.teammateBlip, API.getEntityPosition(this.teammateID));
+        this.updatePosition();
         if (this.teammateOldHealth === API.getPlayerHealth(this.teammateID)) {
             return;
         }
         this.teammateOldHealth = API.getPlayerHealth(this.teammateID);
         this.adjustColor();
         updateTeamVariable();
+    }
+    updatePosition() {
+        if (API.hasEntitySyncedData(this.teammateID, "Current_Position")) {
+            API.setBlipPosition(this.Blip, API.getEntitySyncedData(this.teammateID, "Current_Position"));
+        }
     }
     adjustColor() {
         let playerHealth = API.getPlayerHealth(this.teammateID);
@@ -361,15 +370,18 @@ class PlayerHeadNotification {
 }
 /** OnUpdate Event */
 API.onUpdate.connect(function () {
+    if (deathPause) {
+        return;
+    }
     if (headNotification !== null) {
         headNotification.run();
     }
-    if (teammates.size >= 1) {
-        displayCurrentPlayers();
-        updateAllyPositions();
-    }
     if (missionPauseState) {
         return;
+    }
+    if (teammates.size >= 1) {
+        displayCurrentPlayers();
+        updateAllyHealth();
     }
     if (objectives.length >= 1) {
         if (new Date().getTime() > timeSinceLastCheck) {
@@ -421,7 +433,7 @@ function displayObjectiveProgress() {
         objectives[i].run();
     }
 }
-function updateAllyPositions() {
+function updateAllyHealth() {
     if (teammates.size <= 0) {
         return;
     }

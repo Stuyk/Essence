@@ -47,10 +47,21 @@ namespace Essence.classes
 
             DateTime date = DateTime.Now;
 
+            // Setup registration.
             string[] varNamesTwo = { "Username", "Password", "IP", "Health", "Armor", "RegistrationDate" };
             string tableName = "Players";
             string[] dataTwo = { username, hash, player.address, "100", "0", date.ToString("yyyy-MM-dd HH:mm:ss") };
             db.compileInsertQuery(tableName, varNamesTwo, dataTwo);
+
+            // Get the ID that belongs to the player.
+            result = db.executeQueryWithResult("SELECT ID FROM Players ORDER BY ID DESC LIMIT 1");
+            string playerID = Convert.ToString(result.Rows[0]["ID"]);
+
+            // Setup clothing table for new player.
+            string[] varNamesThree = { "Owner" };
+            tableName = "Clothing";
+            string[] dataThree = { playerID };
+            db.compileInsertQuery(tableName, varNamesThree, dataThree);
 
             API.sendChatMessageToPlayer(player, "Succesfully registered, you may now login.");
         }

@@ -94,7 +94,6 @@ namespace Essence.classes
             if (players.Contains(player))
             {
                 setupTeamSync();
-                return;
             }
 
             players.Add(player);
@@ -110,13 +109,23 @@ namespace Essence.classes
 
         public void setupTeamSync()
         {
+            setPauseState(true);
             foreach (Client player in players)
             {
                 API.triggerClientEvent(player, "Mission_Cleanup_Players");
                 foreach (Client ally in players)
                 {
-                    API.triggerClientEvent(player, "Mission_Add_Player", ally);
+                    API.triggerClientEvent(player, "Mission_Add_Player", ally.handle); // <--- Try NetHandle
                 }
+            }
+            setPauseState(false);
+        }
+
+        public void setPauseState(bool value)
+        {
+            foreach (Client ally in players)
+            {
+                API.triggerClientEvent(ally, "Mission_Pause_State", value);
             }
         }
 

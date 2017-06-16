@@ -4,6 +4,7 @@ var screenY = API.getScreenResolution().Height;
 
 // Mission PauseState
 var missionPauseState = true;
+var deathPause = false;
 
 // Stylesheet Properties
 var backgroundRGBA = [0, 0, 0, 100];
@@ -28,6 +29,14 @@ var objectiveBlips = [];
 // Array of current allied players on team.
 var teammates: Set<Teammate> = new Set();
 var team = "";
+
+API.onResourceStop.connect(() => {
+    fullCleanup();
+});
+
+API.onPlayerRespawn.connect(() => {
+    deathPause = true;
+});
 
 
 API.onServerEventTrigger.connect(function (event, args) {
@@ -225,6 +234,8 @@ function cleanupTeammates() {
 
     teammates.clear();
     team = "";
+
+    deathPause = false;
 }
 
 /**
@@ -266,6 +277,7 @@ class Teammate {
         this.teammateOldHealth = API.getPlayerHealth(id);
         API.setBlipSprite(this.teammateBlip, 1);
         API.setBlipColor(this.teammateBlip, blipColor);
+        API.setBlipShortRange(this.teammateBlip, true);
         this.adjustColor();
     }
 
@@ -277,11 +289,6 @@ class Teammate {
     }
 
     public updateBlip() {
-        if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(API.getEntityPosition(this.teammateID)) > 500) {
-            API.setBlipTransparency(this.teammateBlip, 0);
-            return;
-        }
-
         if (!API.doesEntityExist(this.teammateID)) {
             return;
         }
@@ -290,9 +297,7 @@ class Teammate {
             return;
         }
 
-        API.setBlipTransparency(this.teammateBlip, 255);
-
-        API.setBlipPosition(this.teammateBlip, API.getEntityPosition(this.teammateID));
+        this.updatePosition();
 
         if (this.teammateOldHealth === API.getPlayerHealth(this.teammateID)) {
             return;
@@ -303,6 +308,12 @@ class Teammate {
         this.adjustColor();
 
         updateTeamVariable();
+    }
+
+    private updatePosition() {
+        if (API.hasEntitySyncedData(this.teammateID, "Current_Position")) {
+            API.setBlipPosition(this.Blip, API.getEntitySyncedData(this.teammateID, "Current_Position"));
+        }
     }
 
     private adjustColor() {
@@ -431,17 +442,21 @@ class PlayerHeadNotification {
 
 /** OnUpdate Event */
 API.onUpdate.connect(function () {
+    if (deathPause) {
+        return;
+    }
+
     if (headNotification !== null) {
         headNotification.run();
     }
 
-    if (teammates.size >= 1) {
-        displayCurrentPlayers();
-        updateAllyPositions();
-    }
-
     if (missionPauseState) {
         return;
+    }
+
+    if (teammates.size >= 1) {
+        displayCurrentPlayers();
+        updateAllyHealth();
     }
 
     if (objectives.length >= 1) {
@@ -502,7 +517,7 @@ function displayObjectiveProgress() {
     }
 }
 
-function updateAllyPositions() {
+function updateAllyHealth() {
     if (teammates.size <= 0) {
         return;
     }
@@ -511,6 +526,7 @@ function updateAllyPositions() {
         value.updateBlip();
     });
 }
+
 
 /** Used to add a player to the array stack. **/
 function addPlayer(target) {
