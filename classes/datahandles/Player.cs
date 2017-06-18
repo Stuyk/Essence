@@ -10,6 +10,395 @@ using System.Threading.Tasks;
 
 namespace Essence.classes
 {
+    public class Skin : Script
+    {
+        Database db = new Database();
+
+        private Client client;
+        private Player player;
+        private int father;
+        private int mother;
+        private int fatherSkin;
+        private int motherSkin;
+        private int faceBlend;
+        private int skinBlend;
+        private int hair;
+        private int hairColor;
+        private int hairHighlight;
+        private int blemishes;
+        private int facialHair;
+        private int eyebrows;
+        private int ageing;
+        private int makeup;
+        private int blush;
+        private int complexion;
+        private int sunDamage;
+        private int lipstick;
+        private int moles;
+        private int chestHair;
+        private int bodyBlemishes;
+        private int eyeColor;
+        private int eyeBrows;
+        private int lipstickColor;
+        private int lipstickColor2;
+        private int makeupColor;
+        private int makeupColor2;
+
+        public int Father
+        {
+            get
+            {
+                return father;
+            }
+            set
+            {
+                father = value;
+                API.setEntitySyncedData(client, "ESS_Father", value);
+            }
+        }
+        public int Mother
+        {
+            get
+            {
+                return mother;
+            }
+            set
+            {
+                mother = value;
+                API.setEntitySyncedData(client, "ESS_Mother", value);
+            }
+        }
+        public int FatherSkin
+        {
+            get
+            {
+                return fatherSkin;
+            }
+            set
+            {
+                fatherSkin = value;
+                API.setEntitySyncedData(client, "ESS_FatherSkin", value);
+            }
+        }
+        public int MotherSkin
+        {
+            get
+            {
+                return motherSkin;
+            }
+            set
+            {
+                motherSkin = value;
+                API.setEntitySyncedData(client, "ESS_MotherSkin", value);
+            }
+        }
+        public int FaceBlend
+        {
+            get
+            {
+                return faceBlend;
+            }
+            set
+            {
+                faceBlend = value;
+                API.setEntitySyncedData(client, "ESS_FaceBlend", value);
+            }
+        }
+        public int SkinBlend
+        {
+            get
+            {
+                return skinBlend;
+            }
+            set
+            {
+                skinBlend = value;
+                API.setEntitySyncedData(client, "ESS_SkinBlend", value);
+            }
+        }
+        public int Hair
+        {
+            get
+            {
+                return hair;
+            }
+            set
+            {
+                hair = value;
+                API.setEntitySyncedData(client, "ESS_Hair", value);
+            }
+        }
+        public int HairColor
+        {
+            get
+            {
+                return hairColor;
+            }
+            set
+            {
+                hairColor = value;
+                API.setEntitySyncedData(client, "ESS_HairColor", value);
+            }
+        }
+        public int HairHighlight
+        {
+            get
+            {
+                return hairHighlight;
+            }
+            set
+            {
+                hairHighlight = value;
+                API.setEntitySyncedData(client, "ESS_HairHighlight", value);
+            }
+        }
+        public int Blemishes
+        {
+            get
+            {
+                return blemishes;
+            }
+            set
+            {
+                blemishes = value;
+                API.setEntitySyncedData(client, "ESS_Blemishes", value);
+            }
+        }
+        public int FacialHair
+        {
+            get
+            {
+                return facialHair;
+            }
+            set
+            {
+                facialHair = value;
+                API.setEntitySyncedData(client, "ESS_FacialHair", value);
+            }
+        }
+        public int Eyebrows
+        {
+            get
+            {
+                return eyebrows;
+            }
+            set
+            {
+                eyebrows = value;
+                API.setEntitySyncedData(client, "ESS_Eyebrows", value);
+            }
+        }
+        public int Ageing
+        {
+            get
+            {
+                return ageing;
+            }
+            set
+            {
+                ageing = value;
+                API.setEntitySyncedData(client, "ESS_Ageing", value);
+            }
+        }
+        public int Makeup
+        {
+            get
+            {
+                return makeup;
+            }
+            set
+            {
+                makeup = value;
+                API.setEntitySyncedData(client, "ESS_Makeup", value);
+            }
+        }
+        public int Blush
+        {
+            get
+            {
+                return blush;
+            }
+            set
+            {
+                blush = value;
+                API.setEntitySyncedData(client, "ESS_Blush", value);
+            }
+        }
+        public int Complexion
+        {
+            get
+            {
+                return complexion;
+            }
+            set
+            {
+                complexion = value;
+                API.setEntitySyncedData(client, "ESS_Complexion", value);
+            }
+        }
+        public int SunDamage
+        {
+            get
+            {
+                return sunDamage;
+            }
+            set
+            {
+                sunDamage = value;
+                API.setEntitySyncedData(client, "ESS_SunDamage", value);
+            }
+        }
+        public int Lipstick
+        {
+            get
+            {
+                return lipstick;
+            }
+            set
+            {
+                lipstick = value;
+                API.setEntitySyncedData(client, "ESS_Lipstick", value);
+            }
+        }
+        public int Moles
+        {
+            get
+            {
+                return moles;
+            }
+            set
+            {
+                moles = value;
+                API.setEntitySyncedData(client, "ESS_Moles", value);
+            }
+        }
+        public int ChestHair
+        {
+            get
+            {
+                return chestHair;
+            }
+            set
+            {
+                chestHair = value;
+                API.setEntitySyncedData(client, "ESS_ChestHair", value);
+            }
+        }
+        public int BodyBlemishes
+        {
+            get
+            {
+                return bodyBlemishes;
+            }
+            set
+            {
+                bodyBlemishes = value;
+                API.setEntitySyncedData(client, "ESS_BodyBlemishes", value);
+            }
+        }
+        public int EyeColor
+        {
+            get
+            {
+                return eyeColor;
+            }
+            set
+            {
+                eyeColor = value;
+                API.setEntitySyncedData(client, "ESS_EyeColor", value);
+            }
+        }
+        public int LipstickColor
+        {
+            get
+            {
+                return lipstickColor;
+            }
+            set
+            {
+                lipstickColor = value;
+                API.setEntitySyncedData(client, "ESS_LipstickColor", value);
+            }
+        }
+        public int LipstickColor2
+        {
+            get
+            {
+                return lipstickColor2;
+            }
+            set
+            {
+                lipstickColor2 = value;
+                API.setEntitySyncedData(client, "ESS_LipstickColor2", value);
+            }
+        }
+        public int MakeupColor
+        {
+            get
+            {
+                return lipstickColor;
+            }
+            set
+            {
+                lipstickColor = value;
+                API.setEntitySyncedData(client, "ESS_MakeupColor", value);
+            }
+        }
+        public int MakeupColor2
+        {
+            get
+            {
+                return lipstickColor2;
+            }
+            set
+            {
+                lipstickColor2 = value;
+                API.setEntitySyncedData(client, "ESS_MakeupColor2", value);
+            }
+        }
+
+        public Skin() { }
+
+        public Skin(Client p, Player pClass)
+        {
+            client = p;
+            player = pClass;
+            mother = 0;
+            father = 0;
+            motherSkin = 0;
+            fatherSkin = 0;
+            faceBlend = 0;
+            skinBlend = 0;
+            hair = 0;
+            hairColor = 0;
+            hairHighlight = 0;
+            blemishes = 0;
+            facialHair = 0;
+            eyebrows = 0;
+            ageing = 0;
+            makeup = 0;
+            blush = 0;
+            complexion = 0;
+            sunDamage = 0;
+            lipstick = 0;
+            moles = 0;
+            chestHair = 0;
+            bodyBlemishes = 0;
+            eyeColor = 0;
+            lipstickColor = 0;
+            lipstickColor2 = 0;
+            makeupColor = 0;
+            makeupColor2 = 0;
+        }
+
+        public void updatePlayerFace(NetHandle player)
+        {
+            API.triggerClientEventForAll("ESS_SKIN_UPDATE", player);
+        }
+    }
+
+
+
     public class Clothing : Script
     {
         Database db = new Database();

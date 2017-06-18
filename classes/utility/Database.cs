@@ -72,6 +72,34 @@ namespace Essence.classes
                             [Model] INTEGER DEFAULT 0
                             )";
 
+        static string skinTable = @"CREATE TABLE IF NOT EXISTS
+                            [Skin] (
+                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [Owner] INTEGER DEFAULT 0,
+                            [Father] INTEGER DEFAULT 0,
+                            [Mother] INTEGER DEFAULT 0,
+                            [FatherSkin] INTEGER DEFAULT 0,
+                            [MotherSkin] INTEGER DEFAULT 0,
+                            [FaceBlend] INTEGER DEFAULT 0,
+                            [SkinBlend] INTEGER DEFAULT 0,
+                            [Hair] INTEGER DEFAULT 0,
+                            [HairColor] INTEGER DEFAULT 0,
+                            [HairHighlight] INTEGER DEFAULT 0,
+                            [Blemishes] INTEGER DEFAULT 0,
+                            [FacialHair] INTEGER DEFAULT 0,
+                            [Eyebrows] INTEGER DEFAULT 0,
+                            [Ageing] INTEGER DEFAULT 0,
+                            [Makeup] INTEGER DEFAULT 0,
+                            [Blush] INTEGER DEFAULT 0,
+                            [Complexion] INTEGER DEFAULT 0,
+                            [SunDamage] INTEGER DEFAULT 0,
+                            [Lipstick] INTEGER DEFAULT 0,
+                            [Moles] INTEGER DEFAULT 0,
+                            [ChestHair] INTEGER DEFAULT 0,
+                            [BodyBlemishes] INTEGER DEFAULT 0,
+                            [EyeColor] INTEGER DEFAULT 0
+                            )";
+
         // What happens when we start databasehandler resource.
         public Database()
         {
