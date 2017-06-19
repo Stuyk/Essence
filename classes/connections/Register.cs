@@ -58,12 +58,20 @@ namespace Essence.classes
             string playerID = Convert.ToString(result.Rows[0]["ID"]);
 
             // Setup clothing table for new player.
-            string[] varNamesThree = { "Owner" };
-            tableName = "Clothing";
-            string[] dataThree = { playerID };
-            db.compileInsertQuery(tableName, varNamesThree, dataThree);
+            setupTableForPlayer(playerID, "Clothing");
+
+            // Setup skin table for new player.
+            setupTableForPlayer(playerID, "Skin");
 
             API.sendChatMessageToPlayer(player, "Succesfully registered, you may now login.");
         }
+
+        private void setupTableForPlayer(string id, string tableName)
+        {
+            string[] varNames = { "Owner" };
+            string[] data = { id };
+            db.compileInsertQuery(tableName, varNames, data);
+        }
+
     }
 }

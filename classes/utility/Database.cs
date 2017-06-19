@@ -80,8 +80,8 @@ namespace Essence.classes
                             [Mother] INTEGER DEFAULT 0,
                             [FatherSkin] INTEGER DEFAULT 0,
                             [MotherSkin] INTEGER DEFAULT 0,
-                            [FaceBlend] INTEGER DEFAULT 0,
-                            [SkinBlend] INTEGER DEFAULT 0,
+                            [FaceBlend] NUMERIC DEFAULT 0,
+                            [SkinBlend] NUMERIC DEFAULT 0,
                             [Hair] INTEGER DEFAULT 0,
                             [HairColor] INTEGER DEFAULT 0,
                             [HairHighlight] INTEGER DEFAULT 0,
@@ -97,7 +97,32 @@ namespace Essence.classes
                             [Moles] INTEGER DEFAULT 0,
                             [ChestHair] INTEGER DEFAULT 0,
                             [BodyBlemishes] INTEGER DEFAULT 0,
-                            [EyeColor] INTEGER DEFAULT 0
+                            [EyeColor] INTEGER DEFAULT 0,
+                            [LipstickColor] INTEGER DEFAULT 0,
+                            [LipstickColor2] INTEGER DEFAULT 0,
+                            [MakeupColor] INTEGER DEFAULT 0,
+                            [MakeupColor2] INTEGER DEFAULT 0,
+                            [Face0] NUMERIC DEFAULT 0,
+                            [Face1] NUMERIC DEFAULT 0,
+                            [Face2] NUMERIC DEFAULT 0,
+                            [Face3] NUMERIC DEFAULT 0,
+                            [Face4] NUMERIC DEFAULT 0,
+                            [Face5] NUMERIC DEFAULT 0,
+                            [Face6] NUMERIC DEFAULT 0,
+                            [Face7] NUMERIC DEFAULT 0,
+                            [Face8] NUMERIC DEFAULT 0,
+                            [Face9] NUMERIC DEFAULT 0,
+                            [Face10] NUMERIC DEFAULT 0,
+                            [Face11] NUMERIC DEFAULT 0,
+                            [Face12] NUMERIC DEFAULT 0,
+                            [Face13] NUMERIC DEFAULT 0,
+                            [Face14] NUMERIC DEFAULT 0,
+                            [Face15] NUMERIC DEFAULT 0,
+                            [Face16] NUMERIC DEFAULT 0,
+                            [Face17] NUMERIC DEFAULT 0,
+                            [Face18] NUMERIC DEFAULT 0,
+                            [Face19] NUMERIC DEFAULT 0,
+                            [Face20] NUMERIC DEFAULT 0
                             )";
 
         // What happens when we start databasehandler resource.
@@ -142,6 +167,7 @@ namespace Essence.classes
             executeQuery(playerTable);
             executeQuery(vehicleTable);
             executeQuery(clothingTable);
+            executeQuery(skinTable);
 
             DataTable table = executeQueryWithResult("SELECT * FROM Players");
         }
