@@ -68,8 +68,7 @@ namespace Essence.classes
                             [BodyArmor] INTEGER DEFAULT 0,
                             [BodyArmorVariant] INTEGER DEFAULT 0,
                             [Top] INTEGER DEFAULT 0,
-                            [TopVariant] INTEGER DEFAULT 0,
-                            [Model] INTEGER DEFAULT 0
+                            [TopVariant] INTEGER DEFAULT 0
                             )";
 
         static string skinTable = @"CREATE TABLE IF NOT EXISTS
@@ -85,23 +84,23 @@ namespace Essence.classes
                             [Hair] INTEGER DEFAULT 0,
                             [HairColor] INTEGER DEFAULT 0,
                             [HairHighlight] INTEGER DEFAULT 0,
-                            [Blemishes] INTEGER DEFAULT 0,
-                            [FacialHair] INTEGER DEFAULT 0,
+                            [Blemishes] INTEGER DEFAULT -1,
+                            [FacialHair] INTEGER DEFAULT -1,
                             [Eyebrows] INTEGER DEFAULT 0,
-                            [Ageing] INTEGER DEFAULT 0,
-                            [Makeup] INTEGER DEFAULT 0,
-                            [Blush] INTEGER DEFAULT 0,
-                            [Complexion] INTEGER DEFAULT 0,
-                            [SunDamage] INTEGER DEFAULT 0,
-                            [Lipstick] INTEGER DEFAULT 0,
-                            [Moles] INTEGER DEFAULT 0,
-                            [ChestHair] INTEGER DEFAULT 0,
-                            [BodyBlemishes] INTEGER DEFAULT 0,
+                            [Ageing] INTEGER DEFAULT -1,
+                            [Makeup] INTEGER DEFAULT -1,
+                            [Blush] INTEGER DEFAULT -1,
+                            [Complexion] INTEGER DEFAULT -1,
+                            [SunDamage] INTEGER DEFAULT -1,
+                            [Lipstick] INTEGER DEFAULT -1,
+                            [Moles] INTEGER DEFAULT -1,
+                            [ChestHair] INTEGER DEFAULT -1,
+                            [BodyBlemishes] INTEGER DEFAULT -1,
                             [EyeColor] INTEGER DEFAULT 0,
-                            [LipstickColor] INTEGER DEFAULT 0,
-                            [LipstickColor2] INTEGER DEFAULT 0,
-                            [MakeupColor] INTEGER DEFAULT 0,
-                            [MakeupColor2] INTEGER DEFAULT 0,
+                            [LipstickColor] INTEGER DEFAULT -1,
+                            [LipstickColor2] INTEGER DEFAULT -1,
+                            [MakeupColor] INTEGER DEFAULT -1,
+                            [MakeupColor2] INTEGER DEFAULT -1,
                             [Face0] NUMERIC DEFAULT 0,
                             [Face1] NUMERIC DEFAULT 0,
                             [Face2] NUMERIC DEFAULT 0,
@@ -122,7 +121,8 @@ namespace Essence.classes
                             [Face17] NUMERIC DEFAULT 0,
                             [Face18] NUMERIC DEFAULT 0,
                             [Face19] NUMERIC DEFAULT 0,
-                            [Face20] NUMERIC DEFAULT 0
+                            [Face20] NUMERIC DEFAULT 0,
+                            [Model] INTEGER DEFAULT 0
                             )";
 
         // What happens when we start databasehandler resource.

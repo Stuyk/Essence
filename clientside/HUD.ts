@@ -1,6 +1,8 @@
 ﻿var screenX = API.getScreenResolutionMantainRatio().Width;
 var screenY = API.getScreenResolutionMantainRatio().Height;
 
+API.setHudVisible(false);
+
 var loggedIn = false;
 var money = 0;
 var zone = "";
@@ -17,12 +19,14 @@ API.onEntityDataChange.connect(function(entity, key, oldValue) {
             return;
         case "ESS_LoggedIn":
             loggedIn = true;
+            API.setHudVisible(true);
             return;
     }
 });
 
 API.onUpdate.connect(function () {
     if (!loggedIn) {
+        API.dxDrawTexture("clientside/images/essence.png", new Point(Math.round(screenX / 2 - 373), Math.round(screenY / 2 - 57)), new Size(746, 115), 0, 255, 255, 255, 255);
         return;
     }
 

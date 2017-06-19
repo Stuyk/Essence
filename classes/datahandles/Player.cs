@@ -14,7 +14,7 @@ namespace Essence.classes
     {
         Database db = new Database();
 
-        private NetHandle client;
+        private Client client;
         private Player player;
         private int father;
         private int mother;
@@ -103,7 +103,6 @@ namespace Essence.classes
             {
                 faceBlend = value;
                 API.setEntitySyncedData(client, "ESS_FaceBlend", value);
-                API.consoleOutput("" + faceBlend.ToString());
             }
         }
         public float SkinBlend
@@ -373,7 +372,7 @@ namespace Essence.classes
 
         public Skin() { }
 
-        public Skin(NetHandle p, Player pClass)
+        public Skin(Client p, Player pClass)
         {
             client = p;
             player = pClass;
@@ -473,11 +472,27 @@ namespace Essence.classes
             faceList[20] = Convert.ToSingle(face["Face20"]);
 
             API.setEntitySyncedData(client, "ESS_FaceList", FaceList);
+
+            int gender = Convert.ToInt32(face["Model"]);
+
+            if (gender == 0)
+            {
+                API.setPlayerSkin(client, PedHash.FreemodeMale01);
+            }
+            else
+            {
+                API.setPlayerSkin(client, PedHash.FreemodeFemale01);
+            }
         }
 
         public void updatePlayerFace()
         {
-            API.setPlayerClothes(API.getPlayerFromHandle(client), 2, Hair, 0);
+            if (Hair == 23 || Hair == 24)
+            {
+                Hair = 0;
+            }
+
+            //API.setPlayerClothes(client, 2, Hair, 0);
             API.triggerClientEventForAll("ESS_SKIN_UPDATE", client);
         }
     }
@@ -545,28 +560,24 @@ namespace Essence.classes
             DataTable result = db.compileSelectQuery(before, varNames, data);
             DataRow clothing = result.Rows[0];
 
-            int gender = Convert.ToInt32(clothing["Model"]);
-
-            if (gender == 0)
-            {
-                API.setPlayerSkin(client, PedHash.FreemodeMale01);
-            } else
-            {
-                API.setPlayerSkin(client, PedHash.FreemodeFemale01);
-            }
-
-            object[] targets = { Mask, Torso, TorsoVariant, Legs, LegsVariant, Bag, Feet, FeetVariant, Accessories, Undershirt, UndershirtVariant, BodyArmor, BodyArmorVariant, Top, TopVariant };
-            string[] parameters = { "Mask", "Torso", "TorsoVariant", "Legs", "LegsVariant", "Bag", "Feet", "FeetVariant", "Accessories", "Undershirt", "UndershirtVariant", "BodyArmor", "BodyArmorVariant", "Top", "TopVariant" };
-
-            for (int i = 0; i < targets.Length; i++)
-            {
-                targets[i] = Convert.ToInt32(clothing[parameters[i]]);
-            }
-
-            updatePlayerClothes();
+            Mask = Convert.ToInt32(clothing["Mask"]);
+            Torso = Convert.ToInt32(clothing["Torso"]);
+            TorsoVariant = Convert.ToInt32(clothing["TorsoVariant"]);
+            Legs = Convert.ToInt32(clothing["Legs"]);
+            LegsVariant = Convert.ToInt32(clothing["LegsVariant"]);
+            Bag = Convert.ToInt32(clothing["Bag"]);
+            Feet = Convert.ToInt32(clothing["Feet"]);
+            FeetVariant = Convert.ToInt32(clothing["FeetVariant"]);
+            Accessories = Convert.ToInt32(clothing["Accessories"]);
+            Undershirt = Convert.ToInt32(clothing["Undershirt"]);
+            UndershirtVariant = Convert.ToInt32(clothing["UndershirtVariant"]);
+            BodyArmor = Convert.ToInt32(clothing["BodyArmor"]);
+            BodyArmorVariant = Convert.ToInt32(clothing["BodyArmorVariant"]);
+            Top = Convert.ToInt32(clothing["Top"]);
+            TopVariant = Convert.ToInt32(clothing["TopVariant"]);
         }
 
-        private void updatePlayerClothes()
+        public void updatePlayerClothes()
         {
             // Mask
             API.setPlayerClothes(client, 1, mask, 0);
@@ -904,19 +915,21 @@ namespace Essence.classes
             API.setEntityTransparency(player, 255);
             API.setEntityPosition(player, LastPosition);
 
-            API.consoleOutput(string.Format("{0} has been set to dimension 0.", player.name));
-
             // Setup Player Vehicles
             createPlayerVehicles();
 
-            // Setup Player Clothes
-            playerClothing = new Clothing(player, this);
-            playerClothing.loadPlayerClothes();
-
             // Setup Player Skin
-            playerSkin = new Skin(player.handle, this);
+            playerSkin = new Skin(player, this);
             playerSkin.loadPlayerFace();
             playerSkin.updatePlayerFace();
+
+            // Setup Player Clothing
+            playerClothing = new Clothing(player, this);
+            playerClothing.loadPlayerClothes();
+            playerClothing.updatePlayerClothes();
+
+            // Set our entity dimension.
+            API.setEntityDimension(player, 0);
         }
 
         /** Spawn Player Vehicles */

@@ -20,10 +20,6 @@ function setPedCharacter(ent) {
     if (!API.isPed(ent) && (API.getEntityModel(ent) != 1885233650 || API.getEntityModel(ent) != -1667301416)) {
         return;
     }
-    if (!API.hasEntitySyncedData(ent, "ESS_Father")) {
-        API.sendChatMessage("Couldn't find that shit.");
-        return;
-    }
     var Mother = API.getEntitySyncedData(ent, "ESS_Mother");
     var Father = API.getEntitySyncedData(ent, "ESS_Father");
     var MotherSkin = API.getEntitySyncedData(ent, "ESS_MotherSkin");
@@ -51,43 +47,42 @@ function setPedCharacter(ent) {
     var MakeupColor = API.getEntitySyncedData(ent, "ESS_MakeupColor");
     var MakeupColor2 = API.getEntitySyncedData(ent, "ESS_MakeupColor2");
     var FaceList = API.getEntitySyncedData(ent, "ESS_FaceList");
-    API.sendChatMessage("FaceBlend: " + FaceBlend);
     // Face
     API.callNative("SET_PED_HEAD_BLEND_DATA", ent, Mother, Father, 0, MotherSkin, FatherSkin, 0, parseFloat(FaceBlend), parseFloat(SkinBlend), 0, false);
     // Blend Data
     API.callNative("UPDATE_PED_HEAD_BLEND_DATA", ent, parseFloat(FaceBlend), parseFloat(SkinBlend), 0);
-    // Hair Color
-    API.callNative("_SET_PED_HAIR_COLOR", ent, HairColor, HairHighlight);
     // Eye Color
     API.callNative("_SET_PED_EYE_COLOR", ent, EyeColor);
     // Eyebrows
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 2, Eyebrows, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 2, Eyebrows, 0.9);
     API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", ent, 2, 1, HairColor, HairHighlight);
     // Lipstick
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 8, Lipstick, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 8, Lipstick, 0.9);
     API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", ent, 8, 2, LipstickColor, LipstickColor2);
     // Makeup
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 4, Makeup, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 4, Makeup, 0.9);
     API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", ent, 4, 0, MakeupColor, MakeupColor2);
     // Blemishes
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 0, Blemishes, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 0, Blemishes, 0.9);
     // FacialHair
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 1, FacialHair, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 1, FacialHair, 0.9);
     API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", ent, 1, 1, HairColor, HairHighlight);
     // Ageing
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 3, Ageing, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 3, Ageing, 0.9);
     // Complexion
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 6, Complexion, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 6, Complexion, 0.9);
     // Moles
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 9, Moles, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 9, Moles, 0.9);
     // SunDamage
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 7, SunDamage, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 7, SunDamage, 0.9);
     // ChestHair
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 10, ChestHair, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 10, ChestHair, 0.9);
     // BodyBlemishes
-    API.callNative("SET_PED_HEAD_OVERLAY", ent, 7, BodyBlemishes, 1);
+    API.callNative("SET_PED_HEAD_OVERLAY", ent, 7, BodyBlemishes, 0.9);
     // FaceList (e.g. nose length, chin shape, etc)
     for (var i = 0; i < 21; i++) {
         API.callNative("_SET_PED_FACE_FEATURE", ent, i, parseFloat(FaceList[i]));
     }
+    // Hair Color
+    API.callNative("_SET_PED_HAIR_COLOR", ent, HairColor, HairHighlight);
 }

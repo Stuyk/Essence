@@ -47,6 +47,11 @@ namespace Essence.classes
         [Command("login", Description = "/login [username] [password]")]
         public void cmdLogin(Client player, string username, string password)
         {
+            if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
+            {
+                return;
+            }
+
             string[] varNames = { "Username" };
             string before = "SELECT ID, Password, X, Y, Z, Money, Bank, LoggedIn, Health, Armor FROM Players WHERE";
             object[] data = { username };

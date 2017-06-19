@@ -26,6 +26,11 @@ namespace Essence.classes
         [Command("register", Description = "/register [username] [password] [password2]")]
         public void cmdRegister(Client player, string username, string password, string password2)
         {
+            if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
+            {
+                return;
+            }
+
             if (password != password2)
             {
                 API.sendChatMessageToPlayer(player, "~r~Passwords did not match.");

@@ -16,6 +16,7 @@ namespace Essence.classes
 
         private void API_onPlayerConnected(Client player)
         {
+            API.setEntityDimension(player, new Random().Next(90000, 99999));
             API.freezePlayer(player, true);
             API.setEntityTransparency(player, 0);
         }
