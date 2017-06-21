@@ -151,9 +151,6 @@ function setupMarkers() {
             case "Capture":
                 newMarker = API.createMarker(Enums.MarkerType.VerticalCylinder, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
-            case "FastCapture":
-                newMarker = API.createMarker(Enums.MarkerType.VerticalCylinder, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
-                break;
             case "Destroy":
                 newMarker = API.createMarker(Enums.MarkerType.DebugSphere, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(0.2, 0.2, 0.2), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
@@ -190,6 +187,9 @@ function setupBlips() {
                 API.setBlipSprite(newBlip, 486);
                 API.setBlipColor(newBlip, blipColor);
                 break;
+            case "SetIntoVehicle":
+                API.deleteEntity(newBlip);
+                return;
         }
         objectiveBlips.push(newBlip);
     }

@@ -19,12 +19,15 @@ namespace Essence.classes
         public Login()
         {
             API.onResourceStart += API_onResourceStart;
-            API.onPlayerConnected += API_onPlayerConnected;
+            API.onClientEventTrigger += API_onClientEventTrigger;
         }
 
-        private void API_onPlayerConnected(Client player)
+        private void API_onClientEventTrigger(Client player, string eventName, params object[] arguments)
         {
-            API.sendChatMessageToPlayer(player, "~b~Essence: ~w~If you're an existing user. Login with: /login [username] [password]");
+            if (eventName == "clientLogin")
+            {
+                cmdLogin(player, arguments[0].ToString(), arguments[1].ToString());
+            }
         }
 
         private void API_onResourceStart()
@@ -44,7 +47,6 @@ namespace Essence.classes
             */
         }
 
-        [Command("login", Description = "/login [username] [password]")]
         public void cmdLogin(Client player, string username, string password)
         {
             if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
@@ -59,18 +61,19 @@ namespace Essence.classes
 
             if (result.Rows.Count < 1)
             {
-                API.sendChatMessageToPlayer(player, "~b~Essence: ~r~User does not exist.");
+                API.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
             bool verify = BCr.BCrypt.Verify(password, Convert.ToString(result.Rows[0]["Password"]));
             if (!verify)
             {
-                API.sendChatMessageToPlayer(player, "~b~Essence: ~r~Username or password does not match.");
+                API.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
             new Player(player, result.Rows[0]);
+            API.triggerClientEvent(player, "FinishLogin");
         }
 
     }

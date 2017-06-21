@@ -16,6 +16,7 @@ namespace Essence.classes
         private Vector3 direction;
         private Objective.ObjectiveTypes type;
         private bool completed;
+        private Vector3 nullVector = new Vector3(0, 0, 0);
 
         // What to assign to this class when it's created as a new instance.
         public ObjectiveInfo()
@@ -25,7 +26,6 @@ namespace Essence.classes
             direction = new Vector3();
             type = Objective.ObjectiveTypes.None;
             completed = false;
-            
         }
 
         /** Get / Set the current progress of this objective. */
@@ -116,6 +116,7 @@ namespace Essence.classes
             Capture,
             Teleport,
             Destroy,
+            SetIntoVehicle,
             None
         }
 
@@ -157,25 +158,74 @@ namespace Essence.classes
             }
         }
 
-        public void addObjectiveVehicle(Mission instance, Vector3 location, VehicleHash type)
+        public List<ObjectiveInfo> Objectives {
+            get {
+                return objectives;
+            }
+        }
+
+        public void forceRemoveObjective(ObjectiveInfo obj, Mission mission)
         {
-            NetHandle veh = API.createVehicle(type, location.Around(5), new Vector3(), 52, 52);
-            API.setEntityData(veh, "Mission", instance);
-            instance.addVehicle(veh);
+            if (objectives.Contains(obj))
+            {
+                objectives.Remove(obj);
+            }
+
+            mission.setupTeamSync();
+
+            // Check if all of our objectives are complete.
+            if (objectives.Count >= 1)
+            {
+                return;
+            }
+
+            mission.goToNextObjective();
+        }
+
+        public NetHandle addObjectiveVehicle(Mission instance, Vector3 location, VehicleHash type, Vector3 rotation = null)
+        {
+            if (rotation == null)
+            {
+                NetHandle veh = API.createVehicle(type, location, new Vector3(), 52, 52);
+                API.setEntityData(veh, "Mission", instance);
+                instance.addVehicle(veh);
+                return veh;
+            } else
+            {
+                NetHandle veh = API.createVehicle(type, location, rotation, 52, 52);
+                API.setEntityData(veh, "Mission", instance);
+                instance.addVehicle(veh);
+                return veh;
+            }
+            
         }
 
         public void syncObjectiveToPlayer(Client player)
         {
+            Mission instance = API.getEntityData(player, "Mission");
+
+            List<ObjectiveInfo> removeables = new List<ObjectiveInfo>();
+
             foreach (ObjectiveInfo objInfo in objectives)
             {
+                if (objInfo.Type == ObjectiveTypes.SetIntoVehicle)
+                {
+                    instance.setPlayersIntoVehicles();
+                    removeables.Add(objInfo);
+                    continue;
+                }
+
                 API.triggerClientEvent(player, "Mission_New_Objective", objInfo.Location, objInfo.Type.ToString());
             }
 
-            /*
-            foreach (Vector3 location in objectives.Keys)
+            foreach (ObjectiveInfo objInfo in removeables)
             {
-                API.triggerClientEvent(player, "Mission_New_Objective", location, objectives[location].ToString());
-            }*/
+                if (!objectives.Contains(objInfo))
+                {
+                    continue;
+                }
+                objectives.Remove(objInfo);
+            }
 
             API.triggerClientEvent(player, "Mission_Setup_Objectives");
             API.triggerClientEvent(player, "Mission_Head_Notification", "~o~New Objective", "NewObjective");

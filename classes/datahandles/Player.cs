@@ -852,6 +852,7 @@ namespace Essence.classes
             {
                 money = value;
                 API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
+                updatePlayerMoney();
             }
             get
             {
@@ -977,11 +978,7 @@ namespace Essence.classes
             Bank += amount;
             Money -= amount;
 
-            string before = "UPDATE Players SET";
-            string[] varNames = { "Money", "Bank"};
-            string after = string.Format("WHERE Id='{0}'", ID);
-            object[] args = { Money, Bank };
-            db.compileQuery(before, after, varNames, args);
+            updatePlayerMoney();
         }
 
         /** Withdraw money from the player's bank. */
@@ -990,6 +987,11 @@ namespace Essence.classes
             Bank -= amount;
             Money += amount;
 
+            updatePlayerMoney();
+        }
+
+        private void updatePlayerMoney()
+        {
             string before = "UPDATE Players SET";
             string[] varNames = { "Money", "Bank" };
             string after = string.Format("WHERE Id='{0}'", ID);

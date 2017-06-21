@@ -18,6 +18,8 @@ namespace Essence.classes
         private int objectiveCompletion = 0; // Used as a 'Ticket' system for similarily written capture objectives.
         private DateTime objectiveCooldown; // DateTime comparison broken down into Milliseconds.
         private int partyInstance;
+        private int missionReward;
+        private string missionTitle;
         
         /** Mission ObjectiveTypes that will be used clientside/serverside */
         public enum ObjectiveTypes
@@ -25,7 +27,8 @@ namespace Essence.classes
             Location,
             Finish,
             Capture,
-            FastCapture
+            FastCapture,
+            SetIntoVehicle
         }
         /** Main Constructor */
         public Mission()
@@ -36,6 +39,7 @@ namespace Essence.classes
             players = new List<Client>();
             objectiveCooldown = DateTime.Now;
             partyInstance = new Random().Next(0, 9000000);
+            missionReward = 0;
         }
 
         /****************************************************************
@@ -85,6 +89,30 @@ namespace Essence.classes
             get
             {
                 return players.Count;
+            }
+        }
+
+        public int MissionReward
+        {
+            set
+            {
+                missionReward = value;
+            }
+            get
+            {
+                return missionReward;
+            }
+        }
+
+        public string MissionTitle
+        {
+            set
+            {
+                missionTitle = value;
+            }
+            get
+            {
+                return missionTitle;
             }
         }
 
@@ -204,6 +232,7 @@ namespace Essence.classes
             {
                 objectives[0].syncObjectiveToPlayer(player);
                 API.triggerClientEvent(player, "Mission_Pause_State", false);
+                API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Started: ~w~" + MissionTitle, "NewObjective");
             }
         }
 
@@ -242,8 +271,13 @@ namespace Essence.classes
 
             foreach (Client player in players)
             {
-                API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Mission Complete", "Finish");
+                API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Awarded: ~w~$" + MissionReward, "Finish");
+
+                Player instance = API.getEntityData(player, "Instance");
+                instance.Money += MissionReward;
             }
+
+            MissionReward = 0;
         }
 
         /** Specifically syncs the players objective completion rate. **/
@@ -260,6 +294,28 @@ namespace Essence.classes
             foreach (Client player in players)
             {
                 API.setEntityPosition(player, location.Around(5).Add(new Vector3(0, 0, 2)));
+            }
+        }
+
+        public void setPlayersIntoVehicles()
+        {
+            foreach (NetHandle veh in vehicles)
+            {
+                int seat = -1;
+                Client[] occupants = API.getVehicleOccupants(veh);
+                if (occupants.Length > 0)
+                {
+                    return;
+                }
+                foreach(Client player in players)
+                {
+                    if (player.isInVehicle)
+                    {
+                        continue;
+                    }
+                    API.setPlayerIntoVehicle(player, veh, seat);
+                    seat++;
+                }
             }
         }
     }
