@@ -27,8 +27,9 @@ namespace Essence.classes
             API.consoleOutput(string.Format("Disconnected registered user, {0}", player.name));
             Player instance = (Player)API.getEntityData(player, "Instance");
             instance.PlayerClothing.savePlayerClothes();
+            instance.removePlayerVehicles();
             logoutPlayer(instance);
-            removePlayerVehicles(instance);
+            
         }
 
         // Looks up the player by their ID and updates them based on their unique id.

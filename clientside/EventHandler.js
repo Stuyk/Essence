@@ -1,14 +1,25 @@
 "use strict";
 API.onServerEventTrigger.connect((eventName, args) => {
     switch (eventName) {
+        case "ShowLogin":
+            resource.BrowserManager.showCEF("clientside/login.html");
+            resource.BackgroundMusic.loadBackgroundMusic("www.stuyk.com/embed.html");
+            return;
         case "FinishLogin":
-            API.callNative("_TRANSITION_FROM_BLURRED", 3000);
+            resource.LoginCamera.killLoginCamera();
             resource.BrowserManager.killPanel();
             API.setGameplayCameraActive();
+            resource.BackgroundMusic.clearBackgroundMusic();
+            API.callNative("_STOP_ALL_SCREEN_EFFECTS");
+            return;
+        case "FinishRegistration":
+            resource.BrowserManager.callCEF("showRegistrationSuccess", false);
             return;
         case "FailLogin":
-            resource.BrowserManager.callCEF("showMenu", false);
-            API.sendChatMessage("Yep");
+            resource.BrowserManager.callCEF("showLoginError", false);
+            return;
+        case "FailRegistration":
+            resource.BrowserManager.callCEF("showRegistrationError", false);
             return;
     }
 });

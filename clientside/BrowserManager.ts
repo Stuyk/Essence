@@ -17,8 +17,8 @@ class CefHelper {
         if (this.open == false) {
             this.open = true;
             var resolution = API.getScreenResolution();
+            API.setCefDrawState(true);
             this.browser = API.createCefBrowser(resolution.Width, resolution.Height, true);
-            API.setCefFramerate(this.browser, 60);
             API.waitUntilCefBrowserInit(this.browser);
             API.setCefBrowserPosition(this.browser, 0, 0);
             API.loadPageCefBrowser(this.browser, this.path);
@@ -26,7 +26,21 @@ class CefHelper {
             API.setCanOpenChat(false);
             API.setHudVisible(false);
             API.setChatVisible(false);
-            
+        }
+    }
+    showNonLocal() {
+        if (this.open == false) {
+            this.open = true;
+            var resolution = API.getScreenResolution();
+            API.setCefDrawState(true);
+            this.browser = API.createCefBrowser(resolution.Width, resolution.Height, false);
+            API.waitUntilCefBrowserInit(this.browser);
+            API.setCefBrowserPosition(this.browser, 0, 0);
+            API.loadPageCefBrowser(this.browser, this.path);
+            API.showCursor(true);
+            API.setCanOpenChat(false);
+            API.setHudVisible(false);
+            API.setChatVisible(false);
         }
     }
     // Destroys the CEF Browser.
@@ -37,6 +51,7 @@ class CefHelper {
         API.setCanOpenChat(true);
         API.setHudVisible(true);
         API.setChatVisible(true);
+        API.setCefDrawState(false);
     }
     // No idea what the fuck this does.
     eval(string) {
@@ -53,9 +68,6 @@ API.onResourceStop.connect(function () {
     API.setHudVisible(true);
 });
 
-API.onResourceStart.connect(() => {
-    API.setCefDrawState(true);
-});
 // Destroy any active CEF Panel.
 function killPanel() {
     if (cef !== null) {
@@ -72,6 +84,15 @@ function showCEF(path: string) {
     cef = new CefHelper(path);
     cef.show();
 }
+// Show page, non-local version.
+function showNonLocalCEF(path: string) {
+    if (cef !== null) {
+        cef.destroy();
+    }
+    cef = null;
+    cef = new CefHelper(path);
+    cef.showNonLocal();
+}
 // Browser Function Handler
 function callCEF(func: string, args: Array<any>) {
     if (cef === null) {
@@ -85,4 +106,6 @@ function callCEF(func: string, args: Array<any>) {
 function Login(username, password) {
     API.triggerServerEvent("clientLogin", username, password);
 }
-function Register(username, password) { API.triggerServerEvent("clientRegistration", username, password); }
+function Register(username, password) {
+    API.triggerServerEvent("clientRegister", username, password);
+}

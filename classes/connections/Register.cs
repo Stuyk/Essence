@@ -15,25 +15,25 @@ namespace Essence.classes
 
         public Register()
         {
-            API.onPlayerConnected += API_onPlayerConnected;
+            // Nothing
         }
 
-        private void API_onPlayerConnected(Client player)
-        {
-            API.sendChatMessageToPlayer(player, "~b~Essence: ~w~If you're a new user. Register with: /register [username] [password] [password]");
-        }
-
-        [Command("register", Description = "/register [username] [password] [password2]")]
-        public void cmdRegister(Client player, string username, string password, string password2)
+        public void cmdRegister(Client player, string username, string password)
         {
             if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
             {
                 return;
             }
 
-            if (password != password2)
+            if (username.Length <= 0)
             {
-                API.sendChatMessageToPlayer(player, "~r~Passwords did not match.");
+                API.triggerClientEvent(player, "FailRegistration");
+                return;
+            }
+
+            if (password.Length <= 0)
+            {
+                API.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
@@ -46,7 +46,7 @@ namespace Essence.classes
 
             if (result.Rows.Count >= 1)
             {
-                API.sendChatMessageToPlayer(player, "That username already exists.");
+                API.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
@@ -67,8 +67,7 @@ namespace Essence.classes
 
             // Setup skin table for new player.
             setupTableForPlayer(playerID, "Skin");
-
-            API.sendChatMessageToPlayer(player, "Succesfully registered, you may now login.");
+            API.triggerClientEvent(player, "FinishRegistration");
         }
 
         private void setupTableForPlayer(string id, string tableName)

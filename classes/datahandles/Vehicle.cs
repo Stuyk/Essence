@@ -61,7 +61,6 @@ namespace Essence.classes
             set
             {
                 lastPosition = value;
-                updateVehiclePosition();
             }
             get
             {
@@ -567,7 +566,9 @@ namespace Essence.classes
             ColorA = Convert.ToInt32(db["ColorA"]);
             ColorA = Convert.ToInt32(db["ColorB"]);
             Handle = API.createVehicle(Type, LastPosition, LastRotation, colorA, colorB);
+            API.setVehicleEngineStatus(Handle, false);
             loadVehicleModsFromTable(db);
+            updateVehicleMods();
         }
 
         private void loadVehicleModsFromTable(DataRow db)
@@ -618,6 +619,8 @@ namespace Essence.classes
             string after = string.Format("WHERE Id='{0}'", ID);
             object[] args = { vehPos.X, vehPos.Y, vehPos.Z, vehRot.X, vehRot.Y, vehRot.Z };
             db.compileQuery(before, after, varNames, args);
+
+            API.consoleOutput("Updated POS");
         }
 
         public void updateVehicleMods()

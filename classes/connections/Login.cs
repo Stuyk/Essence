@@ -18,23 +18,9 @@ namespace Essence.classes
 
         public Login()
         {
-            API.onResourceStart += API_onResourceStart;
-            API.onClientEventTrigger += API_onClientEventTrigger;
+           
         }
 
-        private void API_onClientEventTrigger(Client player, string eventName, params object[] arguments)
-        {
-            if (eventName == "clientLogin")
-            {
-                cmdLogin(player, arguments[0].ToString(), arguments[1].ToString());
-            }
-        }
-
-        private void API_onResourceStart()
-        {
-            API.consoleOutput("Started: LoginHandler");
-            SetAllPlayerLoginsToZero();
-        }
 
         private void SetAllPlayerLoginsToZero()
         {
@@ -51,6 +37,18 @@ namespace Essence.classes
         {
             if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
             {
+                return;
+            }
+
+            if (username.Length <= 0)
+            {
+                API.triggerClientEvent(player, "FailLogin");
+                return;
+            }
+
+            if (password.Length <= 0)
+            {
+                API.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
@@ -73,7 +71,13 @@ namespace Essence.classes
             }
 
             new Player(player, result.Rows[0]);
-            API.triggerClientEvent(player, "FinishLogin");
+            API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_OUT, 2000);
+            API.delay(3000, true, () =>
+            {
+                API.triggerClientEvent(player, "FinishLogin");
+                API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_IN, 5000);
+            });
+            
         }
 
     }

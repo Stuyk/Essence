@@ -1,4 +1,5 @@
 ﻿using GTANetworkServer;
+using GTANetworkShared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,29 @@ namespace Essence.classes.commands
             }
 
             API.sendChatMessageToPlayer(player, string.Format("~b~Essence: ~w~Found a total of {0} vehicles.", count));
+        }
+
+        public void ToggleEngine(Client player)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle playerVehicle = player.vehicle;
+
+            if (player.vehicleSeat != -1)
+            {
+                return;
+            }
+
+            if (API.getVehicleEngineStatus(playerVehicle))
+            {
+                API.setVehicleEngineStatus(playerVehicle, false);
+            } else
+            {
+                API.setVehicleEngineStatus(playerVehicle, true);
+            }
         }
     }
 }

@@ -21,14 +21,6 @@ API.onEntityDataChange.connect(function(entity, key, oldValue) {
     }
 });
 
-API.onResourceStart.connect(() => {
-    // Basic Setup for HUD.
-    var cam = API.createCamera(API.getEntityPosition(API.getLocalPlayer()), new Vector3())
-    API.setCameraFov(cam, 110);
-    API.setCameraPosition(cam, API.getCameraPosition(cam).Add(new Vector3(0, 0, 100)));
-    API.setActiveCamera(cam);
-});
-
 API.onResourceStop.connect(() => {
     API.setHudVisible(true);
     loggedIn = false;

@@ -12,6 +12,12 @@ namespace Essence.classes
         public Connect()
         {
             API.onPlayerConnected += API_onPlayerConnected;
+            API.onPlayerFinishedDownload += API_onPlayerFinishedDownload;
+        }
+
+        private void API_onPlayerFinishedDownload(Client player)
+        {
+            API.triggerClientEvent(player, "ShowLogin");
         }
 
         private void API_onPlayerConnected(Client player)
