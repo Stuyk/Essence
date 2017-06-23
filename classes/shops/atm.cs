@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.utility;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -73,14 +74,7 @@ namespace Essence.classes
 
         private void loadLocations()
         {
-            var lines = File.ReadAllLines("resources/Essence/data/atms.txt");
-            foreach (var line in lines)
-            {
-                string[] result = line.Split(',');
-                Vector3 newVector = new Vector3(Convert.ToSingle(result[0]), Convert.ToSingle(result[1]), Convert.ToSingle(result[2]));
-                locations.Add(newVector);
-                
-            }
+            locations = Utility.pullLocationsFromFile("resources/Essence/data/atms.txt");
         }
 
         private void setupLocations()
