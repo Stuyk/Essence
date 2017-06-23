@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.utility;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -614,13 +615,11 @@ namespace Essence.classes
             Vector3 vehPos = API.getEntityPosition(Handle);
             Vector3 vehRot = API.getEntityRotation(Handle);
 
-            string before = "UPDATE Vehicles SET";
-            string[] varNames = { "X", "Y", "Z", "RX", "RY", "RZ" };
-            string after = string.Format("WHERE Id='{0}'", ID);
-            object[] args = { vehPos.X, vehPos.Y, vehPos.Z, vehRot.X, vehRot.Y, vehRot.Z };
-            db.compileQuery(before, after, varNames, args);
-
-            API.consoleOutput("Updated POS");
+            string target = "UPDATE Vehicles SET";
+            string where = string.Format("WHERE Id='{0}'", ID);
+            string[] variables = { "X", "Y", "Z", "RX", "RY", "RZ" };
+            object[] arguments = { vehPos.X, vehPos.Y, vehPos.Z, vehRot.X, vehRot.Y, vehRot.Z };
+            Payload.addNewPayload(target, where, variables, arguments);
         }
 
         public void updateVehicleMods()

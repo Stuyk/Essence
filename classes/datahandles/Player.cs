@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.utility;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -906,9 +907,9 @@ namespace Essence.classes
             API.setEntityData(player, "Instance", this);
             PlayerClient = player;
             ID = Convert.ToInt32(db["ID"]);
-            Bank = Convert.ToInt32(db["Bank"]);
-            Money = Convert.ToInt32(db["Money"]);
-            LastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
+            bank = Convert.ToInt32(db["Bank"]);
+            money = Convert.ToInt32(db["Money"]);
+            lastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             // Don't move on until the players dimension is ready.
 
             // Make our player controllable again.
@@ -992,11 +993,20 @@ namespace Essence.classes
 
         private void updatePlayerMoney()
         {
-            string before = "UPDATE Players SET";
-            string[] varNames = { "Money", "Bank" };
-            string after = string.Format("WHERE Id='{0}'", ID);
-            object[] args = { Money, Bank };
-            db.compileQuery(before, after, varNames, args);
+            string target = "UPDATE Players SET";
+            string where = string.Format("WHERE Id='{0}'", ID);
+            string[] variables = { "Money", "Bank" };
+            object[] data = { Money, Bank };
+            Payload.addNewPayload(target, where, variables, data);
+        }
+
+        public void updatePlayerPosition()
+        {
+            string target = "UPDATE Players SET";
+            string where = string.Format("WHERE Id='{0}'", id);
+            string[] variables = { "LoggedIn", "X", "Y", "Z" };
+            object[] data = { "0", player.position.X, player.position.Y, player.position.Z };
+            Payload.addNewPayload(target, where, variables, data);
         }
 
     }

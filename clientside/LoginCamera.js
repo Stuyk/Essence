@@ -5,7 +5,7 @@ API.onResourceStart.connect(() => {
     API.setCameraFov(cam, 110);
     API.setCameraPosition(cam, API.getCameraPosition(cam).Add(new Vector3(0, 0, 100)));
     API.setActiveCamera(cam);
-    API.playScreenEffect("PeyoteIn", 6000, true);
+    API.playScreenEffect("DrugsDrivingIn", 6000, true);
 });
 API.onUpdate.connect(() => {
     if (cam !== null) {
