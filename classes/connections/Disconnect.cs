@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.connections;
+using GTANetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,9 @@ namespace Essence.classes
 
         private void API_onPlayerDisconnected(Client player, string reason)
         {
+            // Add our player to our connection cooldown.
+            ConnectionManager.AddClient(player.address);
+
             if (!API.hasEntityData(player, "Instance"))
             {
                 API.consoleOutput(string.Format("Disconnected unknown user, {0}", player.name));
