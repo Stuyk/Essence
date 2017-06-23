@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.utility;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -179,39 +180,22 @@ namespace Essence.classes.jobs
 
         private void loadLocations()
         {
-            var lines = File.ReadAllLines("resources/Essence/data/longrangetrucking.txt");
-            foreach (var line in lines)
-            {
-                string[] result = line.Split(',');
-                Vector3 newVector = new Vector3(Convert.ToSingle(result[0]), Convert.ToSingle(result[1]), Convert.ToSingle(result[2]));
-                locations.Add(newVector);
-            }
+            locations = Utility.pullLocationsFromFile("resources/Essence/data/longrangetrucking.txt");
         }
 
         // This generates spawns based on every other line. First Line Pos, Second Line Rotation, Reset.
         private void loadSpawns()
         {
-            Vector3 lastPos = null;
+            List<Vector3> locs = Utility.pullLocationsFromFile("resources/Essence/data/longrangetruckingspawns.txt");
+            List<Vector3> rots = Utility.pullLocationsFromFile("resources/Essence/data/longrangetruckingspawnsrotations.txt");
 
-            var lines = File.ReadAllLines("resources/Essence/data/longrangetruckingspawns.txt");
-            foreach (var line in lines)
+            int count = 0;
+
+            foreach (Vector3 loc in locs)
             {
-                string[] result = line.Split(',');
-                Vector3 newPos = new Vector3(Convert.ToSingle(result[0]), Convert.ToSingle(result[1]), Convert.ToSingle(result[2]));
-
-                if (lastPos == null)
-                {
-                    lastPos = newPos;
-                    continue;
-                }
-                
-                if (lastPos != null)
-                {
-                    LongRangeTruckingSpawns spawn = new LongRangeTruckingSpawns(lastPos, newPos, false);
-                    lastPos = null;
-                    spawns.Add(spawn);
-                    continue;
-                }
+                LongRangeTruckingSpawns spawn = new LongRangeTruckingSpawns(loc, rots[count], false);
+                spawns.Add(spawn);
+                count++;
             }
         }
 

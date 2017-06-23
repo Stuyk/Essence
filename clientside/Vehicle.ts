@@ -9,6 +9,10 @@ function vehicleEngine() {
         return;
     }
 
+    if (API.isChatOpen()) {
+        return;
+    }
+
     API.disableControlThisFrame(Enums.Controls.VehicleHorn);
 
     if (API.isDisabledControlJustPressed(Enums.Controls.VehicleHorn)) {

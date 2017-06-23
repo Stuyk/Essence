@@ -7,6 +7,9 @@ function vehicleEngine() {
     if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
         return;
     }
+    if (API.isChatOpen()) {
+        return;
+    }
     API.disableControlThisFrame(86 /* VehicleHorn */);
     if (API.isDisabledControlJustPressed(86 /* VehicleHorn */)) {
         if (Date.now() < actionCooldown) {
