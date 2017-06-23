@@ -991,6 +991,7 @@ namespace Essence.classes
             updatePlayerMoney();
         }
 
+        // Generally how you save database information.
         private void updatePlayerMoney()
         {
             string target = "UPDATE Players SET";

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Essence.classes.connections
 {
+    // This class is used to add / remove ips from the cooldown list.
+    // Basically adds them in and adds 60 seconds to the time they were added in on.
+    // Then it loops through and checks if they are ready to be removed.
+    // If they are, it will remove them automatically.
     public static class ConnectionManager
     {
         private static Dictionary<string, DateTime> ips = new Dictionary<string, DateTime>();

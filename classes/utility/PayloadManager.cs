@@ -8,6 +8,7 @@ using System.Timers;
 
 namespace Essence.classes.utility
 {
+    // This is the manager for payloads. Just runs on a timer and executes queries every 30 seconds.
     public class PayloadManager : Script
     {
         public PayloadManager()

@@ -8,6 +8,10 @@ using System.Timers;
 
 namespace Essence.classes.connections
 {
+    // This class will make sure the player gets kicked if they're on the cooldown list.
+    // The cooldown list is to prevent exploiting of the Payload system for saves.
+    // This pretty much enforces users to have to wait for two cycles of saves after they log out.
+    // Preventing any manipulation of save data, and lets us have bulk saves.
     public class ConnectionCooldown : Script
     {
         public ConnectionCooldown()
