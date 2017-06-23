@@ -58,5 +58,11 @@ namespace Essence.classes
 
             API.sendChatMessageToPlayer(player, "Saved location as " + location);
         }
+
+        [Command("testnote", GreedyArg = true)]
+        public void cmdTestNote(Client player, string text)
+        {
+            API.triggerClientEvent(player, "HeadNotification", text);
+        }
     }
 }

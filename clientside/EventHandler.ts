@@ -20,5 +20,8 @@
         case "FailRegistration":
             resource.BrowserManager.callCEF("showRegistrationError", false);
             return;
+        case "HeadNotification":
+            resource.HeadNotifications.createHeadNotification(args[0]);
+            return;
     }
 });
