@@ -99,6 +99,14 @@
 				el: '#loginButton',
 				methods: {
 					tryLogin: function () {
+						if (LoginForm.input.length < 4) {
+							return;
+						}
+						
+						if (PasswordForm.input.length < 4) {
+							return;
+						}
+					
 						resourceCall("Login", LoginForm.input, PasswordForm.input);
 						showMenu(false);
 						hideAllWarnings();
@@ -110,6 +118,14 @@
 				el: '#registerButton',
 				methods: {
 					tryRegistration: function () {
+						if (LoginForm.input.length < 5) {
+							return;
+						}
+						
+						if (PasswordForm.input.length < 5) {
+							return;
+						}
+					
 						resourceCall("Register", LoginForm.input, PasswordForm.input);
 						showMenu(false);
 						hideAllWarnings();

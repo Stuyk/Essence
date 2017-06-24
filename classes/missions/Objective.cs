@@ -17,6 +17,7 @@ namespace Essence.classes
         private Objective.ObjectiveTypes type;
         private bool completed;
         private Vector3 nullVector = new Vector3(0, 0, 0);
+        private int uniqueID;
 
         // What to assign to this class when it's created as a new instance.
         public ObjectiveInfo()
@@ -26,6 +27,7 @@ namespace Essence.classes
             direction = new Vector3();
             type = Objective.ObjectiveTypes.None;
             completed = false;
+            uniqueID = -1;
         }
 
         /** Get / Set the current progress of this objective. */
@@ -92,6 +94,19 @@ namespace Essence.classes
                 direction = value;
             }
         }
+
+        /** Set a vehicle specific ID required to complete the objective. **/
+        public int UniqueVehicleID
+        {
+            get
+            {
+                return uniqueID;
+            }
+            set
+            {
+                uniqueID = value;   
+            }
+        }
     }
 
     public class Objective : Script
@@ -117,6 +132,8 @@ namespace Essence.classes
             Teleport,
             Destroy,
             SetIntoVehicle,
+            VehicleCapture,
+            VehicleLocation,
             None
         }
 
@@ -182,22 +199,32 @@ namespace Essence.classes
             mission.goToNextObjective();
         }
 
-        public NetHandle addObjectiveVehicle(Mission instance, Vector3 location, VehicleHash type, Vector3 rotation = null)
+        public NetHandle addObjectiveVehicle(Mission instance, Vector3 location, VehicleHash type, Vector3 rotation = null, int uniqueID = -1)
         {
             if (rotation == null)
             {
                 NetHandle veh = API.createVehicle(type, location, new Vector3(), 52, 52);
                 API.setEntityData(veh, "Mission", instance);
                 instance.addVehicle(veh);
+                API.setEntityData(veh, "Mission_UID", uniqueID);
                 return veh;
             } else
             {
                 NetHandle veh = API.createVehicle(type, location, rotation, 52, 52);
                 API.setEntityData(veh, "Mission", instance);
                 instance.addVehicle(veh);
+                API.setEntityData(veh, "Mission_UID", uniqueID);
                 return veh;
             }
             
+        }
+
+        public void addUniqueIDToAllObjectives(int id)
+        {
+            foreach (ObjectiveInfo obj in objectives)
+            {
+                obj.UniqueVehicleID = id;
+            }
         }
 
         public void syncObjectiveToPlayer(Client player)
@@ -260,6 +287,20 @@ namespace Essence.classes
                 {
                     if (objInfo.Type == ObjectiveTypes.Location || objInfo.Type == ObjectiveTypes.Capture)
                     {
+                        if (player.position.DistanceTo(objInfo.Location) <= 5)
+                        {
+                            closestObjective = objInfo;
+                            break;
+                        }
+                    }
+
+                    if (objInfo.Type == ObjectiveTypes.VehicleCapture || objInfo.Type == ObjectiveTypes.VehicleLocation)
+                    {
+                        if (!player.isInVehicle)
+                        {
+                            continue;
+                        }
+
                         if (player.position.DistanceTo(objInfo.Location) <= 5)
                         {
                             closestObjective = objInfo;
@@ -338,6 +379,12 @@ namespace Essence.classes
                 case ObjectiveTypes.Destroy:
                     objectiveDestroy(player, objInfo);
                     return;
+                case ObjectiveTypes.VehicleCapture:
+                    objectiveVehicleCapture(player, objInfo);
+                    return;
+                case ObjectiveTypes.VehicleLocation:
+                    objectiveVehicleLocation(player, objInfo);
+                    return;
             }
         }
 
@@ -346,6 +393,31 @@ namespace Essence.classes
          * **********************************************/
         private void objectiveLocation(Client player, ObjectiveInfo objInfo)
         {
+            if (player.position.DistanceTo(objInfo.Location) <= 5)
+            {
+                objInfo.Status = true;
+            }
+        }
+
+        private void objectiveVehicleLocation(Client player, ObjectiveInfo objInfo)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle vehicle = API.getPlayerVehicle(player);
+
+            if (!API.hasEntityData(vehicle, "Mission_UID"))
+            {
+                return;
+            }
+
+            if (API.getEntityData(vehicle, "Mission_UID") != objInfo.UniqueVehicleID)
+            {
+                return;
+            }
+
             if (player.position.DistanceTo(objInfo.Location) <= 5)
             {
                 objInfo.Status = true;
@@ -403,6 +475,47 @@ namespace Essence.classes
             if (objInfo.Progress > 100)
             {
                 objInfo.Status = true;
+            }
+        }
+
+        private void objectiveVehicleCapture(Client player, ObjectiveInfo objInfo)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle vehicle = API.getPlayerVehicle(player);
+
+            if (!API.hasEntityData(vehicle, "Mission_UID"))
+            {
+                return;
+            }
+
+            if (API.getEntityData(vehicle, "Mission_UID") != objInfo.UniqueVehicleID)
+            {
+                return;
+            }
+
+            if (player.position.DistanceTo(objInfo.Location) <= 8)
+            {
+                if (!API.hasEntityData(player, "Mission_Cooldown_Check"))
+                {
+                    API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
+                }
+                DateTime lastCheck = API.getEntityData(player, "Mission_Cooldown_Check");
+                DateTime now = DateTime.Now;
+                if (now < lastCheck)
+                {
+                    return;
+                }
+                API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
+                objInfo.Progress += 5;
+                updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
+                if (objInfo.Progress > 100)
+                {
+                    objInfo.Status = true;
+                }
             }
         }
 

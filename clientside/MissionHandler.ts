@@ -10,7 +10,7 @@ var deathPause = false;
 var backgroundRGBA = [0, 0, 0, 100];
 var textRGBA = [255, 255, 255, 255];
 var overlayRGBA = [1, 87, 155, 255];
-var markerRGBA = [1, 87, 155, 50];
+var markerRGBA = [1, 87, 155, 175];
 var blipColor = 77;
 
 // Time Check
@@ -154,6 +154,12 @@ function setupMarkers() {
             case "Destroy":
                 newMarker = API.createMarker(Enums.MarkerType.DebugSphere, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(0.2, 0.2, 0.2), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
+            case "VehicleCapture":
+                newMarker = API.createMarker(Enums.MarkerType.VerticalCylinder, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                break;
+            case "VehicleLocation":
+                newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                break;
             default:
                 return;
         }
@@ -190,6 +196,14 @@ function setupBlips() {
             case "SetIntoVehicle":
                 API.deleteEntity(newBlip);
                 return;
+            case "VehicleCapture":
+                API.setBlipSprite(newBlip, 164);
+                API.setBlipColor(newBlip, blipColor);
+                break;
+            case "VehicleLocation":
+                API.setBlipSprite(newBlip, 162);
+                API.setBlipColor(newBlip, blipColor);
+                break;
         }
         objectiveBlips.push(newBlip);
     }
@@ -502,6 +516,12 @@ function missionObjectives() {
         case "Destroy":
             objectiveDestroy();
             break;
+        case "VehicleCapture":
+            objectiveVehicleCapture();
+            break;
+        case "VehicleLocation":
+            objectiveVehicleLocation();
+            break;
     }
 }
 
@@ -576,6 +596,31 @@ function objectiveTeleport() {
 function objectiveCapture() {
     for (var i = 0; i < objectives.length; i++) {
         if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(objectives[i].Location) <= 5) {
+            API.triggerServerEvent("checkObjective");
+        }
+    }
+}
+
+function objectiveVehicleCapture() {
+    if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
+        return;
+    }
+
+    for (var i = 0; i < objectives.length; i++) {
+        if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(objectives[i].Location) <= 5) {
+            API.triggerServerEvent("checkObjective");
+        }
+    }
+}
+
+function objectiveVehicleLocation() {
+    if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
+        return;
+    }
+
+    for (var i = 0; i < objectives.length; i++) {
+        var playerPos = API.getEntityPosition(API.getLocalPlayer());
+        if (playerPos.DistanceTo(objectives[i].Location) <= 3) {
             API.triggerServerEvent("checkObjective");
         }
     }

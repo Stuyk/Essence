@@ -19,9 +19,17 @@ namespace Essence.classes.events
             switch (eventName)
             {
                 case "clientLogin":
+                    if (arguments.Length <= 0)
+                    {
+                        return;
+                    }
                     API.call("Login", "cmdLogin", player, arguments[0].ToString(), arguments[1].ToString());
                     return;
                 case "clientRegister":
+                    if (arguments.Length <= 0)
+                    {
+                        return;
+                    }
                     API.call("Register", "cmdRegister", player, arguments[0].ToString(), arguments[1].ToString());
                     return;
             }

@@ -21,15 +21,6 @@ namespace Essence.classes
         private int missionReward;
         private string missionTitle;
         
-        /** Mission ObjectiveTypes that will be used clientside/serverside */
-        public enum ObjectiveTypes
-        {
-            Location,
-            Finish,
-            Capture,
-            FastCapture,
-            SetIntoVehicle
-        }
         /** Main Constructor */
         public Mission()
         {

@@ -23,5 +23,9 @@
         case "HeadNotification":
             resource.HeadNotifications.createHeadNotification(args[0]);
             return;
+        // Used by Doors.js and Doors.cs
+        case "RetrieveDoor":
+            resource.Doors.retrieveDoor(args[0], args[1]);
+            return;
     }
 });

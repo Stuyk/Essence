@@ -261,10 +261,14 @@ namespace Essence.classes.jobs
                     break;
                 }
             }
+
+            // Generate a unique ID for our objectives.
+            int uniqueVehicleID = new Random().Next(1, 20000);
+
             // Once an open spot is found.
             objective = mission.CreateNewObjective(openSpot.Position, Objective.ObjectiveTypes.Location);
-            NetHandle vehicle = objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Packer, openSpot.Rotation);
-            NetHandle trailer = objective.addObjectiveVehicle(mission, openSpot.Position.Add(new Vector3(0, 0, 50)), VehicleHash.Trailers, openSpot.Rotation);
+            NetHandle vehicle = objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Packer, openSpot.Rotation, uniqueID: uniqueVehicleID);
+            NetHandle trailer = objective.addObjectiveVehicle(mission, openSpot.Position.Add(new Vector3(0, 0, 50)), VehicleHash.Trailers, openSpot.Rotation, uniqueID: uniqueVehicleID);
             // Set Our Start Location
             // Setup Trailer Sync
             API.setEntityData(vehicle, "Mission_Truck_Trailer", true);
@@ -274,14 +278,18 @@ namespace Essence.classes.jobs
             // Set the Player Into the Vehicle
             objective.setupObjective(new Vector3(), Objective.ObjectiveTypes.SetIntoVehicle);
             // Way Out
-            objective = mission.CreateNewObjective(new Vector3(-1080.812, -2231.04, 12.25332), Objective.ObjectiveTypes.Location);
+            objective = mission.CreateNewObjective(new Vector3(-1080.812, -2231.04, 12.25332), Objective.ObjectiveTypes.VehicleLocation);
+            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
             // Halfway Point
-            objective = mission.CreateNewObjective(midPoint, Objective.ObjectiveTypes.Location);
+            objective = mission.CreateNewObjective(midPoint, Objective.ObjectiveTypes.VehicleLocation);
+            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
             // Pull a random location.
             int random = new Random().Next(0, locations.Count);
-            objective = mission.CreateNewObjective(locations[random], Objective.ObjectiveTypes.Capture);
+            objective = mission.CreateNewObjective(locations[random], Objective.ObjectiveTypes.VehicleCapture);
+            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
             // Setup end point.
-            objective = mission.CreateNewObjective(endPoint, Objective.ObjectiveTypes.Location);
+            objective = mission.CreateNewObjective(endPoint, Objective.ObjectiveTypes.VehicleLocation);
+            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
             mission.startMission();
         }
     }

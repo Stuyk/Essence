@@ -1,0 +1,27 @@
+﻿<meta>
+  <info name="Disorder District" type="gamemode" author="Stuyk" version="0.1" description="Unassigned" />
+  <script src="Essence.dll" type="server" lang="compiled" />
+ 
+  <script src="clientside/MissionHandler.js" type="client" lang="javascript" />
+  <script src="clientside/HUD.js" type="client" lang="javascript" />
+  <script src="clientside/TemporaryBlip.js" type="client" lang="javascript" />
+  <script src="clientside/SkinManager.js" type="client" lang="javascript" />
+  <script src="clientside/BrowserManager.js" type="client" lang="javascript" />
+  <script src="clientside/EventHandler.js" type="client" lang="javascript" />
+  <script src="clientside/Vehicle.js" type="client" lang="javascript" />
+  <script src="clientside/BackgroundMusic.js" type="client" lang="javascript" />
+  <script src="clientside/LoginCamera.js" type="client" lang="javascript" />
+  <script src="clientside/HeadNotifications.js" type="client" lang="javascript" />
+  <script src="clientside/Doors.js" type="client" lang="javascript" />
+
+  <file src="clientside/images/essence.png" />
+  <file src="clientside/images/bg.png" />
+  <file src="clientside/login.html" />
+  
+  <file src="clientside/js/vue.min.js" />
+  <file src="clientside/css/bulma.css" />
+  <file src="clientside/css/main.css" />
+  
+  <assembly ref="System.Data.SQLite.dll"/>
+  <assembly ref="BCrypt.Net.dll"/>
+</meta>
