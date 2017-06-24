@@ -10,6 +10,93 @@ using System.Threading.Tasks;
 
 namespace Essence.classes.jobs
 {
+    public class ShortRangeTruckingSpawns : Script
+    {
+        private Client player;
+        private Vector3 position;
+        private Vector3 rotation;
+        private bool occupied;
+
+        public ShortRangeTruckingSpawns() { }
+
+        public ShortRangeTruckingSpawns(Vector3 pos, Vector3 rot, bool occ)
+        {
+            position = pos;
+            rotation = rot;
+            occupied = occ;
+            player = null;
+        }
+
+        public bool Occupied
+        {
+            set
+            {
+                occupied = value;
+            }
+            get
+            {
+                return occupied;
+            }
+        }
+
+        public Client Vehicle
+        {
+            set
+            {
+                player = value;
+            }
+            get
+            {
+                return player;
+            }
+        }
+
+        public Vector3 Position
+        {
+            get
+            {
+                return position;
+            }
+        }
+
+        public Vector3 Rotation
+        {
+            get
+            {
+                return rotation;
+            }
+        }
+
+        public void checkOccupied()
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            if (!API.hasEntityData(player, "Mission"))
+            {
+                Occupied = false;
+                player = null;
+                return;
+            }
+
+
+            if (player.isInVehicle)
+            {
+                if (API.getEntityPosition(player.vehicle).DistanceTo(position) > 20)
+                {
+                    if (API.hasEntityData(player, "Mission"))
+                    {
+                        Occupied = false;
+                        player = null;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public class ShortRangeTrucking : Script
     {
         private Vector3 startPoint = new Vector3(-1328.738, -212.1859, 42.38577);
@@ -17,16 +104,53 @@ namespace Essence.classes.jobs
         private Vector3 endPoint = new Vector3(-1263.66, -307.4156, 35.51007);
         private List<Vector3> locations = new List<Vector3>();
         private const int reward = 18;
+        // For Spawns
+        private DateTime lastTimeCheck = DateTime.Now;
+        private List<ShortRangeTruckingSpawns> spawns = new List<ShortRangeTruckingSpawns>();
 
         public ShortRangeTrucking()
         {
             loadLocations();
+            loadSpawns();
             setupBlip();
+            API.onUpdate += API_onUpdate;
+        }
+
+        private void API_onUpdate()
+        {
+            spawnChecker();
+        }
+
+        private void spawnChecker()
+        {
+            if (DateTime.Now > lastTimeCheck)
+            {
+                lastTimeCheck = DateTime.Now.AddMilliseconds(10000);
+                foreach (ShortRangeTruckingSpawns spawn in spawns)
+                {
+                    spawn.checkOccupied();
+                }
+            }
         }
 
         private void loadLocations()
         {
             locations = Utility.pullLocationsFromFile("resources/Essence/data/shortrangetrucking.txt");
+        }
+
+        private void loadSpawns()
+        {
+            List<Vector3> locs = Utility.pullLocationsFromFile("resources/Essence/data/shortrangetruckingspawns.txt");
+            List<Vector3> rots = Utility.pullLocationsFromFile("resources/Essence/data/shortrangetruckingspawnsrotations.txt");
+
+            int count = 0;
+
+            foreach (Vector3 loc in locs)
+            {
+                ShortRangeTruckingSpawns spawn = new ShortRangeTruckingSpawns(loc, rots[count], false);
+                spawns.Add(spawn);
+                count++;
+            }
         }
 
         private void setupBlip()
@@ -38,7 +162,7 @@ namespace Essence.classes.jobs
             API.setBlipShortRange(blip, true);
         }
 
-        [Command("startJob")]
+        [Command("startJobShortRange")]
         public void cmdStartTruckingJob(Client player)
         {
             if (player.position.DistanceTo(startPoint) >= 5)
@@ -63,39 +187,49 @@ namespace Essence.classes.jobs
 
             // Mission Framework
             Objective objective;
-            // Set Our Start Location
-            objective = mission.CreateNewObjective(startPoint, Objective.ObjectiveTypes.Location);
-            // Add Our Random Mission Vehicle
-            int random = new Random().Next(1, 5);
-            switch (random)
+            // Queue System
+            ShortRangeTruckingSpawns openSpot = null;
+            while (openSpot == null)
             {
-                case 1:
-                    objective.addObjectiveVehicle(mission, startPoint, VehicleHash.Rumpo);
+                foreach (ShortRangeTruckingSpawns spawn in spawns)
+                {
+                    if (!spawn.Occupied)
+                    {
+                        openSpot = spawn;
+                        openSpot.Occupied = true;
+                        openSpot.Vehicle = player;
+                        break;
+                    }
+                }
+
+                if (openSpot != null)
+                {
                     break;
-                case 2:
-                    objective.addObjectiveVehicle(mission, startPoint, VehicleHash.Rumpo2);
-                    break;
-                case 3:
-                    objective.addObjectiveVehicle(mission, startPoint, VehicleHash.Rumpo3);
-                    break;
-                case 4:
-                    objective.addObjectiveVehicle(mission, startPoint, VehicleHash.Burrito);
-                    break;
-                case 5:
-                    objective.addObjectiveVehicle(mission, startPoint, VehicleHash.Burrito3);
-                    break;
+                }
             }
-            objective = mission.CreateNewObjective(midPoint, Objective.ObjectiveTypes.Location);
+            // Setup a unique ID for the vehicle.
+            int unID = new Random().Next(1, 50000);
+            // Set Our Start Location
+            objective = mission.CreateNewObjective(openSpot.Position, Objective.ObjectiveTypes.VehicleLocation);
+            // Add Our Random Mission Vehicle
+            objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Youga2, rotation: openSpot.Rotation, uniqueID: unID);
+            // Set into vehicle.
             objective.setupObjective(new Vector3(), Objective.ObjectiveTypes.SetIntoVehicle);
-            // Tell our player to get to the mid point.
-            
+            // Add the unique id.
+            objective.addUniqueIDToAllObjectives(unID);
+            // Mid Point
+            objective = mission.CreateNewObjective(midPoint, Objective.ObjectiveTypes.VehicleLocation);
+            objective.addUniqueIDToAllObjectives(unID);
             // Pull a random location.
-            random = new Random().Next(0, locations.Count);
-            objective = mission.CreateNewObjective(locations[random], Objective.ObjectiveTypes.Capture);
+            int random = new Random().Next(0, locations.Count);
+            objective = mission.CreateNewObjective(locations[random], Objective.ObjectiveTypes.VehicleCapture);
+            objective.addUniqueIDToAllObjectives(unID);
             // Setup end point.
-            objective = mission.CreateNewObjective(endPoint, Objective.ObjectiveTypes.Location);
+            objective = mission.CreateNewObjective(endPoint, Objective.ObjectiveTypes.VehicleLocation);
+            objective.addUniqueIDToAllObjectives(unID);
             // Deliver truck back to end points
-            objective = mission.CreateNewObjective(startPoint, Objective.ObjectiveTypes.Location);
+            objective = mission.CreateNewObjective(startPoint, Objective.ObjectiveTypes.VehicleLocation);
+            objective.addUniqueIDToAllObjectives(unID);
             mission.startMission();
             
         }
