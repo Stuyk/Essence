@@ -13,11 +13,13 @@ namespace Essence.classes
     class AtmInfo : Script
     {
         private Vector3 location;
-        private Blip blip;
 
-        public AtmInfo()
+        public AtmInfo() { }
+
+        public AtmInfo(Vector3 loc)
         {
-            location = null;
+            location = loc;
+            PointHelper.addNewPoint(2, 431, loc, "ATM ~n~[E]", true, "SHOP_ATM");
         }
 
         public Vector3 Location
@@ -29,18 +31,6 @@ namespace Essence.classes
             get
             {
                 return location;
-            }
-        }
-
-        public Blip BlipMarker
-        {
-            set
-            {
-                blip = value;
-            }
-            get
-            {
-                return blip;
             }
         }
     }
@@ -83,16 +73,8 @@ namespace Essence.classes
 
             foreach (Vector3 location in locations)
             {
-                AtmInfo atm = new AtmInfo();
+                AtmInfo atm = new AtmInfo(location);
                 atmInfos.Add(atm);
-                atm.Location = location;
-                atm.BlipMarker = API.createBlip(location);
-                // Blip Info
-                API.setBlipShortRange(atm.BlipMarker, true);
-                API.setBlipName(atm.BlipMarker, "Automated Teller Machine");
-                API.setBlipSprite(atm.BlipMarker, 431);
-                API.setBlipColor(atm.BlipMarker, 2);
-
                 count++;
             }
 

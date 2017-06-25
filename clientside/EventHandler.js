@@ -3,13 +3,11 @@ API.onServerEventTrigger.connect((eventName, args) => {
     switch (eventName) {
         case "ShowLogin":
             resource.BrowserManager.showCEF("clientside/login.html");
-            resource.BackgroundMusic.loadBackgroundMusic("www.stuyk.com/embed.html");
             return;
         case "FinishLogin":
             resource.LoginCamera.killLoginCamera();
             resource.BrowserManager.killPanel();
             API.setGameplayCameraActive();
-            resource.BackgroundMusic.clearBackgroundMusic();
             API.callNative("_STOP_ALL_SCREEN_EFFECTS");
             return;
         case "FinishRegistration":
@@ -30,7 +28,7 @@ API.onServerEventTrigger.connect((eventName, args) => {
             return;
         // Used by PointHelper / PointHelper Manager
         case "Add_New_Point":
-            // Point Add Info
+            resource.PointHelper.addNewPoint(args[0], args[1], args[2], args[3], args[4], args[5]);
             return;
     }
 });

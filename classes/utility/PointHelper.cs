@@ -14,15 +14,17 @@ namespace Essence.classes.utility
         private Vector3 position;
         private string text;
         private bool draw;
+        private string id;
 
         public PointInfo() { }
-        public PointInfo(int blipColor, int blipStyle, Vector3 blipPosition, string blipText, bool drawText)
+        public PointInfo(int blipColor, int blipStyle, Vector3 blipPosition, string blipText, bool drawText, string newID)
         {
             color = blipColor;
             blipType = blipStyle;
             position = blipPosition;
             text = blipText;
             draw = drawText;
+            id = newID;
         }
 
         public int Color
@@ -64,15 +66,23 @@ namespace Essence.classes.utility
                 return draw;
             }
         }
+
+        public string ID
+        {
+            get
+            {
+                return id;
+            }
+        }
     }
 
     public static class PointHelper
     {
         public static List<PointInfo> points = new List<PointInfo>();
 
-        public static void addNewPoint(int blipColor, int blipStyle, Vector3 blipLocation, string blipText, bool drawText)
+        public static void addNewPoint(int blipColor, int blipStyle, Vector3 blipLocation, string blipText, bool drawText, string id)
         {
-            PointInfo info = new PointInfo(blipColor, blipStyle, blipLocation, blipText, drawText);
+            PointInfo info = new PointInfo(blipColor, blipStyle, blipLocation, blipText, drawText, id);
             points.Add(info);
         }
 

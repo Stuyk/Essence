@@ -909,6 +909,7 @@ namespace Essence.classes
             ID = Convert.ToInt32(db["ID"]);
             bank = Convert.ToInt32(db["Bank"]);
             money = Convert.ToInt32(db["Money"]);
+            API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
             lastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             // Don't move on until the players dimension is ready.
 

@@ -23,9 +23,9 @@ namespace Essence.classes.jobs
 
         public ShortRangeTrucking()
         {
+            PointHelper.addNewPoint(3, 477, startPoint, "Short Range Trucking ~n~[E]", true, "JOB_SHORT_RANGE_TRUCKING");
             loadLocations();
             loadSpawns();
-            setupBlip();
             API.onUpdate += API_onUpdate;
         }
 
@@ -66,17 +66,7 @@ namespace Essence.classes.jobs
             }
         }
 
-        private void setupBlip()
-        {
-            Blip blip = API.createBlip(startPoint);
-            API.setBlipSprite(blip, 477);
-            API.setBlipName(blip, "Short Range Trucking");
-            API.setBlipColor(blip, 16);
-            API.setBlipShortRange(blip, true);
-        }
-
-        [Command("startJobShortRange")]
-        public void cmdStartTruckingJob(Client player)
+        public void startShortRangeTruckingJob(Client player)
         {
             if (player.position.DistanceTo(startPoint) >= 5)
             {

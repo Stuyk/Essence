@@ -26,8 +26,8 @@ namespace Essence.classes.jobs
 
         public LongRangeTrucking()
         {
+            PointHelper.addNewPoint(3, 477, startPoint, "Long Range Trucking ~n~[E]", true, "JOB_LONG_RANGE_TRUCKING");
             loadLocations();
-            setupBlip();
             loadSpawns();
             API.onUpdate += API_onUpdate;
         }
@@ -110,24 +110,13 @@ namespace Essence.classes.jobs
             }
         }
 
-        private void setupBlip()
-        {
-            Blip blip = API.createBlip(startPoint);
-            API.setBlipSprite(blip, 477);
-            API.setBlipName(blip, "Short Range Trucking");
-            API.setBlipColor(blip, 17);
-            API.setBlipShortRange(blip, true);
-        }
-
         [Command("getmethere")]
         public void cmdgjlkjsa(Client player)
         {
             API.setEntityPosition(player, startPoint);
         }
 
-
-        [Command("startJob")]
-        public void cmdStartTruckingJob(Client player)
+        public void startLongRangeTruckingJob(Client player)
         {
             if (player.position.DistanceTo(startPoint) >= 5)
             {

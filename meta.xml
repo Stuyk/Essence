@@ -14,6 +14,7 @@
   <script src="clientside/HeadNotifications.js" type="client" lang="javascript" />
   <script src="clientside/Doors.js" type="client" lang="javascript" />
   <script src="clientside/PointHelper.js" type="client" lang="javascript" />
+  <script src="clientside/Player.js" type="client" lang="javascript" />
 
   <file src="clientside/images/essence.png" />
   <file src="clientside/images/bg.png" />

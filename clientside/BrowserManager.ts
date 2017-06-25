@@ -51,7 +51,6 @@ class CefHelper {
         API.setCanOpenChat(true);
         API.setHudVisible(true);
         API.setChatVisible(true);
-        API.setCefDrawState(false);
     }
     // No idea what the fuck this does.
     eval(string) {

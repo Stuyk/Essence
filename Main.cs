@@ -64,5 +64,11 @@ namespace Essence.classes
         {
             API.triggerClientEvent(player, "HeadNotification", text);
         }
+
+        [Command("magic")]
+        public void cmdClientWeather(Client player)
+        {
+            API.sendNativeToPlayer(player, (ulong)Hash._SET_WEATHER_TYPE_OVER_TIME, "RAIN", 25f);
+        }
     }
 }

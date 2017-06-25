@@ -16,6 +16,7 @@ namespace Essence.classes.events
 
         private void API_onClientEventTrigger(Client player, string eventName, params object[] arguments)
         {
+            // Login Switch
             switch (eventName)
             {
                 case "clientLogin":
@@ -32,13 +33,11 @@ namespace Essence.classes.events
                     }
                     API.call("Register", "cmdRegister", player, arguments[0].ToString(), arguments[1].ToString());
                     return;
+                default:
+                    break;
             }
 
-            if (!API.hasEntityData(player, "LoggedIn"))
-            {
-                return;
-            }
-
+            // In Vehicle Switch
             if (player.isInVehicle)
             {
                 switch (eventName)
@@ -49,11 +48,21 @@ namespace Essence.classes.events
                 }
             }
 
+            // Out of Vehicle Switch
             if (!player.isInVehicle)
             {
                 switch (eventName)
                 {
-
+                    case "SHOP_ATM":
+                        // !!! IMPLEMENT PLS !!!
+                        API.sendChatMessageToPlayer(player, "Don't forget to implement this shit.");
+                        return;
+                    case "JOB_LONG_RANGE_TRUCKING":
+                        API.call("LongRangeTrucking", "startLongRangeTruckingJob", player);
+                        return;
+                    case "JOB_SHORT_RANGE_TRUCKING":
+                        API.call("ShortRangeTrucking", "startShortRangeTruckingJob", player);
+                        return;
                 }
             }
 
