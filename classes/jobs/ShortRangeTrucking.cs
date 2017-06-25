@@ -81,6 +81,8 @@ namespace Essence.classes.jobs
 
             // Basic Setup.
             Mission mission = new Mission();
+            mission.useTimer();
+            mission.MissionTime = 60 * 5;
             mission.MissionReward = reward;
             mission.MissionTitle = "Short Range Trucking";
 

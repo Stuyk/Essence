@@ -37,6 +37,19 @@ namespace Essence.classes.events
                     break;
             }
 
+            // Mission Switch
+            if (API.hasEntityData(player, "Mission"))
+            {
+                Mission mission = API.getEntityData(player, "Mission");
+
+                switch (eventName)
+                {
+                    case "checkObjective":
+                        mission.verifyObjective(player);
+                        return;
+                }
+            }
+
             // In Vehicle Switch
             if (player.isInVehicle)
             {

@@ -4,6 +4,7 @@ var screenY = API.getScreenResolutionMantainRatio().Height;
 // Other Stuff
 var loggedIn = false;
 var money = 0;
+var timeLeft = -1;
 var zone = "";
 var zoneUpdate = Date.now(); //ms
 API.onEntityDataChange.connect(function (entity, key, oldValue) {
@@ -17,6 +18,9 @@ API.onEntityDataChange.connect(function (entity, key, oldValue) {
         case "ESS_LoggedIn":
             loggedIn = true;
             return;
+        case "Mission_Timer":
+            timeLeft = API.getEntitySyncedData(API.getLocalPlayer(), "Mission_Timer");
+            return;
     }
 });
 API.onResourceStop.connect(() => {
@@ -29,6 +33,7 @@ API.onUpdate.connect(function () {
     }
     drawMoney();
     drawZone();
+    drawTimer();
 });
 /**
  *  Display the players on-hand money.
@@ -42,6 +47,11 @@ function drawMoney() {
 function drawZone() {
     API.drawText(`${zone}`, 315, screenY - 45, 0.5, 77, 208, 225, 255, 7, 0, false, true, 800);
     updateZone();
+}
+function drawTimer() {
+    if (timeLeft >= 0) {
+        API.drawText(`${Math.round(timeLeft)}`, screenX / 2, 50, 0.5, 255, 255, 255, 255, 7, 0, false, true, 800);
+    }
 }
 /**
  * Update the players current zone location.

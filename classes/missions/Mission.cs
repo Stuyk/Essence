@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Essence.classes
 {
@@ -17,9 +18,12 @@ namespace Essence.classes
         private bool pauseState = true; // Used to determine if the mission should be running yet.
         private int objectiveCompletion = 0; // Used as a 'Ticket' system for similarily written capture objectives.
         private DateTime objectiveCooldown; // DateTime comparison broken down into Milliseconds.
+        private DateTime startTime; // The time when the player started the mission officially.
         private int partyInstance;
         private int missionReward;
         private string missionTitle;
+        private Timer timer;
+        private int maxMissionTime;
         
         /** Main Constructor */
         public Mission()
@@ -31,6 +35,43 @@ namespace Essence.classes
             objectiveCooldown = DateTime.Now;
             partyInstance = new Random().Next(0, 9000000);
             missionReward = 0;
+            maxMissionTime = -1;
+        }
+
+        /** Enables the timer */
+        public void useTimer()
+        {
+            timer = new Timer();
+            timer.Interval = 500;
+            timer.Elapsed += Updater;
+            timer.Enabled = true;
+        }
+
+        private void Updater(object sender, ElapsedEventArgs e)
+        {
+            foreach (Client player in players)
+            {
+                API.setEntitySyncedData(player, "Current_Position", player.position);
+            }
+
+            if (maxMissionTime != -1)
+            {
+                foreach (Client player in players)
+                {
+                    API.setEntitySyncedData(player, "Mission_Timer", startTime.AddSeconds(maxMissionTime).Subtract(DateTime.Now).TotalSeconds);
+                }
+
+                if (DateTime.Now > startTime.AddSeconds(maxMissionTime))
+                {
+                    maxMissionTime = -1;
+                    foreach (Client player in players)
+                    {
+                        API.triggerClientEvent(player, "Mission_Finish");
+                        API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Mission Failed", "Fail");
+                    }
+                    forceEmptyMission();
+                }
+            }
         }
 
         /****************************************************************
@@ -59,6 +100,15 @@ namespace Essence.classes
             get
             {
                 return partyInstance;
+            }
+        }
+
+        /** Set the mission time as seconds. */
+        public int MissionTime
+        {
+            set
+            {
+                maxMissionTime = value;
             }
         }
 
@@ -172,7 +222,11 @@ namespace Essence.classes
                         forceRemoveVehicles();
                     }
                 }
+
+                timer.Stop();
+                timer.Dispose();
             }
+
 
             API.resetEntityData(player, "Mission");
             API.resetEntitySyncedData(player, "Mission");
@@ -219,6 +273,8 @@ namespace Essence.classes
 
         public void startMission()
         {
+            startTime = DateTime.Now;
+
             foreach (Client player in players)
             {
                 objectives[0].syncObjectiveToPlayer(player);
@@ -256,12 +312,15 @@ namespace Essence.classes
 
         public void finishMission()
         {
+            timer.Stop();
+            timer.Dispose();
             objectives = new List<Objective>();
 
             forceRemoveVehicles();
 
             foreach (Client player in players)
             {
+                API.setEntitySyncedData(player, "Mission_Timer", -1);
                 API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Awarded: ~w~$" + MissionReward, "Finish");
 
                 Player instance = API.getEntityData(player, "Instance");
@@ -269,6 +328,7 @@ namespace Essence.classes
             }
 
             MissionReward = 0;
+
         }
 
         /** Specifically syncs the players objective completion rate. **/
