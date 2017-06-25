@@ -10,93 +10,6 @@ using System.Threading.Tasks;
 
 namespace Essence.classes.jobs
 {
-    public class ShortRangeTruckingSpawns : Script
-    {
-        private Client player;
-        private Vector3 position;
-        private Vector3 rotation;
-        private bool occupied;
-
-        public ShortRangeTruckingSpawns() { }
-
-        public ShortRangeTruckingSpawns(Vector3 pos, Vector3 rot, bool occ)
-        {
-            position = pos;
-            rotation = rot;
-            occupied = occ;
-            player = null;
-        }
-
-        public bool Occupied
-        {
-            set
-            {
-                occupied = value;
-            }
-            get
-            {
-                return occupied;
-            }
-        }
-
-        public Client Vehicle
-        {
-            set
-            {
-                player = value;
-            }
-            get
-            {
-                return player;
-            }
-        }
-
-        public Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-        }
-
-        public Vector3 Rotation
-        {
-            get
-            {
-                return rotation;
-            }
-        }
-
-        public void checkOccupied()
-        {
-            if (player == null)
-            {
-                return;
-            }
-
-            if (!API.hasEntityData(player, "Mission"))
-            {
-                Occupied = false;
-                player = null;
-                return;
-            }
-
-
-            if (player.isInVehicle)
-            {
-                if (API.getEntityPosition(player.vehicle).DistanceTo(position) > 20)
-                {
-                    if (API.hasEntityData(player, "Mission"))
-                    {
-                        Occupied = false;
-                        player = null;
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     public class ShortRangeTrucking : Script
     {
         private Vector3 startPoint = new Vector3(-1328.738, -212.1859, 42.38577);
@@ -106,7 +19,7 @@ namespace Essence.classes.jobs
         private const int reward = 18;
         // For Spawns
         private DateTime lastTimeCheck = DateTime.Now;
-        private List<ShortRangeTruckingSpawns> spawns = new List<ShortRangeTruckingSpawns>();
+        private List<SpawnInfo> spawns = new List<SpawnInfo>();
 
         public ShortRangeTrucking()
         {
@@ -126,7 +39,7 @@ namespace Essence.classes.jobs
             if (DateTime.Now > lastTimeCheck)
             {
                 lastTimeCheck = DateTime.Now.AddMilliseconds(10000);
-                foreach (ShortRangeTruckingSpawns spawn in spawns)
+                foreach (SpawnInfo spawn in spawns)
                 {
                     spawn.checkOccupied();
                 }
@@ -147,7 +60,7 @@ namespace Essence.classes.jobs
 
             foreach (Vector3 loc in locs)
             {
-                ShortRangeTruckingSpawns spawn = new ShortRangeTruckingSpawns(loc, rots[count], false);
+                SpawnInfo spawn = new SpawnInfo(loc, rots[count]);
                 spawns.Add(spawn);
                 count++;
             }
@@ -188,10 +101,10 @@ namespace Essence.classes.jobs
             // Mission Framework
             Objective objective;
             // Queue System
-            ShortRangeTruckingSpawns openSpot = null;
+            SpawnInfo openSpot = null;
             while (openSpot == null)
             {
-                foreach (ShortRangeTruckingSpawns spawn in spawns)
+                foreach (SpawnInfo spawn in spawns)
                 {
                     if (!spawn.Occupied)
                     {

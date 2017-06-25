@@ -113,12 +113,7 @@ namespace Essence.classes
     {
         private List<NetHandle> objectiveTargets;
         private List<NetHandle> objectiveVehicles;
-        //private Dictionary<Vector3, int> objectiveProgression;
-        //private Dictionary<Vector3, ObjectiveTypes> objectives;
-
         private List<ObjectiveInfo> objectives;
-
-
         private int objectiveCount;
         private int objectivesComplete;
         private bool checkingObjective;
@@ -152,10 +147,8 @@ namespace Essence.classes
             pauseState = false;
             objectiveTargets = new List<NetHandle>();
             objectiveVehicles = new List<NetHandle>();
-            //objectiveProgression = new Dictionary<Vector3, int>();
             objectiveCooldown = DateTime.UtcNow;
             objectives = new List<ObjectiveInfo>();
-            //objectives = new Dictionary<Vector3, ObjectiveTypes>();
         }
 
         /**
@@ -175,12 +168,14 @@ namespace Essence.classes
             }
         }
 
+        // Returns a list of all the ObjectiveInfo in the master objective.
         public List<ObjectiveInfo> Objectives {
             get {
                 return objectives;
             }
         }
 
+        // Forceably removes an objective from the mission.
         public void forceRemoveObjective(ObjectiveInfo obj, Mission mission)
         {
             if (objectives.Contains(obj))
@@ -199,6 +194,7 @@ namespace Essence.classes
             mission.goToNextObjective();
         }
 
+        // Used to add an objective based vehicle. Not owned by the player.
         public NetHandle addObjectiveVehicle(Mission instance, Vector3 location, VehicleHash type, Vector3 rotation = null, int uniqueID = -1)
         {
             if (rotation == null)
@@ -219,6 +215,14 @@ namespace Essence.classes
             
         }
 
+        // Used to add a unique ID to a vehicle. Owned by the player.
+        public void addPlayerVehicle(Mission instance, NetHandle vehicle, int uniqueID)
+        {
+            API.setEntityData(vehicle, "Mission", instance);
+            API.setEntityData(vehicle, "Mission_UID", uniqueID);
+        }
+
+        // Used to add a unique ID to all objectives in the master objective. This is important for vehicle based missions.
         public void addUniqueIDToAllObjectives(int id)
         {
             foreach (ObjectiveInfo obj in objectives)
@@ -227,6 +231,7 @@ namespace Essence.classes
             }
         }
 
+        // Syncs all current objective information to a player.
         public void syncObjectiveToPlayer(Client player)
         {
             Mission instance = API.getEntityData(player, "Mission");
@@ -258,12 +263,14 @@ namespace Essence.classes
             API.triggerClientEvent(player, "Mission_Head_Notification", "~o~New Objective", "NewObjective");
         }
 
+        // Updates olbjective progression for a player.
         private void updateObjectiveProgression(Client player, Vector3 location, int progression)
         {
             Mission mission = API.getEntityData(player, "Mission");
             mission.updateObjectiveProgressionForAll(location, progression);
         }
 
+        // Verifies if an objective is complete.
         public void verifyObjective(Client player)
         {
             // Just to prevent an error from occuring where too many requests get sent. */
@@ -435,18 +442,10 @@ namespace Essence.classes
         {
             if (player.position.DistanceTo(objInfo.Location) <= 8)
             {
-                if (!API.hasEntityData(player, "Mission_Cooldown_Check"))
-                {
-                    API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
-                }
-
-                DateTime lastCheck = API.getEntityData(player, "Mission_Cooldown_Check");
-                DateTime now = DateTime.Now;
-                if (now < lastCheck)
+                if (!isCoolDownOver(player))
                 {
                     return;
                 }
-                API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
                 objInfo.Progress += 5;
                 updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
                 if (objInfo.Progress > 100)
@@ -463,13 +462,10 @@ namespace Essence.classes
                 return;
             }
 
-            double sinceWhen = objectiveCooldown.TimeOfDay.TotalMilliseconds;
-            double timeNow = DateTime.UtcNow.TimeOfDay.TotalMilliseconds;
-            if (sinceWhen + 100 > timeNow)
+            if (!isCoolDownOver(player))
             {
                 return;
             }
-            objectiveCooldown = DateTime.UtcNow;
             objInfo.Progress += 5;
             updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
             if (objInfo.Progress > 100)
@@ -499,17 +495,10 @@ namespace Essence.classes
 
             if (player.position.DistanceTo(objInfo.Location) <= 8)
             {
-                if (!API.hasEntityData(player, "Mission_Cooldown_Check"))
-                {
-                    API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
-                }
-                DateTime lastCheck = API.getEntityData(player, "Mission_Cooldown_Check");
-                DateTime now = DateTime.Now;
-                if (now < lastCheck)
+                if (!isCoolDownOver(player))
                 {
                     return;
                 }
-                API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
                 objInfo.Progress += 5;
                 updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
                 if (objInfo.Progress > 100)
@@ -535,6 +524,24 @@ namespace Essence.classes
             {
                 return objectivesComplete;
             }
+        }
+
+        /** Used to check, and set player objective cooldowns. */
+        private bool isCoolDownOver(Client player)
+        {
+            if (!API.hasEntityData(player, "Mission_Cooldown_Check"))
+            {
+                API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
+            }
+
+            DateTime lastCheck = API.getEntityData(player, "Mission_Cooldown_Check");
+            DateTime now = DateTime.Now;
+            if (now < lastCheck)
+            {
+                return false;
+            }
+            API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
+            return true;
         }
     }
 }

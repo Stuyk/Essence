@@ -10,95 +10,6 @@ using System.Threading.Tasks;
 
 namespace Essence.classes.jobs
 {
-    public class LongRangeTruckingSpawns : Script
-    {
-        private Client player;
-        private Vector3 position;
-        private Vector3 rotation;
-        private bool occupied;
-
-        public LongRangeTruckingSpawns() { }
-
-        public LongRangeTruckingSpawns(Vector3 pos, Vector3 rot, bool occ)
-        {
-            position = pos;
-            rotation = rot;
-            occupied = occ;
-            player = null;
-        }
-
-        public bool Occupied
-        {
-            set
-            {
-                occupied = value;
-            }
-            get
-            {
-                return occupied;
-            }
-        }
-
-        public Client Vehicle
-        {
-            set
-            {
-                player = value;
-            }
-            get
-            {
-                return player;
-            }
-        }
-
-        public Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-        }
-
-        public Vector3 Rotation
-        {
-            get
-            {
-                return rotation;
-            }
-        }
-
-        public void checkOccupied()
-        {
-            if (player == null)
-            {
-                return;
-            }
-
-            if (!API.hasEntityData(player, "Mission"))
-            {
-                Occupied = false;
-                player = null;
-                API.consoleOutput("Opened a spawn for Long Range Trucking.");
-                return;
-            }
-
-
-            if (player.isInVehicle)
-            {
-                if (API.getEntityPosition(player.vehicle).DistanceTo(position) > 20)
-                {
-                    if (API.hasEntityData(player, "Mission"))
-                    {
-                        Occupied = false;
-                        player = null;
-                        API.consoleOutput("Opened a spawn for Long Range Trucking.");
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
     public class LongRangeTrucking : Script
     {
         private Vector3 startPoint = new Vector3(-1124.136, -2164.126, 12.39399);
@@ -108,7 +19,7 @@ namespace Essence.classes.jobs
         private Vector3 midPoint = new Vector3(-2737.794, 2248.115, 20.26052);
         private Vector3 endPoint = new Vector3(-1097.77, -2216.578, 12.32819);
         private List<Vector3> locations = new List<Vector3>();
-        private List<LongRangeTruckingSpawns> spawns = new List<LongRangeTruckingSpawns>();
+        private List<SpawnInfo> spawns = new List<SpawnInfo>();
         private const int reward = 125;
 
         private DateTime lastTimeCheck = DateTime.Now;
@@ -132,7 +43,7 @@ namespace Essence.classes.jobs
             if (DateTime.Now > lastTimeCheck)
             {
                 lastTimeCheck = DateTime.Now.AddMilliseconds(10000);
-                foreach (LongRangeTruckingSpawns spawn in spawns)
+                foreach (SpawnInfo spawn in spawns)
                 {
                     spawn.checkOccupied();
                 }
@@ -193,7 +104,7 @@ namespace Essence.classes.jobs
 
             foreach (Vector3 loc in locs)
             {
-                LongRangeTruckingSpawns spawn = new LongRangeTruckingSpawns(loc, rots[count], false);
+                SpawnInfo spawn = new SpawnInfo(loc, rots[count]);
                 spawns.Add(spawn);
                 count++;
             }
@@ -242,10 +153,10 @@ namespace Essence.classes.jobs
             Objective objective;
 
             // Try and find an open spot.
-            LongRangeTruckingSpawns openSpot = null;
+            SpawnInfo openSpot = null;
             while (openSpot == null)
             {
-                foreach (LongRangeTruckingSpawns spawn in spawns)
+                foreach (SpawnInfo spawn in spawns)
                 {
                     if (!spawn.Occupied)
                     {

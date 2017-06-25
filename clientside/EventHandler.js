@@ -28,5 +28,9 @@ API.onServerEventTrigger.connect((eventName, args) => {
         case "RetrieveDoor":
             resource.Doors.retrieveDoor(args[0], args[1]);
             return;
+        // Used by PointHelper / PointHelper Manager
+        case "Add_New_Point":
+            // Point Add Info
+            return;
     }
 });
