@@ -24,6 +24,9 @@ API.onUpdate.connect(() => {
     }
 });
 function checkAllDoors() {
+    if (doors.length <= 0) {
+        return;
+    }
     var pos = API.getEntityPosition(API.getLocalPlayer());
     for (var i = 0; i < doors.length; i++) {
         if (doors[i].Position.DistanceTo(pos) <= 20) {

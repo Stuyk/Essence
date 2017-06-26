@@ -23,7 +23,7 @@ namespace Essence.classes.jobs
 
         public ShortRangeTrucking()
         {
-            PointHelper.addNewPoint(3, 477, startPoint, "Short Range Trucking ~n~[E]", true, "JOB_SHORT_RANGE_TRUCKING");
+            PointHelper.addNewPoint(3, 477, startPoint, "Short Range Trucking", true, "JOB_SHORT_RANGE_TRUCKING");
             loadLocations();
             loadSpawns();
             API.onUpdate += API_onUpdate;
@@ -73,14 +73,22 @@ namespace Essence.classes.jobs
                 return;
             }
 
+            Mission mission;
+
             if (API.hasEntityData(player, "Mission"))
             {
-                API.sendChatMessageToPlayer(player, "~r~You're already in a party, ~w~/leaveparty ~r~if you want to abandon your allies.");
-                return;
+                mission = API.getEntityData(player, "Mission");
+                if (mission.MissionObjectiveCount > 0)
+                {
+                    API.sendChatMessageToPlayer(player, "~r~You seem to already have a mission running.");
+                    return;
+                }
+            } else {
+                mission = new Mission();
             }
 
             // Basic Setup.
-            Mission mission = new Mission();
+            
             mission.useTimer();
             mission.MissionTime = 60 * 5;
             mission.MissionReward = reward;
@@ -115,13 +123,13 @@ namespace Essence.classes.jobs
             // Setup a unique ID for the vehicle.
             int unID = new Random().Next(1, 50000);
             // Set Our Start Location
-            objective = mission.CreateNewObjective(openSpot.Position, Objective.ObjectiveTypes.VehicleLocation);
-            // Add Our Random Mission Vehicle
+            objective = mission.CreateNewObjective(openSpot.Position, Objective.ObjectiveTypes.RetrieveVehicle);
             objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Youga2, rotation: openSpot.Rotation, uniqueID: unID);
-            // Set into vehicle.
-            objective.setupObjective(new Vector3(), Objective.ObjectiveTypes.SetIntoVehicle);
             // Add the unique id.
             objective.addUniqueIDToAllObjectives(unID);
+            // Setup pickup Objective.
+            NetHandle newObject = API.createObject(-719727517, new Vector3(-1321.264, -253.4067, 41.13453), new Vector3());
+            objective.setupObjective(new Vector3(-1321.264, -253.4067, 41.13453), Objective.ObjectiveTypes.PickupObject, obj: newObject);
             // Mid Point
             objective = mission.CreateNewObjective(midPoint, Objective.ObjectiveTypes.VehicleLocation);
             objective.addUniqueIDToAllObjectives(unID);

@@ -1,4 +1,5 @@
 ﻿var list: BlipTextPoint[] = new Array<BlipTextPoint>();
+var keyboardPath = "clientside/images/keyboard_e.png";
 
 class BlipTextPoint {
     private position: Vector3;
@@ -28,7 +29,8 @@ class BlipTextPoint {
         }
 
         var point = Point.Round(API.worldToScreenMantainRatio(this.position.Add(new Vector3(0, 0, 2))));
-        API.drawText(this.text, point.X, point.Y - 20, 0.5, 255, 255, 255, 150, 4, 1, true, true, 600);
+        API.drawText(this.text, point.X, point.Y - 20, 0.5, 255, 255, 255, 255, 4, 1, true, true, 600);
+        API.dxDrawTexture(keyboardPath, new Point(point.X - 25, point.Y + 40), new Size(50, 50), 0, 255, 255, 255, 255);
     }
 
     get Position(): Vector3 {

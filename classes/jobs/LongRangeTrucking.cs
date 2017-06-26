@@ -26,7 +26,7 @@ namespace Essence.classes.jobs
 
         public LongRangeTrucking()
         {
-            PointHelper.addNewPoint(3, 477, startPoint, "Long Range Trucking ~n~[E]", true, "JOB_LONG_RANGE_TRUCKING");
+            PointHelper.addNewPoint(3, 477, startPoint, "Long Range Trucking", true, "JOB_LONG_RANGE_TRUCKING");
             loadLocations();
             loadSpawns();
             API.onUpdate += API_onUpdate;

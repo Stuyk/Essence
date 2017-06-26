@@ -157,6 +157,14 @@ namespace Essence.classes
             }
         }
 
+        public int MissionObjectiveCount
+        {
+            get
+            {
+                return objectives.Count;
+            }
+        }
+
         /** Add a player to the mission. */
         public void addPlayer(Client player)
         {
@@ -208,6 +216,7 @@ namespace Essence.classes
 
             API.triggerClientEvent(player, "Mission_Abandon");
             API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Abandoned the Party", "Fail");
+            API.setEntitySyncedData(player, "Mission_Timer", -1);
 
             setupTeamSync();
 
@@ -220,11 +229,10 @@ namespace Essence.classes
                     foreach (Objective objective in objectives)
                     {
                         forceRemoveVehicles();
+                        objective.removeAllAttachedObjects();
                     }
                 }
-
-                timer.Stop();
-                timer.Dispose();
+                timer.Enabled = false;
             }
 
 
@@ -322,7 +330,7 @@ namespace Essence.classes
             {
                 API.setEntitySyncedData(player, "Mission_Timer", -1);
                 API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Awarded: ~w~$" + MissionReward, "Finish");
-
+                API.triggerClientEvent(player, "Play_Screen_FX", "SuccessNeutral", 5000, false);
                 Player instance = API.getEntityData(player, "Instance");
                 instance.Money += MissionReward;
             }

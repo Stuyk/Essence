@@ -19,7 +19,7 @@ namespace Essence.classes
         public AtmInfo(Vector3 loc)
         {
             location = loc;
-            PointHelper.addNewPoint(2, 431, loc, "ATM ~n~[E]", true, "SHOP_ATM");
+            PointHelper.addNewPoint(2, 431, loc, "ATM", true, "SHOP_ATM");
         }
 
         public Vector3 Location

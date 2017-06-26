@@ -1,10 +1,10 @@
 "use strict";
 var actionCooldown = Date.now() + 3000;
-API.onUpdate.connect(() => {
+API.onKeyDown.connect((sender, e) => {
     if (API.isChatOpen()) {
         return;
     }
-    if (API.isControlJustPressed(86 /* VehicleHorn */)) {
+    if (e.KeyCode === Keys.E) {
         if (Date.now() < actionCooldown) {
             return;
         }

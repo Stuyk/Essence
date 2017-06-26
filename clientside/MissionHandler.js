@@ -9,7 +9,7 @@ var deathPause = false;
 var backgroundRGBA = [0, 0, 0, 100];
 var textRGBA = [255, 255, 255, 255];
 var overlayRGBA = [1, 87, 155, 255];
-var markerRGBA = [1, 87, 155, 175];
+var markerRGBA = [175, 228, 238, 150];
 var blipColor = 77;
 // Time Check
 var timeSinceLastCheck = new Date().getTime();
@@ -146,6 +146,12 @@ function setupMarkers() {
             case "VehicleLocation":
                 newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
+            case "PickupObject":
+                newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 1)), new Vector3(), new Vector3(0, 180, 0), new Vector3(0.5, 0.5, 0.5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                break;
+            case "RetrieveVehicle":
+                newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                break;
             default:
                 return;
         }
@@ -188,6 +194,14 @@ function setupBlips() {
                 break;
             case "VehicleLocation":
                 API.setBlipSprite(newBlip, 162);
+                API.setBlipColor(newBlip, blipColor);
+                break;
+            case "PickupObject":
+                API.setBlipSprite(newBlip, 367);
+                API.setBlipColor(newBlip, blipColor);
+                break;
+            case "RetrieveVehicle":
+                API.setBlipSprite(newBlip, 225);
                 API.setBlipColor(newBlip, blipColor);
                 break;
         }
@@ -410,7 +424,7 @@ function missionObjectives() {
     var pos = API.getEntityPosition(API.getLocalPlayer());
     var obj = null;
     for (var i = 0; i < objectives.length; i++) {
-        if (pos.DistanceTo(objectives[i].Location) <= 12) {
+        if (pos.DistanceTo(objectives[i].Location) <= 15) {
             obj = objectives[i];
             break;
         }
@@ -440,6 +454,12 @@ function missionObjectives() {
             break;
         case "VehicleLocation":
             objectiveVehicleLocation();
+            break;
+        case "PickupObject":
+            objectivePickupObject();
+            break;
+        case "RetrieveVehicle":
+            objectiveRetrieveVehicle();
             break;
     }
 }
@@ -488,53 +508,74 @@ function updateTeamVariable() {
 //// OBJECTIVE TYPES
 /** This is a point to point location objective type. */
 function objectiveLocation() {
-    for (var i = 0; i < objectives.length; i++) {
-        var playerPos = API.getEntityPosition(API.getLocalPlayer());
-        if (playerPos.DistanceTo(objectives[i].Location) <= 3) {
-            API.triggerServerEvent("checkObjective");
-        }
+    if (confirmPlayerIsNear(5)) {
+        API.triggerServerEvent("checkObjective");
     }
 }
 function objectiveTeleport() {
     API.triggerServerEvent("checkObjective");
 }
 function objectiveCapture() {
-    for (var i = 0; i < objectives.length; i++) {
-        if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(objectives[i].Location) <= 5) {
-            API.triggerServerEvent("checkObjective");
-        }
+    if (confirmPlayerIsNear(5)) {
+        API.triggerServerEvent("checkObjective");
     }
 }
 function objectiveVehicleCapture() {
     if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
         return;
     }
-    for (var i = 0; i < objectives.length; i++) {
-        if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(objectives[i].Location) <= 5) {
-            API.triggerServerEvent("checkObjective");
-        }
+    if (confirmPlayerIsNear(5)) {
+        API.triggerServerEvent("checkObjective");
     }
 }
 function objectiveVehicleLocation() {
     if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
         return;
     }
-    for (var i = 0; i < objectives.length; i++) {
-        var playerPos = API.getEntityPosition(API.getLocalPlayer());
-        if (playerPos.DistanceTo(objectives[i].Location) <= 3) {
-            API.triggerServerEvent("checkObjective");
-        }
+    if (confirmPlayerIsNear(5)) {
+        API.triggerServerEvent("checkObjective");
     }
 }
 function objectiveDestroy() {
     if (!API.isPlayerShooting(API.getLocalPlayer())) {
         return;
     }
-    for (var i = 0; i < objectives.length; i++) {
-        if (API.getPlayerAimCoords(API.getLocalPlayer()).DistanceTo(objectives[i].Location) <= 0.5) {
-            if (API.isPlayerShooting(API.getLocalPlayer())) {
-                API.triggerServerEvent("checkObjective");
-            }
+    if (confirmPlayerAimIsNear(0.5)) {
+        if (API.isPlayerShooting(API.getLocalPlayer())) {
+            API.triggerServerEvent("checkObjective");
         }
     }
+}
+function objectivePickupObject() {
+    if (API.isControlJustPressed(51 /* Context */)) {
+        if (confirmPlayerIsNear(3)) {
+            API.triggerServerEvent("checkObjective");
+        }
+    }
+}
+function objectiveRetrieveVehicle() {
+    if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
+        return;
+    }
+    if (confirmPlayerIsNear(5)) {
+        API.triggerServerEvent("checkObjective");
+    }
+}
+// Utility Functions used by objectives.
+function confirmPlayerIsNear(distanceToCheck) {
+    var playerPos = API.getEntityPosition(API.getLocalPlayer());
+    for (var i = 0; i < objectives.length; i++) {
+        if (playerPos.DistanceTo(objectives[i].Location) <= distanceToCheck) {
+            return true;
+        }
+    }
+    return false;
+}
+function confirmPlayerAimIsNear(distanceToCheck) {
+    for (var i = 0; i < objectives.length; i++) {
+        if (API.getPlayerAimCoords(API.getLocalPlayer()).DistanceTo(objectives[i].Location) <= distanceToCheck) {
+            return true;
+        }
+    }
+    return false;
 }

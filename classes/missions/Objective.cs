@@ -18,6 +18,7 @@ namespace Essence.classes
         private bool completed;
         private Vector3 nullVector = new Vector3(0, 0, 0);
         private int uniqueID;
+        private NetHandle attachedObject;
 
         // What to assign to this class when it's created as a new instance.
         public ObjectiveInfo()
@@ -79,6 +80,10 @@ namespace Essence.classes
             set
             {
                 completed = value;
+                if (value == true)
+                {
+                    removeAttachedObject();
+                }
             }
         }
 
@@ -107,6 +112,19 @@ namespace Essence.classes
                 uniqueID = value;   
             }
         }
+
+        public void addObject(NetHandle obj)
+        {
+            attachedObject = obj;
+        }
+
+        public void removeAttachedObject()
+        {
+            if (attachedObject != null)
+            {
+                API.deleteEntity(attachedObject);
+            }
+        }
     }
 
     public class Objective : Script
@@ -120,6 +138,16 @@ namespace Essence.classes
         private bool pauseState;
         private DateTime objectiveCooldown;
 
+        [Flags]
+        public enum AnimationFlags
+        {
+            Loop = 1 << 0,
+            StopOnLastFrame = 1 << 1,
+            OnlyAnimateUpperBody = 1 << 4,
+            AllowPlayerControl = 1 << 5,
+            Cancellable = 1 << 7
+        }
+
         public enum ObjectiveTypes
         {
             Location,
@@ -129,6 +157,8 @@ namespace Essence.classes
             SetIntoVehicle,
             VehicleCapture,
             VehicleLocation,
+            PickupObject,
+            RetrieveVehicle,
             None
         }
 
@@ -154,7 +184,7 @@ namespace Essence.classes
         /**
          * Setup a new objective.
          * */
-        public void setupObjective(Vector3 location, ObjectiveTypes type, Vector3 direction = null)
+        public void setupObjective(Vector3 location, ObjectiveTypes type, Vector3 direction = null, NetHandle obj = new NetHandle())
         {
             ObjectiveInfo objInfo = new ObjectiveInfo();
             objInfo.Location = location;
@@ -165,6 +195,11 @@ namespace Essence.classes
             if (direction != null)
             {
                 objInfo.Direction = direction;
+            }
+
+            if (obj != null)
+            {
+                objInfo.addObject(obj);
             }
         }
 
@@ -231,6 +266,14 @@ namespace Essence.classes
             }
         }
 
+        public void removeAllAttachedObjects()
+        {
+            foreach (ObjectiveInfo obj in objectives)
+            {
+                obj.removeAttachedObject();
+            }
+        }
+
         // Syncs all current objective information to a player.
         public void syncObjectiveToPlayer(Client player)
         {
@@ -292,6 +335,7 @@ namespace Essence.classes
                 }
                 else
                 {
+                    // Capture / Location for On-Foot
                     if (objInfo.Type == ObjectiveTypes.Location || objInfo.Type == ObjectiveTypes.Capture)
                     {
                         if (player.position.DistanceTo(objInfo.Location) <= 5)
@@ -301,6 +345,7 @@ namespace Essence.classes
                         }
                     }
 
+                    // Capture / Location for In-Vehicle
                     if (objInfo.Type == ObjectiveTypes.VehicleCapture || objInfo.Type == ObjectiveTypes.VehicleLocation)
                     {
                         if (!player.isInVehicle)
@@ -314,7 +359,8 @@ namespace Essence.classes
                             break;
                         }
                     }
-
+                    
+                    // Destroy Objective.
                     if (objInfo.Type == ObjectiveTypes.Destroy)
                     {
                         if (player.position.DistanceTo(objInfo.Location) >= 20)
@@ -326,6 +372,30 @@ namespace Essence.classes
                         {
                             closestObjective = objInfo;
                             break;
+                        }
+                    }
+
+                    // Pickup Objective
+                    if (objInfo.Type == ObjectiveTypes.PickupObject)
+                    {
+                        if (player.position.DistanceTo(objInfo.Location) >= 10)
+                        {
+                            continue;
+                        }
+
+                        if (player.position.DistanceTo(objInfo.Location) <= 2)
+                        {
+                            closestObjective = objInfo;
+                            break;
+                        }
+                    }
+                    
+                    // Retrieve Vehicle
+                    if (objInfo.Type == ObjectiveTypes.RetrieveVehicle)
+                    {
+                        if (player.isInVehicle)
+                        {
+                            closestObjective = objInfo;
                         }
                     }
                 }
@@ -391,6 +461,12 @@ namespace Essence.classes
                     return;
                 case ObjectiveTypes.VehicleLocation:
                     objectiveVehicleLocation(player, objInfo);
+                    return;
+                case ObjectiveTypes.PickupObject:
+                    objectivePickupObject(player, objInfo);
+                    return;
+                case ObjectiveTypes.RetrieveVehicle:
+                    objectiveRetrieveVehicle(player, objInfo);
                     return;
             }
         }
@@ -474,6 +550,24 @@ namespace Essence.classes
             }
         }
 
+        private void objectivePickupObject(Client player, ObjectiveInfo objInfo)
+        {
+            if (player.isInVehicle)
+            {
+                return;
+            }
+
+            if (player.position.DistanceTo(objInfo.Location) <= 3)
+            {
+                objInfo.Status = true;
+                API.playPlayerAnimation(player, (int)(AnimationFlags.StopOnLastFrame), "pickup_object", "pickup_low");
+                API.delay(1500, true, () =>
+                {
+                    API.stopPlayerAnimation(player);
+                });
+            }
+        }
+
         private void objectiveVehicleCapture(Client player, ObjectiveInfo objInfo)
         {
             if (!player.isInVehicle)
@@ -506,6 +600,28 @@ namespace Essence.classes
                     objInfo.Status = true;
                 }
             }
+        }
+
+        private void objectiveRetrieveVehicle(Client player, ObjectiveInfo objInfo)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle vehicle = API.getPlayerVehicle(player);
+
+            if (!API.hasEntityData(vehicle, "Mission_UID"))
+            {
+                return;
+            }
+
+            if (API.getEntityData(vehicle, "Mission_UID") != objInfo.UniqueVehicleID)
+            {
+                return;
+            }
+
+            objInfo.Status = true;
         }
 
         /** Get the total objective count. */

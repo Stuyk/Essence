@@ -29,5 +29,8 @@
         case "Add_New_Point":
             resource.PointHelper.addNewPoint(args[0], args[1], args[2], args[3], args[4], args[5]);
             return;
+        case "Play_Screen_FX":
+            resource.ScreenFX.playScreenFX(args[0], args[1], args[2]);
+            return;
     }
 });

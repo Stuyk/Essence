@@ -50,7 +50,7 @@ function drawZone() {
 }
 function drawTimer() {
     if (timeLeft >= 0) {
-        API.drawText(`${Math.round(timeLeft)}`, screenX / 2, 50, 0.5, 255, 255, 255, 255, 7, 0, false, true, 800);
+        API.drawText(`Mission Time: ~n~${Math.round(timeLeft)}`, screenX / 2, 30, 0.5, 255, 0, 0, 255, 7, 1, false, true, 800);
     }
 }
 /**
