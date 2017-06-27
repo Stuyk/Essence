@@ -26,6 +26,19 @@ namespace Essence.classes.utility
             return list;
         }
 
+        public static List<string> pullTypesFromFile(string path)
+        {
+            string[] lines = File.ReadAllLines(path);
+            List<string> list = new List<string>();
+
+            foreach (string line in lines)
+            {
+                list.Add(line);
+            }
+
+            return list;
+        }
+
         public static SpawnInfo findOpenSpawn(List<SpawnInfo> spawns, Mission missionInstance)
         {
             foreach (SpawnInfo spawn in spawns)

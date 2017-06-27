@@ -126,9 +126,5 @@ namespace Essence.classes
             mission.addPlayer(player);
             API.triggerClientEvent(player, "Mission_Head_Notification", "New Party Created", "NewObjective");
         }
-        
-        
-        
-        
     }
 }

@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.missions;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -9,171 +10,16 @@ using System.Threading.Tasks;
 
 namespace Essence.classes
 {
-    public class ObjectiveInfo : Script
-    {
-        private int progress;
-        private Vector3 location;
-        private Vector3 direction;
-        private Objective.ObjectiveTypes type;
-        private bool completed;
-        private Vector3 nullVector = new Vector3(0, 0, 0);
-        private int uniqueID;
-        private NetHandle attachedObject;
-
-        /// <summary>
-        /// Generate a new ObjectiveInfo and assign your information for the objective. Default Progress: 0, Completed: False, UniqueID is -1, No attached objects.
-        /// </summary>
-        public ObjectiveInfo()
-        {
-            progress = 0;
-            location = new Vector3();
-            direction = new Vector3();
-            type = Objective.ObjectiveTypes.None;
-            completed = false;
-            uniqueID = -1;
-        }
-
-        /// <summary>
-        /// Set the current progress of this objective. Always set this to zero.
-        /// </summary>
-        public int Progress
-        {
-            get
-            {
-                return progress;
-            }
-            set
-            {
-                progress = value;
-            }
-        }
-
-        /// <summary>
-        /// Set the location of this objective. This is 100% required to make an objective function properly.
-        /// </summary>
-        public Vector3 Location
-        {
-            get
-            {
-                return location;
-            }
-            set
-            {
-                location = value;
-            }
-        }
-
-        /// <summary>
-        /// Set the type of objective this should be.
-        /// </summary>
-        public Objective.ObjectiveTypes Type
-        {
-            get
-            {
-                return type;
-            }
-            set
-            {
-                type = value;
-            }
-        }
-
-        /// <summary>
-        /// Set the current completion status of this objective. If it's true, it'll remove itself. Don't set it to true. God dammit.
-        /// </summary>
-        public bool Status
-        {
-            get
-            {
-                return completed;
-            }
-            set
-            {
-                completed = value;
-                if (value == true)
-                {
-                    removeAttachedObject();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Used to set a direction the marker should face.
-        /// </summary>
-        public Vector3 Direction
-        {
-            get
-            {
-                return direction;
-            }
-            set
-            {
-                direction = value;
-            }
-        }
-
-        /// <summary>
-        /// A unique ID assigned to a vehicle that is required for this objective. Only effective if using VehicleLocation or VehicleCapture.
-        /// </summary>
-        public int UniqueVehicleID
-        {
-            get
-            {
-                return uniqueID;
-            }
-            set
-            {
-                uniqueID = value;   
-            }
-        }
-
-        /// <summary>
-        /// Add an object that will be removed from this objective once complete. Mostly for visual queue's.
-        /// </summary>
-        public NetHandle AddObject
-        {
-            set
-            {
-                attachedObject = value;
-            }
-            get
-            {
-                return attachedObject;
-            }
-        }
-
-        /// <summary>
-        /// Remove an attached object from this ObjectiveInfo.
-        /// </summary>
-        public void removeAttachedObject()
-        {
-            if (attachedObject != null)
-            {
-                API.deleteEntity(attachedObject);
-            }
-        }
-    }
-
     public class Objective : Script
     {
         private List<NetHandle> objectiveTargets;
         private List<NetHandle> objectiveVehicles;
         private List<ObjectiveInfo> objectives;
+        private List<ObjectiveInfo> removeableObjectives;
         private int objectiveCount;
         private int objectivesComplete;
-        private bool checkingObjective;
-        private bool pauseState;
         private DateTime objectiveCooldown;
-
-        [Flags]
-        public enum AnimationFlags
-        {
-            Loop = 1 << 0,
-            StopOnLastFrame = 1 << 1,
-            OnlyAnimateUpperBody = 1 << 4,
-            AllowPlayerControl = 1 << 5,
-            Cancellable = 1 << 7
-        }
+        private Mission mission;
 
         public enum ObjectiveTypes
         {
@@ -186,6 +32,9 @@ namespace Essence.classes
             VehicleLocation,
             PickupObject,
             RetrieveVehicle,
+            KillPlayer,
+            UnlockVehicles,
+            BreakIntoVehicle,
             None
         }
 
@@ -200,12 +49,26 @@ namespace Essence.classes
         {
             objectiveCount = 0;
             objectivesComplete = 0;
-            checkingObjective = false;
-            pauseState = false;
             objectiveTargets = new List<NetHandle>();
             objectiveVehicles = new List<NetHandle>();
             objectiveCooldown = DateTime.UtcNow;
             objectives = new List<ObjectiveInfo>();
+            removeableObjectives = new List<ObjectiveInfo>();
+        }
+
+        /// <summary>
+        /// Assigned on emptyObjective creation.
+        /// </summary>
+        public Mission MissionInstance
+        {
+            set
+            {
+                mission = value;
+            }
+            get
+            {
+                return mission;
+            }
         }
 
         /// <summary>
@@ -215,6 +78,7 @@ namespace Essence.classes
         public ObjectiveInfo addEmptyObjectiveInfo()
         {
             ObjectiveInfo objInfo = new ObjectiveInfo();
+            objInfo.MissionInstance = mission;
             objectives.Add(objInfo);
             return objInfo;
         }
@@ -303,20 +167,71 @@ namespace Essence.classes
         }
 
         /// <summary>
+        /// Queue an objective to be removed.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void queueMinorObjectiveForRemoval(ObjectiveInfo obj)
+        {
+            if (removeableObjectives.Contains(obj))
+            {
+                return;
+            }
+
+            removeableObjectives.Add(obj);
+        }
+
+        /// <summary>
+        /// Used to remove a single Objective from the Major Objective.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void removeMinorObjective(ObjectiveInfo obj)
+        {
+            if (objectives.Contains(obj))
+            {
+                mission.removeObjectiveForAll(obj.Location);
+                objectives.Remove(obj);
+            }
+        }
+
+        /// <summary>
+        /// Used to remove all minor objectives from the major objective that are complete.
+        /// </summary>
+        private void removeQueuedObjectives()
+        {
+            foreach (ObjectiveInfo obj in removeableObjectives)
+            {
+                removeMinorObjective(obj);
+            }
+            removeableObjectives = new List<ObjectiveInfo>();
+        }
+
+        /// <summary>
         /// Syncs all objective into to a player.
         /// </summary>
         /// <param name="player"></param>
         public void syncObjectiveToPlayer(Client player)
         {
-            Mission instance = API.getEntityData(player, "Mission");
-
             List<ObjectiveInfo> removeables = new List<ObjectiveInfo>();
 
             foreach (ObjectiveInfo objInfo in objectives)
             {
                 if (objInfo.Type == ObjectiveTypes.SetIntoVehicle)
                 {
-                    instance.setPlayersIntoVehicles();
+                    mission.setPlayersIntoVehicles();
+                    removeables.Add(objInfo);
+                    continue;
+                }
+
+                if (objInfo.Type == ObjectiveTypes.Teleport)
+                {
+                    mission.teleportAllPlayers(objInfo.Location);
+                    removeables.Add(objInfo);
+                    continue;
+                }
+
+                if (objInfo.Type == ObjectiveTypes.UnlockVehicles)
+                {
+                    mission.unlockAllVehicles();
                     removeables.Add(objInfo);
                     continue;
                 }
@@ -338,18 +253,6 @@ namespace Essence.classes
         }
 
         /// <summary>
-        /// Updates the objective progression for a player.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="location"></param>
-        /// <param name="progression"></param>
-        private void updateObjectiveProgression(Client player, Vector3 location, int progression)
-        {
-            Mission mission = API.getEntityData(player, "Mission");
-            mission.updateObjectiveProgressionForAll(location, progression);
-        }
-
-        /// <summary>
         /// Checks if the objective is complete. Primary method to determine if a minor objective is completed or not.
         /// </summary>
         /// <param name="player"></param>
@@ -361,107 +264,16 @@ namespace Essence.classes
                 return;
             }
 
-            Mission mission = API.getEntityData(player, "Mission");
-
-            // Get the closest objective to the player.
-            ObjectiveInfo closestObjective = null;
             foreach (ObjectiveInfo objInfo in objectives)
             {
-                if (objInfo.Type == ObjectiveTypes.Teleport)
+                objInfo.attemptToVerify(player);
+                if (objInfo.Status)
                 {
-                    closestObjective = objInfo;
-                    break;
-                }
-                else
-                {
-                    // Capture / Location for On-Foot
-                    if (objInfo.Type == ObjectiveTypes.Location || objInfo.Type == ObjectiveTypes.Capture)
-                    {
-                        if (player.position.DistanceTo(objInfo.Location) <= 5)
-                        {
-                            closestObjective = objInfo;
-                            break;
-                        }
-                    }
-
-                    // Capture / Location for In-Vehicle
-                    if (objInfo.Type == ObjectiveTypes.VehicleCapture || objInfo.Type == ObjectiveTypes.VehicleLocation)
-                    {
-                        if (!player.isInVehicle)
-                        {
-                            continue;
-                        }
-
-                        if (player.position.DistanceTo(objInfo.Location) <= 5)
-                        {
-                            closestObjective = objInfo;
-                            break;
-                        }
-                    }
-                    
-                    // Destroy Objective.
-                    if (objInfo.Type == ObjectiveTypes.Destroy)
-                    {
-                        if (player.position.DistanceTo(objInfo.Location) >= 20)
-                        {
-                            continue;
-                        }
-
-                        if (player.isAiming)
-                        {
-                            closestObjective = objInfo;
-                            break;
-                        }
-                    }
-
-                    // Pickup Objective
-                    if (objInfo.Type == ObjectiveTypes.PickupObject)
-                    {
-                        if (player.position.DistanceTo(objInfo.Location) >= 10)
-                        {
-                            continue;
-                        }
-
-                        if (player.position.DistanceTo(objInfo.Location) <= 2)
-                        {
-                            closestObjective = objInfo;
-                            break;
-                        }
-                    }
-                    
-                    // Retrieve Vehicle
-                    if (objInfo.Type == ObjectiveTypes.RetrieveVehicle)
-                    {
-                        if (player.isInVehicle)
-                        {
-                            closestObjective = objInfo;
-                        }
-                    }
+                    queueMinorObjectiveForRemoval(objInfo);
                 }
             }
 
-            // If our closestObjective doesn't seem to exist, we'll just return.
-            if (closestObjective == null)
-            {
-                return;
-            }
-
-            // Send our objective information out, and wait for it to finish or hit a dead end.
-            checkForCompletion(player, closestObjective);
-
-            // Check if our tuple returned false.
-            if (!closestObjective.Status)
-            {
-                return;
-            }
-
-            // Get the players mission instance.
-            mission.removeObjectiveForAll(closestObjective.Location);
-
-            API.triggerClientEvent(player, "Mission_Head_Notification", "~b~Minor Objective Complete", "Objective");
-
-            // Remove dead objectives.
-            objectives.Remove(closestObjective);
+            removeQueuedObjectives();
 
             mission.setupTeamSync();
 
@@ -472,234 +284,6 @@ namespace Essence.classes
             }
 
             mission.goToNextObjective();
-
-            pauseState = false;
-        }
-
-        /// <summary>
-        /// Switches through objectives and determines which one to check, and checks for completion.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void checkForCompletion(Client player, ObjectiveInfo objInfo)
-        {
-            switch (objInfo.Type)
-            {
-                case ObjectiveTypes.Location:
-                    objectiveLocation(player, objInfo);
-                    return;
-                case ObjectiveTypes.Teleport:
-                    objectiveTeleport(player, objInfo);
-                    return;
-                case ObjectiveTypes.Capture:
-                    objectiveCapture(player, objInfo);
-                    return;
-                case ObjectiveTypes.Destroy:
-                    objectiveDestroy(player, objInfo);
-                    return;
-                case ObjectiveTypes.VehicleCapture:
-                    objectiveVehicleCapture(player, objInfo);
-                    return;
-                case ObjectiveTypes.VehicleLocation:
-                    objectiveVehicleLocation(player, objInfo);
-                    return;
-                case ObjectiveTypes.PickupObject:
-                    objectivePickupObject(player, objInfo);
-                    return;
-                case ObjectiveTypes.RetrieveVehicle:
-                    objectiveRetrieveVehicle(player, objInfo);
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// Objective of type location functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectiveLocation(Client player, ObjectiveInfo objInfo)
-        {
-            if (player.position.DistanceTo(objInfo.Location) <= 5)
-            {
-                objInfo.Status = true;
-            }
-        }
-
-        /// <summary>
-        /// Objective of type Vehicle Location functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectiveVehicleLocation(Client player, ObjectiveInfo objInfo)
-        {
-            if (!player.isInVehicle)
-            {
-                return;
-            }
-
-            NetHandle vehicle = API.getPlayerVehicle(player);
-
-            if (!API.hasEntityData(vehicle, "Mission_UID"))
-            {
-                return;
-            }
-
-            if (API.getEntityData(vehicle, "Mission_UID") != objInfo.UniqueVehicleID)
-            {
-                return;
-            }
-
-            if (player.position.DistanceTo(objInfo.Location) <= 5)
-            {
-                objInfo.Status = true;
-            }
-        }
-
-        /// <summary>
-        /// Objective of type Teleport functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectiveTeleport(Client player, ObjectiveInfo objInfo)
-        {
-            Mission mission = API.getEntityData(player, "Mission");
-            mission.teleportAllPlayers(objInfo.Location);
-            objInfo.Status = true;
-        }
-
-        /// <summary>
-        /// Objective of type Capture functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectiveCapture(Client player, ObjectiveInfo objInfo)
-        {
-            if (player.position.DistanceTo(objInfo.Location) <= 8)
-            {
-                if (!isCoolDownOver(player))
-                {
-                    return;
-                }
-                objInfo.Progress += 5;
-                updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
-                if (objInfo.Progress > 100)
-                {
-                    objInfo.Status = true;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Objective of type Destruction functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectiveDestroy(Client player, ObjectiveInfo objInfo)
-        {
-            if (!player.isAiming)
-            {
-                return;
-            }
-
-            if (!isCoolDownOver(player))
-            {
-                return;
-            }
-            objInfo.Progress += 5;
-            updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
-            if (objInfo.Progress > 100)
-            {
-                objInfo.Status = true;
-            }
-        }
-
-        /// <summary>
-        /// Objective of type Pickup functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectivePickupObject(Client player, ObjectiveInfo objInfo)
-        {
-            if (player.isInVehicle)
-            {
-                return;
-            }
-
-            if (player.position.DistanceTo(objInfo.Location) <= 3)
-            {
-                objInfo.Status = true;
-                API.playPlayerAnimation(player, (int)(AnimationFlags.StopOnLastFrame), "pickup_object", "pickup_low");
-                API.delay(1500, true, () =>
-                {
-                    API.stopPlayerAnimation(player);
-                });
-            }
-        }
-
-        /// <summary>
-        /// Objective of type Vehicle Capture functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectiveVehicleCapture(Client player, ObjectiveInfo objInfo)
-        {
-            if (!player.isInVehicle)
-            {
-                return;
-            }
-
-            NetHandle vehicle = API.getPlayerVehicle(player);
-
-            if (!API.hasEntityData(vehicle, "Mission_UID"))
-            {
-                return;
-            }
-
-            if (API.getEntityData(vehicle, "Mission_UID") != objInfo.UniqueVehicleID)
-            {
-                return;
-            }
-
-            if (player.position.DistanceTo(objInfo.Location) <= 8)
-            {
-                if (!isCoolDownOver(player))
-                {
-                    return;
-                }
-                objInfo.Progress += 5;
-                updateObjectiveProgression(player, objInfo.Location, objInfo.Progress);
-                if (objInfo.Progress > 100)
-                {
-                    objInfo.Status = true;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Objective of type Retrieve Vehicle functionality.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="objInfo"></param>
-        private void objectiveRetrieveVehicle(Client player, ObjectiveInfo objInfo)
-        {
-            if (!player.isInVehicle)
-            {
-                return;
-            }
-
-            NetHandle vehicle = API.getPlayerVehicle(player);
-
-            if (!API.hasEntityData(vehicle, "Mission_UID"))
-            {
-                return;
-            }
-
-            if (API.getEntityData(vehicle, "Mission_UID") != objInfo.UniqueVehicleID)
-            {
-                return;
-            }
-
-            objInfo.Status = true;
         }
 
         /// <summary>
@@ -724,26 +308,6 @@ namespace Essence.classes
             }
         }
 
-        /// <summary>
-        /// Used to set the player cooldown so they can't spam objectives.
-        /// </summary>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        private bool isCoolDownOver(Client player)
-        {
-            if (!API.hasEntityData(player, "Mission_Cooldown_Check"))
-            {
-                API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
-            }
-
-            DateTime lastCheck = API.getEntityData(player, "Mission_Cooldown_Check");
-            DateTime now = DateTime.Now;
-            if (now < lastCheck)
-            {
-                return false;
-            }
-            API.setEntityData(player, "Mission_Cooldown_Check", DateTime.Now.AddMilliseconds(3000));
-            return true;
-        }
+        
     }
 }

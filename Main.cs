@@ -59,6 +59,39 @@ namespace Essence.classes
             API.sendChatMessageToPlayer(player, "Saved location as " + location);
         }
 
+        [Command("saveCustomPos", "~w~/savePos <filename>")]
+        public void cmdCustomSave(Client player, string filename)
+        {
+            Vector3 groundLevel = new Vector3(player.position.X, player.position.Y, player.position.Z - 1);
+            using (StreamWriter writer = new StreamWriter("resources/Essence/data/" + filename + "positions.txt", true))
+            {
+                writer.WriteLine(string.Format("{0}, {1}, {2}", groundLevel.X, groundLevel.Y, groundLevel.Z));
+            }
+
+            using (StreamWriter writer = new StreamWriter("resources/Essence/data/" + filename + "rotations.txt", true))
+            {
+                writer.WriteLine(string.Format("{0}, {1}, {2}", player.rotation.X, player.rotation.Y, player.rotation.Z));
+            }
+
+            API.sendChatMessageToPlayer(player, "Saved location as " + filename);
+        }
+        
+        [Command("chopshopTime")]
+        public void gotjsdfas(Client player)
+        {
+            API.setEntityPosition(player, new Vector3(1569.829, -2130.04, 77.33018));
+        }
+
+        [Command("tryAnimation")]
+        public void tryAnim(Client player, string dic, string target)
+        {
+            API.playPlayerAnimation(player, 0, dic, target);
+            API.delay(5000, true, () =>
+            {
+                player.stopAnimation();
+            });
+        }
+
         [Command("testnote", GreedyArg = true)]
         public void cmdTestNote(Client player, string text)
         {

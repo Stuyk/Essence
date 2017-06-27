@@ -1,4 +1,5 @@
-﻿using Essence.classes.utility;
+﻿using Essence.classes.missions;
+using Essence.classes.utility;
 using GTANetworkServer;
 using GTANetworkShared;
 using System;
@@ -95,8 +96,14 @@ namespace Essence.classes.jobs
                     API.sendChatMessageToPlayer(player, "~r~You seem to already have a mission running.");
                     return;
                 }
+                API.setEntitySyncedData(player, "Mission_New_Instance", true);
+                API.setEntityData(player, "Mission", mission);
+                mission.addPlayer(player);
             } else {
                 mission = new Mission();
+                API.setEntitySyncedData(player, "Mission_New_Instance", true);
+                API.setEntityData(player, "Mission", mission);
+                mission.addPlayer(player);
             }
 
             // Basic Setup.
@@ -104,10 +111,6 @@ namespace Essence.classes.jobs
             mission.MissionTime = 60 * 5;
             mission.MissionReward = reward;
             mission.MissionTitle = "Short Range Trucking";
-
-            API.setEntitySyncedData(player, "Mission_New_Instance", true);
-            API.setEntityData(player, "Mission", mission);
-            mission.addPlayer(player);
 
             // Queue System
             DateTime startTime = DateTime.Now;
@@ -126,9 +129,9 @@ namespace Essence.classes.jobs
             int uniqueID = new Random().Next(1, 50000);
             // == First Major Objective
             // = Create an empty objective to house information. Create an empty ObjectiveInfo Add our first objective, and associate the Vehicle ID with our objective.
-            Objective objective = mission.addEmptyObjective();
+            Objective objective = mission.addEmptyObjective(mission);
 
-            objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Youga2, rotation: openSpot.Rotation, uniqueID: uniqueID);
+            objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Comet3, rotation: openSpot.Rotation, uniqueID: uniqueID);
 
             ObjectiveInfo objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = openSpot.Position;
@@ -142,7 +145,7 @@ namespace Essence.classes.jobs
             objectiveInfo.AddObject = boxObject;
 
             // == Second Major Objective
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = midPoint;
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
@@ -150,21 +153,21 @@ namespace Essence.classes.jobs
 
             // == Third Major Objective
             int missionIndex = new Random().Next(0, locations.Count);
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = locations[missionIndex];
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleCapture;
             objectiveInfo.UniqueVehicleID = uniqueID;
 
             // == Fourth Major Objective
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = endPoint;
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
             objectiveInfo.UniqueVehicleID = uniqueID;
 
             // == Fifth Major Objective
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = startPoint;
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;

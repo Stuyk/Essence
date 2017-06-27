@@ -1,4 +1,5 @@
-﻿using Essence.classes.utility;
+﻿using Essence.classes.missions;
+using Essence.classes.utility;
 using GTANetworkServer;
 using GTANetworkShared;
 using System;
@@ -175,7 +176,7 @@ namespace Essence.classes.jobs
             int uniqueVehicleID = new Random().Next(1, 20000);
 
             // 1 - Major Objective - Go to the vehicle.
-            Objective objective = mission.addEmptyObjective();
+            Objective objective = mission.addEmptyObjective(mission);
             ObjectiveInfo objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = openSpot.Position;
             objectiveInfo.Type = Objective.ObjectiveTypes.RetrieveVehicle;
@@ -189,14 +190,14 @@ namespace Essence.classes.jobs
             API.setEntityData(vehicle, "Mission_Truck_Trailer_Attachment", trailer);
 
             // 2 - Major Objective - Drive Vehicle Out
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = new Vector3(-1080.812, -2231.04, 12.25332);
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
             objectiveInfo.UniqueVehicleID = uniqueVehicleID;
 
             // 3 - Major Objective - Halfway Point
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = midPoint;
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
@@ -204,14 +205,14 @@ namespace Essence.classes.jobs
 
             // 4 - Major Objective - Get Random Point
             int locationIndex = new Random().Next(0, locations.Count);
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = locations[locationIndex];
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleCapture;
             objectiveInfo.UniqueVehicleID = uniqueVehicleID;
 
             // 5 - Major Objective - Go back to depot.
-            objective = mission.addEmptyObjective();
+            objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = endPoint;
             objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;

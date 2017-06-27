@@ -80,7 +80,6 @@ API.onServerEventTrigger.connect(function (event, args) {
             return;
         case "Mission_Head_Notification":
             headNotification = new PlayerHeadNotification(args[0]);
-
             if (args.Count <= 1) {
                 return;
             }
@@ -166,6 +165,11 @@ function setupMarkers() {
             case "RetrieveVehicle":
                 newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
+            case "BreakIntoVehicle":
+                newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                break;
+            case "KillPlayer":
+                return;
             default:
                 return;
         }
@@ -218,6 +222,16 @@ function setupBlips() {
                 API.setBlipSprite(newBlip, 225);
                 API.setBlipColor(newBlip, blipColor);
                 break;
+            case "KillPlayer":
+                API.deleteEntity(newBlip);
+                return;
+            case "UnlockVehicles":
+                API.deleteEntity(newBlip);
+                return;
+            case "BreakIntoVehicle":
+                API.setBlipSprite(newBlip, 229);
+                API.setBlipColor(newBlip, blipColor);
+                return;
         }
         objectiveBlips.push(newBlip);
     }
@@ -258,7 +272,7 @@ function cleanupTeammates() {
         return;
     }
 
-    teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
+    //teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
 
     teammates.clear();
     team = "";
@@ -300,12 +314,12 @@ class Teammate {
 
     constructor(id: any) {
         this.teammateID = id;
-        this.teammateBlip = API.createBlip(API.getEntityPosition(id));
+        //this.teammateBlip = API.createBlip(API.getEntityPosition(id));
         this.teammateName = API.getPlayerName(id);
         this.teammateOldHealth = API.getPlayerHealth(id);
-        API.setBlipSprite(this.teammateBlip, 1);
-        API.setBlipColor(this.teammateBlip, blipColor);
-        API.setBlipShortRange(this.teammateBlip, true);
+        //API.setBlipSprite(this.teammateBlip, 1);
+        //API.setBlipColor(this.teammateBlip, blipColor);
+        //API.setBlipShortRange(this.teammateBlip, true);
         this.adjustColor();
     }
 
@@ -321,9 +335,11 @@ class Teammate {
             return;
         }
 
+        /*
         if (!API.doesEntityExist(this.teammateBlip)) {
             return;
         }
+        */
 
         this.updatePosition();
 
@@ -339,9 +355,11 @@ class Teammate {
     }
 
     private updatePosition() {
+        /*
         if (API.hasEntitySyncedData(this.teammateID, "Current_Position")) {
             API.setBlipPosition(this.Blip, API.getEntitySyncedData(this.teammateID, "Current_Position"));
         }
+        */
     }
 
     private adjustColor() {
@@ -349,37 +367,37 @@ class Teammate {
 
         // Set Green
         if (playerHealth >= 80) {
-            API.setBlipColor(this.teammateBlip, 69);
+            //API.setBlipColor(this.teammateBlip, 69);
             this.teammateName = `~g~${API.getPlayerName(this.teammateID)}`
         }
 
         // Set Orange / Green
         if (playerHealth <= 79 && playerHealth >= 56) {
-            API.setBlipColor(this.teammateBlip, 24);
+            //API.setBlipColor(this.teammateBlip, 24);
             this.teammateName = `~g~${API.getPlayerName(this.teammateID)}`
         }
 
         // Set Orange
         if (playerHealth <= 55 && playerHealth >= 30) {
-            API.setBlipColor(this.teammateBlip, 81);
+            //API.setBlipColor(this.teammateBlip, 81);
             this.teammateName = `~o~${API.getPlayerName(this.teammateID)}`
         }
 
         // Set Red
         if (playerHealth <= 29 && playerHealth >= 16) {
-            API.setBlipColor(this.teammateBlip, 49);
+            //API.setBlipColor(this.teammateBlip, 49);
             this.teammateName = `~r~${API.getPlayerName(this.teammateID)}`
         }
 
         // Set Deep Red
         if (playerHealth <= 15 && playerHealth >= 1) {
-            API.setBlipColor(this.teammateBlip, 76);
+            //API.setBlipColor(this.teammateBlip, 76);
             this.teammateName = `~r~${API.getPlayerName(this.teammateID)}`
         }
 
         // Dead
         if (playerHealth <= 0) {
-            API.setBlipColor(this.teammateBlip, 85);
+            //API.setBlipColor(this.teammateBlip, 85);
             this.teammateName = `~h~~u~${API.getPlayerName(this.teammateID)}`
         }
     }
@@ -502,12 +520,7 @@ function missionObjectives() {
     var pos = API.getEntityPosition(API.getLocalPlayer());
     var obj: Objective = null;
     for (var i = 0; i < objectives.length; i++) {
-        if (pos.DistanceTo(objectives[i].Location) <= 15) {
-            obj = objectives[i];
-            break;
-        }
-
-        if (objectives[i].Type == "Teleport") {
+        if (pos.DistanceTo(objectives[i].Location) <= 30) {
             obj = objectives[i];
             break;
         }
@@ -541,6 +554,9 @@ function missionObjectives() {
             break;
         case "RetrieveVehicle":
             objectiveRetrieveVehicle();
+            break;
+        case "BreakIntoVehicle":
+            objectiveBreakIntoVehicle();
             break;
     }
 }
@@ -653,6 +669,17 @@ function objectivePickupObject() {
         if (confirmPlayerIsNear(3)) {
             API.triggerServerEvent("checkObjective");
         }
+    }
+}
+
+function objectiveBreakIntoVehicle() {
+    if (API.isControlPressed(Enums.Controls.Context)) {
+        if (confirmPlayerIsNear(3)) {
+            API.playPlayerAnimation("mini@safe_cracking", "dial_turn_clock_slow", 1, 5000)
+            API.triggerServerEvent("checkObjective");
+        }
+    } else {
+        API.stopPlayerAnimation();
     }
 }
 

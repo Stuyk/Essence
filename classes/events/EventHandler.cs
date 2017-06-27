@@ -79,6 +79,9 @@ namespace Essence.classes.events
                     case "JOB_SHORT_RANGE_TRUCKING":
                         API.call("ShortRangeTrucking", "startShortRangeTruckingJob", player);
                         return;
+                    case "JOB_CHOP_SHOP":
+                        API.call("ChopShop", "startChopShopJob", player);
+                        return;
                 }
             }
 

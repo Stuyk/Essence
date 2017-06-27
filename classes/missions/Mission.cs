@@ -21,6 +21,7 @@ namespace Essence.classes
         private DateTime startTime; // The time when the player started the mission officially.
         private int partyInstance;
         private int missionReward;
+        private WeaponHash missionWeaponReward;
         private string missionTitle;
         private Timer timer;
         private int maxMissionTime;
@@ -36,6 +37,7 @@ namespace Essence.classes
             partyInstance = new Random().Next(0, 9000000);
             missionReward = 0;
             maxMissionTime = -1;
+            missionWeaponReward = WeaponHash.Unarmed;
         }
 
         /// <summary>
@@ -76,13 +78,23 @@ namespace Essence.classes
             }
         }
 
+        public bool missionContainsPlayer(Client player)
+        {
+            if (players.Contains(player))
+            {
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Returns an empty Objective to add ObjectiveInfo into.
         /// </summary>
         /// <returns></returns>
-        public Objective addEmptyObjective()
+        public Objective addEmptyObjective(Mission mission)
         {
             Objective objective = new Objective();
+            objective.MissionInstance = mission;
             objectives.Add(objective);
             return objective;
         }
@@ -156,6 +168,21 @@ namespace Essence.classes
         }
 
         /// <summary>
+        /// Set the weapon reward for the mission when it is complete. Each player will recieve this weapon reward.
+        /// </summary>
+        public WeaponHash MissionWeaponReward
+        {
+            set
+            {
+                missionWeaponReward = value;
+            }
+            get
+            {
+                return missionWeaponReward;
+            }
+        }
+
+        /// <summary>
         /// Set the title of the mission.
         /// </summary>
         public string MissionTitle
@@ -190,6 +217,7 @@ namespace Essence.classes
             if (players.Contains(player))
             {
                 setupTeamSync();
+                return;
             }
 
             players.Add(player);
@@ -274,6 +302,7 @@ namespace Essence.classes
             foreach(Client ally in players)
             {
                 API.triggerClientEvent(ally, "Mission_Remove_Objective", location);
+                API.triggerClientEvent(ally, "Mission_Head_Notification", "~b~Minor Objective Complete", "Objective");
             }
         }
 
@@ -313,6 +342,17 @@ namespace Essence.classes
                 
             }
             vehicles = new List<NetHandle>();
+        }
+
+        /// <summary>
+        /// Unlock all vehicles in the mission instance.
+        /// </summary>
+        public void unlockAllVehicles()
+        {
+            foreach (NetHandle vehicle in vehicles)
+            {
+                API.setVehicleLocked(vehicle, false);
+            }
         }
 
         /// <summary>
@@ -380,6 +420,7 @@ namespace Essence.classes
             objectives = new List<Objective>();
 
             forceRemoveVehicles();
+            var finalReward = Math.Floor(Convert.ToDouble(MissionReward / players.Count));
 
             foreach (Client player in players)
             {
@@ -387,11 +428,15 @@ namespace Essence.classes
                 API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Awarded: ~w~$" + MissionReward, "Finish");
                 API.triggerClientEvent(player, "Play_Screen_FX", "SuccessNeutral", 5000, false);
                 Player instance = API.getEntityData(player, "Instance");
-                instance.Money += MissionReward;
+                instance.Money += Convert.ToInt32(finalReward);
+
+                if (MissionWeaponReward != WeaponHash.Unarmed)
+                {
+                    API.givePlayerWeapon(player, MissionWeaponReward, 20, false, true);
+                }
             }
 
             MissionReward = 0;
-
         }
 
         /** Specifically syncs the players objective completion rate. **/
