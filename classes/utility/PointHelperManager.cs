@@ -19,8 +19,8 @@ namespace Essence.classes.utility
             List<PointInfo> points = PointHelper.Points;
             foreach (PointInfo point in points)
             {
-                API.triggerClientEvent(player, "Add_New_Point", point.Position, point.Type, point.Color, point.Text, point.Draw, point.ID);
-                // Position, Type, Color, Text, Draw.
+                API.triggerClientEvent(player, "Add_New_Point", point.Position, point.BlipType, point.BlipColor, point.Text, point.DrawLabel, point.ID, point.InteractionEnabled);
+                // Position, Type, Color, Text, Draw, ID, Interactable.
             }
         }
     }

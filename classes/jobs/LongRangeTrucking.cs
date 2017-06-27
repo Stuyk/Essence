@@ -26,10 +26,22 @@ namespace Essence.classes.jobs
 
         public LongRangeTrucking()
         {
-            PointHelper.addNewPoint(3, 477, startPoint, "Long Range Trucking", true, "JOB_LONG_RANGE_TRUCKING");
+            generatePoint();
             loadLocations();
             loadSpawns();
             API.onUpdate += API_onUpdate;
+        }
+
+        private void generatePoint()
+        {
+            PointInfo point = PointHelper.addNewPoint();
+            point.BlipColor = 3;
+            point.BlipType = 477;
+            point.Text = "Long Range Trucking";
+            point.DrawLabel = true;
+            point.ID = "JOB_LONG_RANGE_TRUCKING";
+            point.InteractionEnabled = true;
+            point.Position = startPoint;
         }
 
         private void API_onUpdate()

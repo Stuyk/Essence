@@ -10,7 +10,8 @@ class BlipTextPoint {
     private draw: boolean;
     private blip: any;
     private id: any;
-    constructor(position, type, color, text, draw, id) {
+    private interactable: boolean;
+    constructor(position, type, color, text, draw, id, interactable) {
         this.position = position;
         this.type = type;
         this.color = color;
@@ -18,6 +19,7 @@ class BlipTextPoint {
         this.draw = draw;
         this.id = id;
         this.blip = API.createBlip(this.position);
+        this.interactable = interactable;
         API.setBlipSprite(this.blip, this.type);
         API.setBlipColor(this.blip, this.color);
         API.setBlipShortRange(this.blip, true);
@@ -31,7 +33,9 @@ class BlipTextPoint {
 
         var point = Point.Round(API.worldToScreenMantainRatio(this.position.Add(new Vector3(0, 0, 2))));
         API.drawText(this.text, point.X, point.Y - 20, 0.5, 255, 255, 255, 255, 4, 1, true, true, 600);
-        API.dxDrawTexture(keyboardPath, new Point(point.X - 25, point.Y + 40), new Size(50, 50), 0, 255, 255, 255, 255);
+        if (this.interactable) {
+            API.dxDrawTexture(keyboardPath, new Point(point.X - 25, point.Y + 40), new Size(50, 50), 0, 255, 255, 255, 255);
+        }
     }
 
     get Position(): Vector3 {
@@ -44,6 +48,10 @@ class BlipTextPoint {
 
     get ID(): any {
         return this.id;
+    }
+
+    get Interactable(): boolean {
+        return this.interactable;
     }
 
     // Used to interact with pretty much everything ever.
@@ -72,8 +80,8 @@ function drawText() {
 }
 
 // Adds a new point to the list.
-function addNewPoint(position, type, color, text, draw, id) {
-    var newPoint = new BlipTextPoint(position, type, color, text, draw, id);
+function addNewPoint(position, type, color, text, draw, id, interactable) {
+    var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable);
     list.push(newPoint);
 }
 
@@ -82,6 +90,10 @@ function checkIfNearPointOnce() {
     if (Date.now() > actionCooldown) {
         actionCooldown = Date.now() + 3000;
         for (var i = 0; i < list.length; i++) {
+            if (!list[i].Interactable) {
+                continue;
+            }
+
             if (list[i].Position.DistanceTo(playerPos) <= 5) {
                 list[i].triggerServerEvent();
                 return;

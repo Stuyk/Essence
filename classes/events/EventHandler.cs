@@ -66,6 +66,9 @@ namespace Essence.classes.events
             {
                 switch (eventName)
                 {
+                    case "No_Label":
+                        API.sendChatMessageToPlayer(player, "You didn't specify an ID for this point.");
+                        return;
                     case "SHOP_ATM":
                         // !!! IMPLEMENT PLS !!!
                         API.sendChatMessageToPlayer(player, "Don't forget to implement this shit.");

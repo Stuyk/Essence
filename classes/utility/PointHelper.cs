@@ -13,65 +13,123 @@ namespace Essence.classes.utility
         private int blipType;
         private Vector3 position;
         private string text;
-        private bool draw;
+        private bool drawLabel;
         private string id;
+        private bool interactionEnabled;
 
-        public PointInfo() { }
-        public PointInfo(int blipColor, int blipStyle, Vector3 blipPosition, string blipText, bool drawText, string newID)
+        /// <summary>
+        /// Generate an interactive location for a player.
+        /// </summary>
+        public PointInfo()
         {
-            color = blipColor;
-            blipType = blipStyle;
-            position = blipPosition;
-            text = blipText;
-            draw = drawText;
-            id = newID;
+            color = 0;
+            blipType = 1;
+            position = new Vector3();
+            text = "You didn't set this shit up right.";
+            drawLabel = true;
+            id = "No_Label";
+            interactionEnabled = true;
         }
 
-        public int Color
+        /// <summary>
+        /// The color our blip is going to be.
+        /// </summary>
+        public int BlipColor
         {
+            set
+            {
+                color = value;
+            }
             get
             {
                 return color;
             }
         }
 
-        public int Type
+        /// <summary>
+        /// The style / icon our blip is going to be.
+        /// </summary>
+        public int BlipType
         {
+            set
+            {
+                blipType = value;
+            }
             get
             {
                 return blipType;
             }
         }
         
+        /// <summary>
+        /// The position our blip should be located at.
+        /// </summary>
         public Vector3 Position
         {
+            set
+            {
+                position = value;
+            }
             get
             {
                 return position;
             }
         }
 
+        /// <summary>
+        /// The text that will show up if DrawLabel is true.
+        /// </summary>
         public string Text
         {
+            set
+            {
+                text = value;
+            }
             get
             {
                 return text;
             }
         }
 
-        public bool Draw
+        /// <summary>
+        /// Should we draw text near this position for the player to see?
+        /// </summary>
+        public bool DrawLabel
         {
+            set
+            {
+                drawLabel = value;
+            }
             get
             {
-                return draw;
+                return drawLabel;
             }
         }
 
+        /// <summary>
+        /// A special ID assigned to this label, so if a player pressed E a event will trigger in EventManager if hooked up. See EventManager.cs for more on this.
+        /// </summary>
         public string ID
         {
+            set
+            {
+                id = value;
+            }
             get
             {
                 return id;
+            }
+        }
+
+        public bool InteractionEnabled
+        {
+            set
+            {
+                interactionEnabled = value;
+            }
+            get
+            {
+                return interactionEnabled;
             }
         }
     }
@@ -80,10 +138,15 @@ namespace Essence.classes.utility
     {
         public static List<PointInfo> points = new List<PointInfo>();
 
-        public static void addNewPoint(int blipColor, int blipStyle, Vector3 blipLocation, string blipText, bool drawText, string id)
+        /// <summary>
+        /// Created a new blip, specify properties after creating the new instance.
+        /// </summary>
+        /// <returns></returns>
+        public static PointInfo addNewPoint()
         {
-            PointInfo info = new PointInfo(blipColor, blipStyle, blipLocation, blipText, drawText, id);
+            PointInfo info = new PointInfo();
             points.Add(info);
+            return info;
         }
 
         public static List<PointInfo> Points

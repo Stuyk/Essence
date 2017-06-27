@@ -19,7 +19,19 @@ namespace Essence.classes
         public AtmInfo(Vector3 loc)
         {
             location = loc;
-            PointHelper.addNewPoint(2, 431, loc, "ATM", true, "SHOP_ATM");
+            generatePoint();
+        }
+
+        private void generatePoint()
+        {
+            PointInfo point = PointHelper.addNewPoint();
+            point.Position = location;
+            point.BlipColor = 2;
+            point.BlipType = 431;
+            point.Text = "ATM";
+            point.DrawLabel = true;
+            point.ID = "SHOP_ATM";
+            point.InteractionEnabled = true;
         }
 
         public Vector3 Location
