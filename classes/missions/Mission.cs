@@ -297,7 +297,20 @@ namespace Essence.classes
         {
             foreach (NetHandle vehicle in vehicles)
             {
-                API.deleteEntity(vehicle);
+                API.setVehicleLocked(vehicle, true);
+
+                Client[] passengers = API.getVehicleOccupants(vehicle);
+                foreach (Client passenger in passengers)
+                {
+                    API.sendNativeToPlayer(passenger, (ulong)Hash.TASK_LEAVE_VEHICLE, passenger, vehicle, 0);
+                }
+
+                API.delay(5000, true, () =>
+                {
+
+                    API.deleteEntity(vehicle);
+                });
+                
             }
             vehicles = new List<NetHandle>();
         }
