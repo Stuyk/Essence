@@ -1,6 +1,7 @@
 "use strict";
 var list = new Array();
 var keyboardPath = "clientside/images/keyboard_e.png";
+var actionCooldown = Date.now() + 3000;
 class BlipTextPoint {
     constructor(position, type, color, text, draw, id) {
         this.position = position;
@@ -60,10 +61,13 @@ function addNewPoint(position, type, color, text, draw, id) {
 }
 function checkIfNearPointOnce() {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
-    for (var i = 0; i < list.length; i++) {
-        if (list[i].Position.DistanceTo(playerPos) <= 5) {
-            list[i].triggerServerEvent();
-            return;
+    if (Date.now() > actionCooldown) {
+        actionCooldown = Date.now() + 3000;
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].Position.DistanceTo(playerPos) <= 5) {
+                list[i].triggerServerEvent();
+                return;
+            }
         }
     }
 }

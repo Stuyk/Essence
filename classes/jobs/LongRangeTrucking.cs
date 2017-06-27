@@ -138,9 +138,6 @@ namespace Essence.classes.jobs
             API.setEntityData(player, "Mission", mission);
             mission.addPlayer(player);
 
-            // Mission Framework
-            Objective objective;
-
             // Try and find an open spot.
             SpawnInfo openSpot = null;
             while (openSpot == null)
@@ -165,31 +162,50 @@ namespace Essence.classes.jobs
             // Generate a unique ID for our objectives.
             int uniqueVehicleID = new Random().Next(1, 20000);
 
-            // Once an open spot is found.
-            objective = mission.CreateNewObjective(openSpot.Position, Objective.ObjectiveTypes.Location);
+            // 1 - Major Objective - Go to the vehicle.
+            Objective objective = mission.addEmptyObjective();
+            ObjectiveInfo objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = openSpot.Position;
+            objectiveInfo.Type = Objective.ObjectiveTypes.RetrieveVehicle;
+            objectiveInfo.UniqueVehicleID = uniqueVehicleID;
             NetHandle vehicle = objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Packer, openSpot.Rotation, uniqueID: uniqueVehicleID);
             NetHandle trailer = objective.addObjectiveVehicle(mission, openSpot.Position.Add(new Vector3(0, 0, 50)), VehicleHash.Trailers, openSpot.Rotation, uniqueID: uniqueVehicleID);
-            // Set Our Start Location
-            // Setup Trailer Sync
+            // All of this will go away on Client Update.
             API.setEntityData(vehicle, "Mission_Truck_Trailer", true);
             API.setEntityData(vehicle, "Mission_Truck_Sync_Time", DateTime.Now.AddSeconds(3));
             API.setEntityData(vehicle, "Mission_Truck_Sync_Distance", truckSpawn);
             API.setEntityData(vehicle, "Mission_Truck_Trailer_Attachment", trailer);
-            // Set the Player Into the Vehicle
-            objective.setupObjective(new Vector3(), Objective.ObjectiveTypes.SetIntoVehicle);
-            // Way Out
-            objective = mission.CreateNewObjective(new Vector3(-1080.812, -2231.04, 12.25332), Objective.ObjectiveTypes.VehicleLocation);
-            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
-            // Halfway Point
-            objective = mission.CreateNewObjective(midPoint, Objective.ObjectiveTypes.VehicleLocation);
-            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
-            // Pull a random location.
-            int random = new Random().Next(0, locations.Count);
-            objective = mission.CreateNewObjective(locations[random], Objective.ObjectiveTypes.VehicleCapture);
-            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
-            // Setup end point.
-            objective = mission.CreateNewObjective(endPoint, Objective.ObjectiveTypes.VehicleLocation);
-            objective.addUniqueIDToAllObjectives(uniqueVehicleID);
+
+            // 2 - Major Objective - Drive Vehicle Out
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = new Vector3(-1080.812, -2231.04, 12.25332);
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
+            objectiveInfo.UniqueVehicleID = uniqueVehicleID;
+
+            // 3 - Major Objective - Halfway Point
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = midPoint;
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
+            objectiveInfo.UniqueVehicleID = uniqueVehicleID;
+
+            // 4 - Major Objective - Get Random Point
+            int locationIndex = new Random().Next(0, locations.Count);
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = locations[locationIndex];
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleCapture;
+            objectiveInfo.UniqueVehicleID = uniqueVehicleID;
+
+            // 5 - Major Objective - Go back to depot.
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = endPoint;
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
+            objectiveInfo.UniqueVehicleID = uniqueVehicleID;
+
+            // 6 - Start the mission.
             mission.startMission();
         }
     }

@@ -20,7 +20,9 @@ namespace Essence.classes
         private int uniqueID;
         private NetHandle attachedObject;
 
-        // What to assign to this class when it's created as a new instance.
+        /// <summary>
+        /// Generate a new ObjectiveInfo and assign your information for the objective. Default Progress: 0, Completed: False, UniqueID is -1, No attached objects.
+        /// </summary>
         public ObjectiveInfo()
         {
             progress = 0;
@@ -31,7 +33,9 @@ namespace Essence.classes
             uniqueID = -1;
         }
 
-        /** Get / Set the current progress of this objective. */
+        /// <summary>
+        /// Set the current progress of this objective. Always set this to zero.
+        /// </summary>
         public int Progress
         {
             get
@@ -44,7 +48,9 @@ namespace Essence.classes
             }
         }
 
-        /** Get / Set the current location of this objective. */
+        /// <summary>
+        /// Set the location of this objective. This is 100% required to make an objective function properly.
+        /// </summary>
         public Vector3 Location
         {
             get
@@ -57,7 +63,9 @@ namespace Essence.classes
             }
         }
 
-        /** Get / Set the current type of this objective. */
+        /// <summary>
+        /// Set the type of objective this should be.
+        /// </summary>
         public Objective.ObjectiveTypes Type
         {
             get
@@ -70,7 +78,9 @@ namespace Essence.classes
             }
         }
 
-        /** Set the current completion status for this objective. */
+        /// <summary>
+        /// Set the current completion status of this objective. If it's true, it'll remove itself. Don't set it to true. God dammit.
+        /// </summary>
         public bool Status
         {
             get
@@ -87,7 +97,9 @@ namespace Essence.classes
             }
         }
 
-        /** Set the current direction for this objective. */
+        /// <summary>
+        /// Used to set a direction the marker should face.
+        /// </summary>
         public Vector3 Direction
         {
             get
@@ -100,7 +112,9 @@ namespace Essence.classes
             }
         }
 
-        /** Set a vehicle specific ID required to complete the objective. **/
+        /// <summary>
+        /// A unique ID assigned to a vehicle that is required for this objective. Only effective if using VehicleLocation or VehicleCapture.
+        /// </summary>
         public int UniqueVehicleID
         {
             get
@@ -113,11 +127,24 @@ namespace Essence.classes
             }
         }
 
-        public void addObject(NetHandle obj)
+        /// <summary>
+        /// Add an object that will be removed from this objective once complete. Mostly for visual queue's.
+        /// </summary>
+        public NetHandle AddObject
         {
-            attachedObject = obj;
+            set
+            {
+                attachedObject = value;
+            }
+            get
+            {
+                return attachedObject;
+            }
         }
 
+        /// <summary>
+        /// Remove an attached object from this ObjectiveInfo.
+        /// </summary>
         public void removeAttachedObject()
         {
             if (attachedObject != null)
@@ -181,36 +208,31 @@ namespace Essence.classes
             objectives = new List<ObjectiveInfo>();
         }
 
-        /**
-         * Setup a new objective.
-         * */
-        public void setupObjective(Vector3 location, ObjectiveTypes type, Vector3 direction = null, NetHandle obj = new NetHandle())
+        /// <summary>
+        /// Add new objective info to your Major Objective.
+        /// </summary>
+        /// <returns></returns>
+        public ObjectiveInfo addEmptyObjectiveInfo()
         {
             ObjectiveInfo objInfo = new ObjectiveInfo();
-            objInfo.Location = location;
-            objInfo.Type = type;
-            objInfo.Progress = 0;
             objectives.Add(objInfo);
-
-            if (direction != null)
-            {
-                objInfo.Direction = direction;
-            }
-
-            if (obj != null)
-            {
-                objInfo.addObject(obj);
-            }
+            return objInfo;
         }
 
-        // Returns a list of all the ObjectiveInfo in the master objective.
+        /// <summary>
+        /// Returns a list of all the ObjectiveInfo in the master objective.
+        /// </summary>
         public List<ObjectiveInfo> Objectives {
             get {
                 return objectives;
             }
         }
 
-        // Forceably removes an objective from the mission.
+        /// <summary>
+        /// Removes a specific ObjectiveInfo from the master objective.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="mission"></param>
         public void forceRemoveObjective(ObjectiveInfo obj, Mission mission)
         {
             if (objectives.Contains(obj))
@@ -220,7 +242,6 @@ namespace Essence.classes
 
             mission.setupTeamSync();
 
-            // Check if all of our objectives are complete.
             if (objectives.Count >= 1)
             {
                 return;
@@ -229,7 +250,15 @@ namespace Essence.classes
             mission.goToNextObjective();
         }
 
-        // Used to add an objective based vehicle. Not owned by the player.
+        /// <summary>
+        /// Adds a vehicle that is attached to the Mission.
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="location"></param>
+        /// <param name="type"></param>
+        /// <param name="rotation"></param>
+        /// <param name="uniqueID"></param>
+        /// <returns></returns>
         public NetHandle addObjectiveVehicle(Mission instance, Vector3 location, VehicleHash type, Vector3 rotation = null, int uniqueID = -1)
         {
             if (rotation == null)
@@ -250,22 +279,21 @@ namespace Essence.classes
             
         }
 
-        // Used to add a unique ID to a vehicle. Owned by the player.
+        /// <summary>
+        /// Add a specific vehicle that will not despawn to the mission instance.
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="uniqueID"></param>
         public void addPlayerVehicle(Mission instance, NetHandle vehicle, int uniqueID)
         {
             API.setEntityData(vehicle, "Mission", instance);
             API.setEntityData(vehicle, "Mission_UID", uniqueID);
         }
 
-        // Used to add a unique ID to all objectives in the master objective. This is important for vehicle based missions.
-        public void addUniqueIDToAllObjectives(int id)
-        {
-            foreach (ObjectiveInfo obj in objectives)
-            {
-                obj.UniqueVehicleID = id;
-            }
-        }
-
+        /// <summary>
+        /// Removes all attached objects from ObjectiveInfo.
+        /// </summary>
         public void removeAllAttachedObjects()
         {
             foreach (ObjectiveInfo obj in objectives)
@@ -274,7 +302,10 @@ namespace Essence.classes
             }
         }
 
-        // Syncs all current objective information to a player.
+        /// <summary>
+        /// Syncs all objective into to a player.
+        /// </summary>
+        /// <param name="player"></param>
         public void syncObjectiveToPlayer(Client player)
         {
             Mission instance = API.getEntityData(player, "Mission");
@@ -306,14 +337,22 @@ namespace Essence.classes
             API.triggerClientEvent(player, "Mission_Head_Notification", "~o~New Objective", "NewObjective");
         }
 
-        // Updates olbjective progression for a player.
+        /// <summary>
+        /// Updates the objective progression for a player.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="location"></param>
+        /// <param name="progression"></param>
         private void updateObjectiveProgression(Client player, Vector3 location, int progression)
         {
             Mission mission = API.getEntityData(player, "Mission");
             mission.updateObjectiveProgressionForAll(location, progression);
         }
 
-        // Verifies if an objective is complete.
+        /// <summary>
+        /// Checks if the objective is complete. Primary method to determine if a minor objective is completed or not.
+        /// </summary>
+        /// <param name="player"></param>
         public void verifyObjective(Client player)
         {
             // Just to prevent an error from occuring where too many requests get sent. */
@@ -437,9 +476,11 @@ namespace Essence.classes
             pauseState = false;
         }
 
-        /*********************************************
-         * Verify based on objective type.
-         * ******************************************/
+        /// <summary>
+        /// Switches through objectives and determines which one to check, and checks for completion.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void checkForCompletion(Client player, ObjectiveInfo objInfo)
         {
             switch (objInfo.Type)
@@ -471,9 +512,11 @@ namespace Essence.classes
             }
         }
 
-        /*************************************************
-         *                OBJECTIVE TYPES
-         * **********************************************/
+        /// <summary>
+        /// Objective of type location functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectiveLocation(Client player, ObjectiveInfo objInfo)
         {
             if (player.position.DistanceTo(objInfo.Location) <= 5)
@@ -482,6 +525,11 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Objective of type Vehicle Location functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectiveVehicleLocation(Client player, ObjectiveInfo objInfo)
         {
             if (!player.isInVehicle)
@@ -507,6 +555,11 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Objective of type Teleport functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectiveTeleport(Client player, ObjectiveInfo objInfo)
         {
             Mission mission = API.getEntityData(player, "Mission");
@@ -514,6 +567,11 @@ namespace Essence.classes
             objInfo.Status = true;
         }
 
+        /// <summary>
+        /// Objective of type Capture functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectiveCapture(Client player, ObjectiveInfo objInfo)
         {
             if (player.position.DistanceTo(objInfo.Location) <= 8)
@@ -531,6 +589,11 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Objective of type Destruction functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectiveDestroy(Client player, ObjectiveInfo objInfo)
         {
             if (!player.isAiming)
@@ -550,6 +613,11 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Objective of type Pickup functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectivePickupObject(Client player, ObjectiveInfo objInfo)
         {
             if (player.isInVehicle)
@@ -568,6 +636,11 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Objective of type Vehicle Capture functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectiveVehicleCapture(Client player, ObjectiveInfo objInfo)
         {
             if (!player.isInVehicle)
@@ -602,6 +675,11 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Objective of type Retrieve Vehicle functionality.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="objInfo"></param>
         private void objectiveRetrieveVehicle(Client player, ObjectiveInfo objInfo)
         {
             if (!player.isInVehicle)
@@ -624,7 +702,9 @@ namespace Essence.classes
             objInfo.Status = true;
         }
 
-        /** Get the total objective count. */
+        /// <summary>
+        /// Get total minor objective count.
+        /// </summary>
         public int ObjectiveCount
         {
             get
@@ -633,7 +713,9 @@ namespace Essence.classes
             }
         }
 
-        /** Get the total amount of objectives complete. */
+        /// <summary>
+        /// Get completed objective count for this major objective.
+        /// </summary>
         public int CompletedObjectives
         {
             get
@@ -642,7 +724,11 @@ namespace Essence.classes
             }
         }
 
-        /** Used to check, and set player objective cooldowns. */
+        /// <summary>
+        /// Used to set the player cooldown so they can't spam objectives.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         private bool isCoolDownOver(Client player)
         {
             if (!API.hasEntityData(player, "Mission_Cooldown_Check"))

@@ -25,5 +25,18 @@ namespace Essence.classes.utility
 
             return list;
         }
+
+        public static SpawnInfo findOpenSpawn(List<SpawnInfo> spawns, Mission missionInstance)
+        {
+            foreach (SpawnInfo spawn in spawns)
+            {
+                if (!spawn.Occupied)
+                {
+                    spawn.Occupied = true;
+                    return spawn;
+                }
+            }
+            return null;
+        }
     }
 }

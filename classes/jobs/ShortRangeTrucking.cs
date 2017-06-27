@@ -88,7 +88,6 @@ namespace Essence.classes.jobs
             }
 
             // Basic Setup.
-            
             mission.useTimer();
             mission.MissionTime = 60 * 5;
             mission.MissionReward = reward;
@@ -98,53 +97,69 @@ namespace Essence.classes.jobs
             API.setEntityData(player, "Mission", mission);
             mission.addPlayer(player);
 
-            // Mission Framework
-            Objective objective;
             // Queue System
+            DateTime startTime = DateTime.Now;
             SpawnInfo openSpot = null;
             while (openSpot == null)
             {
-                foreach (SpawnInfo spawn in spawns)
-                {
-                    if (!spawn.Occupied)
-                    {
-                        openSpot = spawn;
-                        openSpot.Occupied = true;
-                        openSpot.Vehicle = player;
-                        break;
-                    }
-                }
+                openSpot = Utility.findOpenSpawn(spawns, mission);
 
                 if (openSpot != null)
                 {
+                    openSpot.Vehicle = player;
                     break;
                 }
             }
-            // Setup a unique ID for the vehicle.
-            int unID = new Random().Next(1, 50000);
-            // Set Our Start Location
-            objective = mission.CreateNewObjective(openSpot.Position, Objective.ObjectiveTypes.RetrieveVehicle);
-            objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Youga2, rotation: openSpot.Rotation, uniqueID: unID);
-            // Add the unique id.
-            objective.addUniqueIDToAllObjectives(unID);
-            // Setup pickup Objective.
-            NetHandle newObject = API.createObject(-719727517, new Vector3(-1321.264, -253.4067, 41.13453), new Vector3());
-            objective.setupObjective(new Vector3(-1321.264, -253.4067, 41.13453), Objective.ObjectiveTypes.PickupObject, obj: newObject);
-            // Mid Point
-            objective = mission.CreateNewObjective(midPoint, Objective.ObjectiveTypes.VehicleLocation);
-            objective.addUniqueIDToAllObjectives(unID);
-            // Pull a random location.
-            int random = new Random().Next(0, locations.Count);
-            objective = mission.CreateNewObjective(locations[random], Objective.ObjectiveTypes.VehicleCapture);
-            objective.addUniqueIDToAllObjectives(unID);
-            // Setup end point.
-            objective = mission.CreateNewObjective(endPoint, Objective.ObjectiveTypes.VehicleLocation);
-            objective.addUniqueIDToAllObjectives(unID);
-            // Deliver truck back to end points
-            objective = mission.CreateNewObjective(startPoint, Objective.ObjectiveTypes.VehicleLocation);
-            objective.addUniqueIDToAllObjectives(unID);
-            mission.startMission();
+            // Setup a unique ID for the vehicle we'll be using.
+            int uniqueID = new Random().Next(1, 50000);
+            // == First Major Objective
+            // = Create an empty objective to house information. Create an empty ObjectiveInfo Add our first objective, and associate the Vehicle ID with our objective.
+            Objective objective = mission.addEmptyObjective();
+
+            objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Youga2, rotation: openSpot.Rotation, uniqueID: uniqueID);
+
+            ObjectiveInfo objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = openSpot.Position;
+            objectiveInfo.Type = Objective.ObjectiveTypes.RetrieveVehicle;
+            objectiveInfo.UniqueVehicleID = uniqueID;
+
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            NetHandle boxObject = API.createObject(-719727517, new Vector3(-1321.264, -253.4067, 41.13453), new Vector3());
+            objectiveInfo.Location = new Vector3(-1321.264, -253.4067, 41.13453);
+            objectiveInfo.Type = Objective.ObjectiveTypes.PickupObject;
+            objectiveInfo.AddObject = boxObject;
+
+            // == Second Major Objective
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = midPoint;
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
+            objectiveInfo.UniqueVehicleID = uniqueID;
+
+            // == Third Major Objective
+            int missionIndex = new Random().Next(0, locations.Count);
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = locations[missionIndex];
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleCapture;
+            objectiveInfo.UniqueVehicleID = uniqueID;
+
+            // == Fourth Major Objective
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = endPoint;
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
+            objectiveInfo.UniqueVehicleID = uniqueID;
+
+            // == Fifth Major Objective
+            objective = mission.addEmptyObjective();
+            objectiveInfo = objective.addEmptyObjectiveInfo();
+            objectiveInfo.Location = startPoint;
+            objectiveInfo.Type = Objective.ObjectiveTypes.VehicleLocation;
+            objectiveInfo.UniqueVehicleID = uniqueID;
             
+            // == Start Mission
+            mission.startMission();
         }
     }
 }

@@ -38,7 +38,9 @@ namespace Essence.classes
             maxMissionTime = -1;
         }
 
-        /** Enables the timer */
+        /// <summary>
+        /// Enables a timer for the mission. Use 'MissionTime' to set how long the mission is available for.
+        /// </summary>
         public void useTimer()
         {
             timer = new Timer();
@@ -74,13 +76,13 @@ namespace Essence.classes
             }
         }
 
-        /****************************************************************
-         * Create an objective. (Vector3, Objective.ObjectiveTypes.Type)
-         * *************************************************************/
-        public Objective CreateNewObjective(Vector3 location, Objective.ObjectiveTypes type)
+        /// <summary>
+        /// Returns an empty Objective to add ObjectiveInfo into.
+        /// </summary>
+        /// <returns></returns>
+        public Objective addEmptyObjective()
         {
             Objective objective = new Objective();
-            objective.setupObjective(location, type);
             objectives.Add(objective);
             return objective;
         }
@@ -92,9 +94,9 @@ namespace Essence.classes
             objectiveCooldown = DateTime.Now;
         }
 
-        /*************************************
-         * Returns the party instance number.
-         * **********************************/
+        /// <summary>
+        /// Returns the party instance number.
+        /// </summary>
         public int PartyInstance
         {
             get
@@ -103,7 +105,9 @@ namespace Essence.classes
             }
         }
 
-        /** Set the mission time as seconds. */
+        /// <summary>
+        /// Sets the mission time. If set, enable the timer by using useTimer();
+        /// </summary>
         public int MissionTime
         {
             set
@@ -125,6 +129,9 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Return the number of party members.
+        /// </summary>
         public int NumberOfPartyMembers
         {
             get
@@ -133,6 +140,9 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Set the reward for the mission when it is complete. Each player will recieve this reward.
+        /// </summary>
         public int MissionReward
         {
             set
@@ -145,6 +155,9 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Set the title of the mission.
+        /// </summary>
         public string MissionTitle
         {
             set
@@ -157,6 +170,9 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Returns how many objectivese are currently active in this party.
+        /// </summary>
         public int MissionObjectiveCount
         {
             get
@@ -165,7 +181,10 @@ namespace Essence.classes
             }
         }
 
-        /** Add a player to the mission. */
+        /// <summary>
+        /// Add a player to the party.
+        /// </summary>
+        /// <param name="player"></param>
         public void addPlayer(Client player)
         {
             if (players.Contains(player))
@@ -184,6 +203,9 @@ namespace Essence.classes
             setupTeamSync();
         }
 
+        /// <summary>
+        /// Forces mission synchronization to all the players.
+        /// </summary>
         public void setupTeamSync()
         {
             setPauseState(true);
@@ -206,7 +228,10 @@ namespace Essence.classes
             }
         }
 
-        /** Abandon a mission. */
+        /// <summary>
+        /// Abandons the mission for a player, kicking them out of the party. Anyone left inside can continue the mission. If not the mission kills itself.
+        /// </summary>
+        /// <param name="player"></param>
         public void abandonMission(Client player)
         {
             if (players.Contains(player))
@@ -240,9 +265,10 @@ namespace Essence.classes
             API.resetEntitySyncedData(player, "Mission");
         }
 
-        /***********************************************************
-         * Removes objective markers, blips, etc. based on location.
-         * ********************************************************/
+        /// <summary>
+        /// Removes an objective based on location.
+        /// </summary>
+        /// <param name="location"></param>
         public void removeObjectiveForAll(Vector3 location)
         {
             foreach(Client ally in players)
@@ -251,6 +277,11 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Updates objective progression for everyone. This is mostly for capture points, destruction, etc. Percentage based.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="currentProgression"></param>
         public void updateObjectiveProgressionForAll(Vector3 location, int currentProgression)
         {
             foreach(Client ally in players)
@@ -259,9 +290,9 @@ namespace Essence.classes
             }
         }
 
-        /*************************************************************
-         * Forcefully remove any mission vehicles.
-         * *********************************************/
+        /// <summary>
+        /// Forcefully removes all vehicles from the mission.
+        /// </summary>
         public void forceRemoveVehicles()
         {
             foreach (NetHandle vehicle in vehicles)
@@ -271,6 +302,10 @@ namespace Essence.classes
             vehicles = new List<NetHandle>();
         }
 
+        /// <summary>
+        /// Adds a vehicle to the mission.
+        /// </summary>
+        /// <param name="handle"></param>
         public void addVehicle(NetHandle handle)
         {
             if (!vehicles.Contains(handle))
@@ -279,6 +314,9 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// This should be ran after the mission is completely setup.
+        /// </summary>
         public void startMission()
         {
             startTime = DateTime.Now;
@@ -291,6 +329,10 @@ namespace Essence.classes
             }
         }
 
+        /// <summary>
+        /// Used to verify if the player is currently completing an objective.
+        /// </summary>
+        /// <param name="player"></param>
         public void verifyObjective(Client player)
         {
             if (objectives.Count <= 0)
