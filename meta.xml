@@ -16,11 +16,16 @@
   <script src="clientside/PointHelper.js" type="client" lang="javascript" />
   <script src="clientside/Player.js" type="client" lang="javascript" />
   <script src="clientside/ScreenFX.js" type="client" lang="javascript" />
+  <script src="clientside/Sandbox.js" type="client" lang="javascript" />
 
   <file src="clientside/images/essence.png" />
   <file src="clientside/images/keyboard_e.png" />
   <file src="clientside/images/bg.png" />
   <file src="clientside/login.html" />
+
+  <file src="clientside/images/lockpick/lockpick_0.png" />
+  <file src="clientside/images/lockpick/lockpick_1.png" />
+  <file src="clientside/images/lockpick/lockpick_2.png" />
   
   <file src="clientside/js/vue.min.js" />
   <file src="clientside/css/bulma.css" />

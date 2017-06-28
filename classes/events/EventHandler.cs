@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.minigames;
+using GTANetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,24 @@ namespace Essence.classes.events
                 {
                     case "checkObjective":
                         mission.verifyObjective(player);
+                        return;
+                }
+            }
+
+            if (API.hasEntityData(player, "Minigame"))
+            {
+                switch(eventName)
+                {
+                    case "Check_Lockpick_Score":
+                        Lockpick minigame = API.getEntityData(player, "Minigame");
+                        minigame.checkScore(Convert.ToInt32(arguments[0]));
+                        return;
+                }
+            } else {
+                switch (eventName)
+                {
+                    case "Request_Lockpick_Minigame":
+                        MinigameHelper.setupLockpick(player);
                         return;
                 }
             }
