@@ -1,0 +1,174 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href='css/main.css' rel='stylesheet' type='text/css'>
+		<link href='css/bulma.css' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<div class="container-helper">
+			<section class="hero is-fullheight" id="loadingBox">
+				<div class="hero-body">
+					<div class="container has-text-centered">
+						<div class="sk-circle">
+						  <div class="sk-circle1 sk-child"></div>
+						  <div class="sk-circle2 sk-child"></div>
+						  <div class="sk-circle3 sk-child"></div>
+						  <div class="sk-circle4 sk-child"></div>
+						  <div class="sk-circle5 sk-child"></div>
+						  <div class="sk-circle6 sk-child"></div>
+						  <div class="sk-circle7 sk-child"></div>
+						  <div class="sk-circle8 sk-child"></div>
+						  <div class="sk-circle9 sk-child"></div>
+						  <div class="sk-circle10 sk-child"></div>
+						  <div class="sk-circle11 sk-child"></div>
+						  <div class="sk-circle12 sk-child"></div>
+						</div>
+						<p class="subtitle is-5" style="color: #FFF">Better than a fidget spinner.</p>
+					</div>
+				</div>
+			</section>
+			<section class="hero is-fullheight" id="mainBody">
+				<div class="hero-body">
+					<div class="container has-text-centered">
+						<div class="columns">
+							<div class="column is-half is-offset-one-quarter">
+								<img src="images/essence.png" />
+							</div>
+						</div>
+						<div class="columns" id="warningMessage">
+							<div class="column is-half is-offset-one-quarter">
+								<div class="notification is-danger">
+									Oops, either that account doesn't exist or your password does not match.
+								</div>
+							</div>
+						</div>
+						<div class="columns" id="warningMessageReg">
+							<div class="column is-half is-offset-one-quarter">
+								<div class="notification is-danger">
+									Oops, something went wrong with your registration. <br/> Try a longer password (5+ Characters), or a different username.
+								</div>
+							</div>
+						</div>
+						<div class="columns" id="warningRegistrationSuccess">
+							<div class="column is-half is-offset-one-quarter">
+								<div class="notification is-success">
+									Excellent! Your account has been registered.
+								</div>
+							</div>
+						</div>
+						<div class="columns">
+							<div class="column is-half is-offset-one-quarter">
+								<div class="box">
+									<div id="loginForm">
+										<input class="input" type="text" v-model="input" placeholder="Username">
+									</div>
+								</div>
+								<div class="box">
+									<div id="passwordForm">
+										<input class="input" type="password" v-model="input" placeholder="Password" @keyup.enter="LoginButton.tryLogin">
+									</div>
+								</div>
+								<div class="column is-half is-offset-one-quarter">
+									<a class="button" id="loginButton" v-on:click="tryLogin">Login</a>
+									<a class="button" id="registerButton" v-on:click="tryRegistration">Register</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+		<script src='js/vue.min.js'></script>
+		<script>
+			var LoginForm = new Vue({
+				el: '#loginForm',
+				data: {
+					input: ''
+				}
+			});
+			
+			var PasswordForm = new Vue({
+				el: '#passwordForm',
+				data: {
+					input: ''
+				}
+			});
+			
+			var LoginButton = new Vue({
+				el: '#loginButton',
+				methods: {
+					tryLogin: function () {
+						if (LoginForm.input.length < 5) {
+							return;
+						}
+						
+						if (PasswordForm.input.length < 5) {
+							return;
+						}
+					
+						resourceCall("Login", LoginForm.input, PasswordForm.input);
+						showMenu(false);
+						hideAllWarnings();
+					}
+				}
+			});
+			
+			var RegisterButton = new Vue({
+				el: '#registerButton',
+				methods: {
+					tryRegistration: function () {
+						if (LoginForm.input.length < 5) {
+							return;
+						}
+						
+						if (PasswordForm.input.length < 5) {
+							return;
+						}
+					
+						resourceCall("Register", LoginForm.input, PasswordForm.input);
+						showMenu(false);
+						hideAllWarnings();
+					}
+				}
+			});
+			
+			function hideAllWarnings() {
+				document.getElementById('warningMessage').style.display = 'none';
+				document.getElementById('warningMessageReg').style.display = 'none';
+				document.getElementById('warningRegistrationSuccess').style.display = 'none';
+			}
+			
+			function showMenu(toggle) {
+				if (toggle) {
+					document.getElementById('mainBody').style.display = 'flex';
+					document.getElementById('loadingBox').style.display = 'none';
+				} else {
+					document.getElementById('mainBody').style.display = 'none';
+					document.getElementById('loadingBox').style.display = 'flex';
+				}
+			}
+			
+			function showLoginError() {
+				showMenu(true);
+				document.getElementById('warningMessage').style.display = 'flex';
+				document.getElementById('warningMessageReg').style.display = 'none';
+				document.getElementById('warningRegistrationSuccess').style.display = 'none';
+			}
+			
+			function showRegistrationError() {
+				showMenu(true);
+				document.getElementById('warningMessage').style.display = 'none';
+				document.getElementById('warningMessageReg').style.display = 'flex';
+				document.getElementById('warningRegistrationSuccess').style.display = 'none';
+			}
+			
+			function showRegistrationSuccess() {
+				showMenu(true);
+				document.getElementById('warningMessage').style.display = 'none';
+				document.getElementById('warningMessageReg').style.display = 'none';
+				document.getElementById('warningRegistrationSuccess').style.display = 'flex';
+			}
+		</script>
+	</body>
+</html>

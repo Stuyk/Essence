@@ -92,6 +92,12 @@ namespace Essence.classes.events
                         // !!! IMPLEMENT PLS !!!
                         API.sendChatMessageToPlayer(player, "Don't forget to implement this shit.");
                         return;
+                    case "SHOP_BARBER":
+                        API.call("Barber", "startBarberShop", player);
+                        return;
+                    case "SHOP_MASK":
+                        API.call("Mask", "startMaskShop", player);
+                        return;
                     case "JOB_LONG_RANGE_TRUCKING":
                         API.call("LongRangeTrucking", "startLongRangeTruckingJob", player);
                         return;

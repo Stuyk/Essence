@@ -33,5 +33,8 @@ API.onServerEventTrigger.connect((eventName, args) => {
         case "Play_Screen_FX":
             resource.ScreenFX.playScreenFX(args[0], args[1], args[2]);
             return;
+        case "OpenMaskShop":
+            resource.BrowserManager.showCEF("clientside/shops/mask.html");
+            return;
     }
 });
