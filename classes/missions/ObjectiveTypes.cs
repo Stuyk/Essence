@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.minigames;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -194,28 +195,19 @@ namespace Essence.classes.missions
         /// <returns></returns>
         public static bool objectiveBreakIntoVehicle(Client player, ObjectiveInfo objInfo)
         {
-            if (!isCloseToObjective(player, objInfo.Location, 4))
+            if (!isCloseToObjective(player, objInfo.Location, 5))
             {
                 return false;
             }
 
-            if (!isCoolDownOver(player))
+            if (objInfo.Lockpick.GameInfo.Score >= 100)
             {
-                return false;
+                objInfo.Status = true;
+                return true;
             }
 
-            objInfo.Progress += 5;
-
-            if (objInfo.Progress < 100)
-            {
-                API.shared.delay(500, true, () =>
-                {
-                    player.stopAnimation();
-                });
-                return false;
-            }
-
-            return true;
+            API.shared.triggerClientEvent(player, "Start_Lock_Pick_Minigame");
+            return false;
         }
 
         /// <summary>

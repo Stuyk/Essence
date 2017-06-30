@@ -34,6 +34,15 @@ namespace Essence.classes
                             [Ip] INTEGER,
                             [RegistrationDate])";
 
+        static string stashTable = @"CREATE TABLE IF NOT EXISTS
+                            [Stash] (
+                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [Type] INTEGER DEFAULT 0,
+                            [Quantity] INTEGER DEFAULT 0,
+                            [X] FLOAT DEFAULT 0,
+                            [Y] FLOAT DEFAULT 0,
+                            [Z] FLOAT DEFAULT 0)";
+
         // Contains Vehicle Information - Owner is the owner's Player Table ID.
         static string vehicleTable = @"CREATE TABLE IF NOT EXISTS
                             [Vehicles] (
@@ -206,8 +215,9 @@ namespace Essence.classes
             executeQuery(vehicleTable);
             executeQuery(clothingTable);
             executeQuery(skinTable);
+            executeQuery(stashTable);
 
-            DataTable table = executeQueryWithResult("SELECT * FROM Players");
+            //DataTable table = executeQueryWithResult("SELECT * FROM Players");
         }
 
         private void API_onResourceStop()

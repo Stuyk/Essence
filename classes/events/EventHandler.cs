@@ -56,15 +56,11 @@ namespace Essence.classes.events
                 switch(eventName)
                 {
                     case "Check_Lockpick_Score":
-                        Lockpick minigame = API.getEntityData(player, "Minigame");
-                        minigame.checkScore(Convert.ToInt32(arguments[0]));
-                        return;
-                }
-            } else {
-                switch (eventName)
-                {
-                    case "Request_Lockpick_Minigame":
-                        MinigameHelper.setupLockpick(player);
+                        if (player.hasData("Minigame"))
+                        {
+                            Lockpick minigame = API.getEntityData(player, "Minigame");
+                            minigame.checkScore(player, Convert.ToInt32(arguments[0]));
+                        }
                         return;
                 }
             }

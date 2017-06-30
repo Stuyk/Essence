@@ -16,6 +16,8 @@ namespace Essence.classes.utility
         private bool drawLabel;
         private string id;
         private bool interactionEnabled;
+        private bool blipEnabled;
+        private bool stashType;
 
         /// <summary>
         /// Generate an interactive location for a player.
@@ -29,6 +31,35 @@ namespace Essence.classes.utility
             drawLabel = true;
             id = "No_Label";
             interactionEnabled = true;
+            blipEnabled = true;
+            stashType = false;
+        }
+
+        public bool StashType
+        {
+            set
+            {
+                stashType = value;
+            }
+            get
+            {
+                return stashType;
+            }
+        }
+
+        /// <summary>
+        /// Should we show the blip to the player?
+        /// </summary>
+        public bool BlipEnabled
+        {
+            set
+            {
+                blipEnabled = value;
+            }
+            get
+            {
+                return blipEnabled;
+            }
         }
 
         /// <summary>
@@ -147,6 +178,22 @@ namespace Essence.classes.utility
             PointInfo info = new PointInfo();
             points.Add(info);
             return info;
+        }
+
+        /// <summary>
+        /// Used to update a PointHelper based on ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="text"></param>
+        public static void updatePointInfo(string id, string text)
+        {
+            foreach (PointInfo point in points)
+            {
+                if (point.ID == id)
+                {
+                    point.Text = text;
+                }
+            }
         }
 
         public static List<PointInfo> Points

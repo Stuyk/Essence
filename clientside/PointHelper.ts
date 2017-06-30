@@ -11,19 +11,22 @@ class BlipTextPoint {
     private blip: any;
     private id: any;
     private interactable: boolean;
-    constructor(position, type, color, text, draw, id, interactable) {
+    private blipEnabled: boolean;
+    constructor(position, type, color, text, draw, id, interactable, blipEnabled) {
         this.position = position;
         this.type = type;
         this.color = color;
         this.text = text;
         this.draw = draw;
         this.id = id;
-        this.blip = API.createBlip(this.position);
         this.interactable = interactable;
-        API.setBlipSprite(this.blip, this.type);
-        API.setBlipColor(this.blip, this.color);
-        API.setBlipShortRange(this.blip, true);
-        API.setBlipName(this.blip, this.text);
+        if (blipEnabled) {
+            this.blip = API.createBlip(this.position);
+            API.setBlipSprite(this.blip, this.type);
+            API.setBlipColor(this.blip, this.color);
+            API.setBlipShortRange(this.blip, true);
+            API.setBlipName(this.blip, this.text);
+        }
     }
 
     run() {
@@ -32,10 +35,18 @@ class BlipTextPoint {
         }
 
         var point = Point.Round(API.worldToScreenMantainRatio(this.position.Add(new Vector3(0, 0, 2))));
+        if (point.X <= 0 && point.Y <= 0) {
+            return;
+        }
+
         API.drawText(this.text, point.X, point.Y - 20, 0.5, 255, 255, 255, 255, 4, 1, true, true, 600);
         if (this.interactable) {
             API.dxDrawTexture(keyboardPath, new Point(point.X - 25, point.Y + 40), new Size(50, 50), 0, 255, 255, 255, 255);
         }
+    }
+
+    set Text(value: string) {
+        this.text = value;
     }
 
     get Position(): Vector3 {
@@ -80,9 +91,18 @@ function drawText() {
 }
 
 // Adds a new point to the list.
-function addNewPoint(position, type, color, text, draw, id, interactable) {
-    var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable);
+function addNewPoint(position, type, color, text, draw, id, interactable, blipEnabled) {
+    var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled);
     list.push(newPoint);
+}
+
+function updateStashPoint(id, newText: string) {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].ID == id) {
+            list[i].Text = newText;
+            break;
+        }
+    }
 }
 
 function checkIfNearPointOnce() {

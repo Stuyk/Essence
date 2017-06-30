@@ -18,12 +18,13 @@ namespace Essence.classes.connections
 
         private void API_onPlayerDeath(Client player, NetHandle entityKiller, int weapon)
         {
-            resyncIfInMission(player);
+            //resyncIfInMission(player);
+            kickOutOfMission(player);
         }
 
         private void API_onPlayerRespawn(Client player)
         {
-            resyncIfInMission(player);
+            //resyncIfInMission(player);
         }
 
         /// <summary>
@@ -64,6 +65,21 @@ namespace Essence.classes.connections
                         break;
                     }
                 }
+            }
+        }
+
+        private void kickOutOfMission(Client player)
+        {
+            if (!player.hasData("Mission"))
+            {
+                return;
+            }
+
+            Mission mission = player.getData("Mission");
+            
+            if (mission.RemoveFromMissionOnDeath)
+            {
+                mission.abandonMission(player, true);
             }
         }
 

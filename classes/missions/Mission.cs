@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.missions;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,8 @@ namespace Essence.classes
         private string missionTitle;
         private Timer timer;
         private int maxMissionTime;
+        private StashInfo stashInfo;
+        private bool removeFromMissionOnDeath;
         
         /** Main Constructor */
         public Mission()
@@ -38,6 +41,8 @@ namespace Essence.classes
             missionReward = 0;
             maxMissionTime = -1;
             missionWeaponReward = WeaponHash.Unarmed;
+            stashInfo = null;
+            removeFromMissionOnDeath = false;
         }
 
         /// <summary>
@@ -45,6 +50,12 @@ namespace Essence.classes
         /// </summary>
         public void useTimer()
         {
+            if (timer != null)
+            {
+                timer.Stop();
+                timer.Enabled = false;
+            }
+
             timer = new Timer();
             timer.Interval = 500;
             timer.Elapsed += Updater;
@@ -53,6 +64,12 @@ namespace Essence.classes
 
         private void Updater(object sender, ElapsedEventArgs e)
         {
+            if (players.Count <= 0)
+            {
+                timer.Stop();
+                return;
+            }
+
             foreach (Client player in players)
             {
                 API.setEntitySyncedData(player, "Current_Position", player.position);
@@ -117,6 +134,18 @@ namespace Essence.classes
             }
         }
 
+        public bool RemoveFromMissionOnDeath
+        {
+            set
+            {
+                removeFromMissionOnDeath = value;
+            }
+            get
+            {
+                return removeFromMissionOnDeath;
+            }
+        }
+
         /// <summary>
         /// Sets the mission time. If set, enable the timer by using useTimer();
         /// </summary>
@@ -149,6 +178,21 @@ namespace Essence.classes
             get
             {
                 return players.Count;
+            }
+        }
+
+        /// <summary>
+        /// Attach a stash to this mission.
+        /// </summary>
+        public StashInfo AttachStashInfo
+        {
+            set
+            {
+                stashInfo = value;
+            }
+            get
+            {
+                return stashInfo;
             }
         }
 
@@ -260,7 +304,7 @@ namespace Essence.classes
         /// Abandons the mission for a player, kicking them out of the party. Anyone left inside can continue the mission. If not the mission kills itself.
         /// </summary>
         /// <param name="player"></param>
-        public void abandonMission(Client player)
+        public void abandonMission(Client player, bool died = false)
         {
             if (players.Contains(player))
             {
@@ -269,11 +313,13 @@ namespace Essence.classes
 
             API.triggerClientEvent(player, "Mission_Abandon");
             API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Abandoned the Party", "Fail");
-            API.setEntitySyncedData(player, "Mission_Timer", -1);
 
             setupTeamSync();
 
-            API.consoleOutput(string.Format("[{0}] {1} has left a mission.", partyInstance, player.name));
+            if (died)
+            {
+                API.sendChatMessageToPlayer(player, string.Format("{0} have died, and were removed from the mission.", player.name));
+            }
 
             if (players.Count <= 0)
             {
@@ -286,22 +332,37 @@ namespace Essence.classes
                     }
                 }
                 timer.Enabled = false;
+                timer.Stop();
+            } else {
+                if (died)
+                {
+                    foreach (Client ally in players)
+                    {
+                        API.sendChatMessageToPlayer(ally, string.Format("{0} has died and has been removed from the mission.", player.name));
+                    }
+                }
             }
 
-
+            API.setEntitySyncedData(player, "Mission_Timer", -1);
             API.resetEntityData(player, "Mission");
             API.resetEntitySyncedData(player, "Mission");
         }
+
 
         /// <summary>
         /// Removes an objective based on location.
         /// </summary>
         /// <param name="location"></param>
-        public void removeObjectiveForAll(Vector3 location)
+        public void removeObjectiveForAll(ObjectiveInfo objInfo)
         {
             foreach(Client ally in players)
             {
-                API.triggerClientEvent(ally, "Mission_Remove_Objective", location);
+                if (objInfo.Type == Objective.ObjectiveTypes.BreakIntoVehicle)
+                {
+                    API.triggerClientEvent(ally, "End_Lock_Pick_Minigame");
+                }
+
+                API.triggerClientEvent(ally, "Mission_Remove_Objective", objInfo.ObjectiveID);
                 API.triggerClientEvent(ally, "Mission_Head_Notification", "~b~Minor Objective Complete", "Objective");
             }
         }
@@ -376,10 +437,13 @@ namespace Essence.classes
 
             foreach (Client player in players)
             {
+                API.triggerClientEvent(player, "Mission_New_Instance");
                 objectives[0].syncObjectiveToPlayer(player);
                 API.triggerClientEvent(player, "Mission_Pause_State", false);
                 API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Started: ~w~" + MissionTitle, "NewObjective");
             }
+
+            setupTeamSync();
         }
 
         /// <summary>
@@ -437,6 +501,11 @@ namespace Essence.classes
             }
 
             MissionReward = 0;
+
+            if (stashInfo != null)
+            {
+                stashInfo.Quantity += 5;
+            }
         }
 
         /** Specifically syncs the players objective completion rate. **/

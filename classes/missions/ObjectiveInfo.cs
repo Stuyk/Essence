@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.minigames;
+using GTANetworkServer;
 using GTANetworkShared;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace Essence.classes.missions
         private NetHandle attachedObject;
         private Objective objective;
         private NetHandle target;
+        private Lockpick lockpick;
+        private int objectiveID;
 
         public ObjectiveInfo() { }
 
@@ -33,6 +36,7 @@ namespace Essence.classes.missions
             type = Objective.ObjectiveTypes.None;
             completed = false;
             uniqueID = -1;
+            objectiveID = new Random().Next(1, 999999);
         }
 
         /// <summary>
@@ -63,6 +67,14 @@ namespace Essence.classes.missions
             get
             {
                 return target;
+            }
+        }
+
+        public int ObjectiveID
+        {
+            get
+            {
+                return objectiveID;
             }
         }
 
@@ -143,6 +155,19 @@ namespace Essence.classes.missions
             set
             {
                 direction = value;
+            }
+        }
+
+        public Lockpick Lockpick
+        {
+            set
+            {
+                lockpick = value;
+                lockpick.ObjectiveInformation = this;
+            }
+            get
+            {
+                return lockpick;
             }
         }
 

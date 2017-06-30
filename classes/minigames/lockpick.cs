@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.missions;
+using GTANetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,10 @@ namespace Essence.classes.minigames
         private bool running;
         private Direction direction;
         private DateTime nextDirectionChange;
-        private Client player;
+        private List<Client> players;
         private MinigameInfo minigameInfo;
         private DateTime timeSinceLastCheck;
+        private ObjectiveInfo objInfo;
 
         public enum Direction
         {
@@ -34,18 +36,33 @@ namespace Essence.classes.minigames
             minigameInfo = new MinigameInfo();
             minigameInfo.Type = MinigameInfo.MinigameType.Lockpick;
             timeSinceLastCheck = DateTime.Now.AddSeconds(1);
+            players = new List<Client>();
         }
 
-        public Client AssignedPlayer
+        public ObjectiveInfo ObjectiveInformation
         {
             set
             {
-                player = value;
+                objInfo = value;
             }
+        }
+
+        public MinigameInfo GameInfo
+        {
             get
             {
-                return player;
+                return minigameInfo;
             }
+        }
+
+        public void addPlayer(Client player)
+        {
+            if (players.Contains(player))
+            {
+                return;
+            }
+
+            players.Add(player);
         }
 
         public bool isRunning
@@ -80,31 +97,69 @@ namespace Essence.classes.minigames
             timer.Elapsed += lockPickAdjuster;
         }
 
-        public void checkScore(int playerInput)
+        public void checkScore(Client client, int playerInput)
         {
             if (DateTime.Now < timeSinceLastCheck)
             {
                 return;
             }
-            timeSinceLastCheck = DateTime.Now.AddSeconds(1);
 
-            if (outside - 2 < playerInput && outside + 2 > playerInput)
+            int leadroom = 2;
+
+            if (client.ping > 100 && client.ping < 150)
             {
-                minigameInfo.Score += 5;
-                API.shared.playSoundFrontEnd(player, "Hack_Success", "DLC_HEIST_BIOLAB_PREP_HACKING_SOUNDS");
+                leadroom = 3;
             }
 
-            API.shared.setEntitySyncedData(player, "Lockpick_Score", minigameInfo.Score);
 
-            if (minigameInfo.Score >= 100)
+            if (client.ping >= 150 && client.ping <= 200)
             {
-                timer.Stop();
-                isRunning = false;
+                leadroom = 4;
+            }
+
+            if (client.ping >= 201)
+            {
+                leadroom = 5;
+            }
+            
+
+            timeSinceLastCheck = DateTime.Now.AddSeconds(1);
+
+            if (outside - leadroom < playerInput && outside + leadroom > playerInput)
+            {
+                minigameInfo.Score += 5;
+                foreach (Client player in players)
+                {
+                    API.shared.playSoundFrontEnd(player, "CONTINUE", "HUD_FRONTEND_DEFAULT_SOUNDSET");
+                    API.shared.setEntitySyncedData(player, "Lockpick_Score", minigameInfo.Score);
+                }
+            }
+
+            foreach (Client player in players)
+            {
+                API.shared.setEntitySyncedData(player, "Lockpick_Score", minigameInfo.Score);
             }
         }
 
         private void lockPickAdjuster(object sender, ElapsedEventArgs e)
         {
+            if (minigameInfo.Score >= 100)
+            {
+                timer.Stop();
+                objInfo.Status = true;
+                foreach (Client player in players)
+                {
+                    if (player.hasData("Mission"))
+                    {
+                        Mission mission = player.getData("Mission");
+                        mission.verifyObjective(player);
+                    }
+                }
+
+
+                return;
+            }
+
             changeDirection();
             adjustOutside();
         }
@@ -116,8 +171,6 @@ namespace Essence.classes.minigames
                 nextDirectionChange = DateTime.Now.AddSeconds(1);
 
                 int random = new Random().Next(0, 2);
-
-                API.shared.consoleOutput(random.ToString());
 
                 switch (random)
                 {
@@ -133,28 +186,29 @@ namespace Essence.classes.minigames
 
         private void adjustOutside()
         {
-            if (player != null)
+            foreach (Client player in players)
             {
-                switch (direction)
-                {
-                    case Direction.Left:
-                        outside -= 1;
-                        if (outside < 0)
-                        {
-                            outside = 359;
-                        }
-                        API.shared.setEntitySyncedData(player, "Lockpick_Value", outside);
-                        break;
-                    case Direction.Right:
-                        outside += 1;
-                        if (outside > 359)
-                        {
-                            outside = 0;
-                        }
-                        API.shared.setEntitySyncedData(player, "Lockpick_Value", outside);
-                        break;
-                }
+                    switch (direction)
+                    {
+                        case Direction.Left:
+                            outside -= 1;
+                            if (outside < 0)
+                            {
+                                outside = 359;
+                            }
+                            API.shared.setEntitySyncedData(player, "Lockpick_Value", outside);
+                            break;
+                        case Direction.Right:
+                            outside += 1;
+                            if (outside > 359)
+                            {
+                                outside = 0;
+                            }
+                            API.shared.setEntitySyncedData(player, "Lockpick_Value", outside);
+                            break;
+                    }
             }
+            
         }
     }
 }

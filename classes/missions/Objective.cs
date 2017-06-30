@@ -188,7 +188,7 @@ namespace Essence.classes
         {
             if (objectives.Contains(obj))
             {
-                mission.removeObjectiveForAll(obj.Location);
+                mission.removeObjectiveForAll(obj);
                 objectives.Remove(obj);
             }
         }
@@ -236,7 +236,15 @@ namespace Essence.classes
                     continue;
                 }
 
-                API.triggerClientEvent(player, "Mission_New_Objective", objInfo.Location, objInfo.Type.ToString());
+                if (objInfo.Type == ObjectiveTypes.BreakIntoVehicle)
+                {
+                    API.setEntityData(player, "Minigame", objInfo.Lockpick);
+                    objInfo.Lockpick.addPlayer(player);
+                    objInfo.Lockpick.startLockpick();
+                    objInfo.Lockpick.isRunning = true;
+                }
+
+                API.triggerClientEvent(player, "Mission_New_Objective", objInfo.Location, objInfo.Type.ToString(), objInfo.ObjectiveID);
             }
 
             foreach (ObjectiveInfo objInfo in removeables)

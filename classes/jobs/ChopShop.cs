@@ -64,7 +64,7 @@ namespace Essence.classes.jobs
             PointInfo point = PointHelper.addNewPoint();
             point.BlipColor = 3;
             point.BlipType = 477;
-            point.Text = "Chop Shop ~n~Cars for Cash";
+            point.Text = "Chop Shop - Cars for Cash";
             point.DrawLabel = true;
             point.ID = "JOB_CHOP_SHOP";
             point.InteractionEnabled = true;
@@ -124,9 +124,20 @@ namespace Essence.classes.jobs
 
             // Basic Setup.
             mission.useTimer();
-            mission.MissionTime = 60 * 8;
+            mission.MissionTime = 60 * 5;
             mission.MissionReward = reward;
             mission.MissionTitle = "Chop Shop";
+            mission.RemoveFromMissionOnDeath = true;
+
+            StashInfo stash = StashManager.getStashInfoByID(1);
+
+            if (stash == null)
+            {
+                API.sendChatMessageToPlayer(player, "~r~Something went wrong with stashes. Contact an administrator.");
+                return;
+            }
+
+            mission.AttachStashInfo = stash;
 
             // Setup a unique ID for the vehicle we'll be using.
             int uniqueID = new Random().Next(1, 50000);
@@ -136,6 +147,7 @@ namespace Essence.classes.jobs
             ObjectiveInfo objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = midPoint;
             objectiveInfo.Type = Objective.ObjectiveTypes.Location;
+            objectiveInfo.Lockpick = new minigames.Lockpick();
 
             // == Second Major Objective
             int missionIndex = new Random().Next(0, locations.Count);
@@ -146,6 +158,7 @@ namespace Essence.classes.jobs
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = location;
             objectiveInfo.Type = Objective.ObjectiveTypes.BreakIntoVehicle;
+            objectiveInfo.Lockpick = new minigames.Lockpick();
             NetHandle vehicle = objective.addObjectiveVehicle(mission, location.Add(new Vector3(0, 0, 0.2)), API.vehicleNameToModel(vehicleList[carIndex]), rotation, uniqueID);
             API.setVehiclePrimaryColor(vehicle, new Random().Next(0, 159));
             API.setVehicleSecondaryColor(vehicle, new Random().Next(0, 159));
@@ -157,7 +170,7 @@ namespace Essence.classes.jobs
                 API.setVehicleEngineStatus(vehicle, false);
                 API.setEntityPositionFrozen(vehicle, false);
             });
-
+            
             // == Third Major Objective - Take Vehicle
             objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
@@ -177,6 +190,7 @@ namespace Essence.classes.jobs
             objectiveInfo.UniqueVehicleID = uniqueID;
 
             // == Start Mission
+            
             mission.startMission();
         }
     }

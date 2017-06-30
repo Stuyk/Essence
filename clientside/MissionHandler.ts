@@ -24,7 +24,6 @@ var objectives: Objective[] = new Array <Objective>();
 
 // Array of mission blips / markers.
 var objectiveMarkers = [];
-var objectiveBlips = [];
 
 // Array of current allied players on team.
 var teammates: Set<Teammate> = new Set();
@@ -53,7 +52,7 @@ API.onServerEventTrigger.connect(function (event, args) {
             return;
         // Mission Instance - Objectives
         case "Mission_New_Objective":
-            var objective = new Objective(args[0], args[1]);
+            var objective = new Objective(args[0], args[1], args[2]);
             objectives.push(objective);
             return;
        // Mission Instance - Setup Objective Markers
@@ -119,19 +118,19 @@ API.onServerEventTrigger.connect(function (event, args) {
  * Cleans up anything / everything but ALLIES.
  */
 function partialCleanup() {
-    objectives = [];
     cleanupMarkers();
     cleanupBlips();
+    objectives = [];
 }
 
 /**
  * Cleans up anything / everything.
  */
 function fullCleanup() {
-    objectives = [];
     cleanupMarkers();
     cleanupBlips();
     cleanupTeammates();
+    objectives = [];
 }
 
 /**
@@ -182,73 +181,56 @@ function setupMarkers() {
  *  Called when we need to setup all the blips for our objectives.
  */
 function setupBlips() {
-    // Deleted any existing blips and then created a clean array.
-    cleanupBlips();
     // Get all of our objective locations, loop through and determine the type of blip we need.
     for (var i = 0; i < objectives.length; i++) {
-        let newBlip = API.createBlip(objectives[i].Location);
+        objectives[i].ObjectiveBlip = API.createBlip(objectives[i].Location);
         switch (objectives[i].Type) {
             case "Capture":
-                API.setBlipSprite(newBlip, 164);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 164);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 break;
             case "Location":
-                API.setBlipSprite(newBlip, 162);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 162);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 break;
             case "Teleport":
-                API.deleteEntity(newBlip);
+                API.deleteEntity(objectives[i].ObjectiveBlip);
                 return;
             case "Destroy":
-                API.setBlipSprite(newBlip, 486);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 486);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 break;
             case "SetIntoVehicle":
-                API.deleteEntity(newBlip);
+                API.deleteEntity(objectives[i].ObjectiveBlip);
                 return;
             case "VehicleCapture":
-                API.setBlipSprite(newBlip, 164);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 164);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 break;
             case "VehicleLocation":
-                API.setBlipSprite(newBlip, 162);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 162);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 break;
             case "PickupObject":
-                API.setBlipSprite(newBlip, 367);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 367);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 break;
             case "RetrieveVehicle":
-                API.setBlipSprite(newBlip, 225);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 225);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 break;
             case "KillPlayer":
-                API.deleteEntity(newBlip);
+                API.deleteEntity(objectives[i].ObjectiveBlip);
                 return;
             case "UnlockVehicles":
-                API.deleteEntity(newBlip);
+                API.deleteEntity(objectives[i].ObjectiveBlip);
                 return;
             case "BreakIntoVehicle":
-                API.setBlipSprite(newBlip, 229);
-                API.setBlipColor(newBlip, blipColor);
+                API.setBlipSprite(objectives[i].ObjectiveBlip, 229);
+                API.setBlipColor(objectives[i].ObjectiveBlip, blipColor);
                 return;
         }
-        objectiveBlips.push(newBlip);
     }
-}
-/**
- * Cleanup blips.
- */
-function cleanupBlips() {
-    if (objectiveBlips.length <= 0) {
-        return;
-    }
-
-    for (var i = 0; i < objectiveBlips.length; i++) {
-        API.deleteEntity(objectiveBlips[i]);
-    }
-
-    objectiveBlips = [];
 }
 /**
  * Cleanup Markers.
@@ -258,12 +240,24 @@ function cleanupMarkers() {
         return;
     }
 
+
     for (var i = 0; i < objectiveMarkers.length; i++) {
         API.deleteEntity(objectiveMarkers[i]);
     }
 
     objectiveMarkers = [];
 }
+/**
+*
+*/
+function cleanupBlips() {
+    for (var i = 0; i < objectives.length; i++) {
+        if (objectives[i].ObjectiveBlip != null) {
+            API.deleteEntity(objectives[i].ObjectiveBlip);
+        }
+    }
+}
+
 /**
 * Cleanup Teammates.
 */
@@ -283,11 +277,14 @@ function cleanupTeammates() {
 /**
  * Remove an objective based on location.
  */
-function removeObjective(location: Vector3) {
+function removeObjective(id: number) {
     var index = -1;
     for (var i = 0; i < objectives.length; i++) {
-        if (objectives[i].Location.ToString() === location.ToString()) {
+        if (objectives[i].ObjectiveID === id) {
             index = i;
+            if (objectives[i].ObjectiveBlip != null) {
+                API.deleteEntity(objectives[i].ObjectiveBlip);
+            }
             break;
         }
     }
@@ -296,13 +293,8 @@ function removeObjective(location: Vector3) {
         API.deleteEntity(objectiveMarkers[index]);
     }
 
-    if (objectiveBlips.length > 0) {
-        API.deleteEntity(objectiveBlips[index]);
-    }
-
     objectiveMarkers.splice(index, 1);
     objectives.splice(index, 1);
-    objectiveBlips.splice(index, 1);
 }
 
 class Teammate {
@@ -316,11 +308,11 @@ class Teammate {
         this.teammateID = id;
         //this.teammateBlip = API.createBlip(API.getEntityPosition(id));
         this.teammateName = API.getPlayerName(id);
-        this.teammateOldHealth = API.getPlayerHealth(id);
+        //this.teammateOldHealth = API.getPlayerHealth(this.teammateID);
         //API.setBlipSprite(this.teammateBlip, 1);
         //API.setBlipColor(this.teammateBlip, blipColor);
         //API.setBlipShortRange(this.teammateBlip, true);
-        this.adjustColor();
+        //this.adjustColor();
     }
 
     public removeBlip() {
@@ -341,17 +333,19 @@ class Teammate {
         }
         */
 
+        
         this.updatePosition();
-
+        /*
         if (this.teammateOldHealth === API.getPlayerHealth(this.teammateID)) {
             return;
         }
 
         this.teammateOldHealth = API.getPlayerHealth(this.teammateID)
 
-        this.adjustColor();
+        //this.adjustColor();
 
         updateTeamVariable();
+        */
     }
 
     private updatePosition() {
@@ -363,6 +357,7 @@ class Teammate {
     }
 
     private adjustColor() {
+
         let playerHealth = API.getPlayerHealth(this.teammateID);
 
         // Set Green
@@ -419,11 +414,28 @@ class Objective {
     private objectiveLocation: Vector3;
     private objectiveProgress: number;
     private objectiveType: string;
+    private objectiveID: number;
+    private objectiveBlip: any;
 
-    constructor(loc: Vector3, type: string) {
+    constructor(loc: Vector3, type: string, objectiveID: number) {
         this.objectiveLocation = loc;
         this.objectiveType = type;
         this.objectiveProgress = -1;
+        this.objectiveID = objectiveID;
+        this.objectiveBlip = null;
+        API.setWaypoint(loc.X, loc.Y);
+    }
+
+    set ObjectiveBlip(value: any) {
+        this.objectiveBlip = value;
+    }
+
+    get ObjectiveBlip(): any {
+        return this.objectiveBlip;
+    }
+
+    get ObjectiveID(): number {
+        return this.objectiveID;
     }
 
     set Location(value: Vector3) {
@@ -673,13 +685,10 @@ function objectivePickupObject() {
 }
 
 function objectiveBreakIntoVehicle() {
-    if (API.isControlPressed(Enums.Controls.Context)) {
+    if (API.isControlJustPressed(Enums.Controls.Context)) {
         if (confirmPlayerIsNear(3)) {
-            API.playPlayerAnimation("mini@safe_cracking", "dial_turn_clock_slow", 1, 5000)
-            API.triggerServerEvent("checkObjective");
+            resource.Lockpick.newLockPickMiniGame();
         }
-    } else {
-        API.stopPlayerAnimation();
     }
 }
 

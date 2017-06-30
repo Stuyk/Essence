@@ -31,6 +31,12 @@ namespace Essence.classes
             API.setPlayerIntoVehicle(player, vehicle, -1);
         }
 
+        [Command("gun")]
+        public void cmdGun(Client player, WeaponHash gun)
+        {
+            API.givePlayerWeapon(player, gun, 999, true, true);
+        }
+
         [Command("randomClothes")]
         public void randomClothes(Client player)
         {
@@ -90,6 +96,12 @@ namespace Essence.classes
             {
                 player.stopAnimation();
             });
+        }
+
+        [Command("gopos")]
+        public void goPosCMD(Client player, double value1, double value2, double value3)
+        {
+            API.setEntityPosition(player, new Vector3(value1, value2, value3));
         }
 
         [Command("testnote", GreedyArg = true)]
