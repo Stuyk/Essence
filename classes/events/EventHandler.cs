@@ -73,6 +73,30 @@ namespace Essence.classes.events
                     case "Vehicle_Engine":
                         API.call("VehicleCommands", "ToggleEngine", player);
                         return;
+                    case "Vehicle_Trunk":
+                        API.call("VehicleCommands", "ToggleTrunk", player);
+                        return;
+                    case "Vehicle_Hood":
+                        API.call("VehicleCommands", "ToggleHood", player);
+                        return;
+                    case "Vehicle_Door_0":
+                        API.call("VehicleCommands", "ToggleDoor", player, 0);
+                        return;
+                    case "Vehicle_Door_1":
+                        API.call("VehicleCommands", "ToggleDoor", player, 1);
+                        return;
+                    case "Vehicle_Door_2":
+                        API.call("VehicleCommands", "ToggleDoor", player, 2);
+                        return;
+                    case "Vehicle_Door_3":
+                        API.call("VehicleCommands", "ToggleDoor", player, 3);
+                        return;
+                    case "Vehicle_Windows_Up":
+                        API.call("VehicleCommands", "WindowState", player, false);
+                        return;
+                    case "Vehicle_Windows_Down":
+                        API.call("VehicleCommands", "WindowState", player, true);
+                        return;
                 }
             }
 

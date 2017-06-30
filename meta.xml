@@ -17,6 +17,7 @@
   <script src="clientside/Player.js" type="client" lang="javascript" />
   <script src="clientside/ScreenFX.js" type="client" lang="javascript" />
   <script src="clientside/Lockpick.js" type="client" lang="javascript" />
+  <script src="clientside/Interaction.js" type="client" lang="javascript" />
 
   <file src="clientside/images/essence.png" />
   <file src="clientside/images/keyboard_e.png" />

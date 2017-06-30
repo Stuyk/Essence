@@ -138,6 +138,16 @@ namespace Essence.classes.minigames
             foreach (Client player in players)
             {
                 API.shared.setEntitySyncedData(player, "Lockpick_Score", minigameInfo.Score);
+
+                if (minigameInfo.Score >= 100)
+                {
+                    timer.Stop();
+                    if (player.hasData("Mission"))
+                    {
+                        Mission mission = player.getData("Mission");
+                        mission.verifyObjective(player);
+                    }
+                }
             }
         }
 

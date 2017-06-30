@@ -76,7 +76,9 @@ namespace Essence.classes.connections
             }
 
             Mission mission = player.getData("Mission");
-            
+            API.triggerClientEvent(player, "endLockPickMiniGame");
+
+
             if (mission.RemoveFromMissionOnDeath)
             {
                 mission.abandonMission(player, true);

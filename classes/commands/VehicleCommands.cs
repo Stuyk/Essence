@@ -55,5 +55,98 @@ namespace Essence.classes.commands
                 API.setVehicleEngineStatus(playerVehicle, true);
             }
         }
+
+        public void ToggleHood(Client player)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle playerVehicle = player.vehicle;
+
+            if (player.vehicleSeat != -1)
+            {
+                return;
+            }
+
+            if (API.getVehicleDoorState(playerVehicle, 4))
+            {
+                API.setVehicleDoorState(playerVehicle, 4, false);
+            }
+            else
+            {
+                API.setVehicleDoorState(playerVehicle, 4, true);
+            }
+        }
+
+        public void ToggleTrunk(Client player)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle playerVehicle = player.vehicle;
+
+            if (player.vehicleSeat != -1)
+            {
+                return;
+            }
+
+            if (API.getVehicleDoorState(playerVehicle, 5))
+            {
+                API.setVehicleDoorState(playerVehicle, 5, false);
+            }
+            else
+            {
+                API.setVehicleDoorState(playerVehicle, 5, true);
+            }
+        }
+
+        public void ToggleDoor(Client player, int door)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle playerVehicle = player.vehicle;
+
+            if (player.vehicleSeat != -1)
+            {
+                return;
+            }
+
+            if (API.getVehicleDoorState(playerVehicle, door))
+            {
+                API.setVehicleDoorState(playerVehicle, door, false);
+            }
+            else
+            {
+                API.setVehicleDoorState(playerVehicle, door, true);
+            }
+        }
+
+        public void WindowState(Client player, bool status)
+        {
+            if (!player.isInVehicle)
+            {
+                return;
+            }
+
+            NetHandle playerVehicle = player.vehicle;
+
+            if (status)
+            {
+                API.sendNativeToPlayersInRange(player.position, 50f, (ulong)Hash.ROLL_DOWN_WINDOWS, playerVehicle);
+            } else
+            {
+                API.sendNativeToPlayersInRange(player.position, 50f, (ulong)Hash.ROLL_UP_WINDOW, playerVehicle, 0);
+                API.sendNativeToPlayersInRange(player.position, 50f, (ulong)Hash.ROLL_UP_WINDOW, playerVehicle, 1);
+                API.sendNativeToPlayersInRange(player.position, 50f, (ulong)Hash.ROLL_UP_WINDOW, playerVehicle, 2);
+                API.sendNativeToPlayersInRange(player.position, 50f, (ulong)Hash.ROLL_UP_WINDOW, playerVehicle, 3);
+            }
+        }
     }
 }

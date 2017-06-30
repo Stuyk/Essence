@@ -20,6 +20,12 @@ class LockPick {
     }
 
     drawLockPick() {
+        if (this.score >= 100) {
+            API.showCursor(false);
+            currentLockPick = null;
+            return;
+        }
+
         this.getOutside();
         this.getScore();
         this.controls();

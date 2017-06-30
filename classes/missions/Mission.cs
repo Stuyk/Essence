@@ -89,6 +89,7 @@ namespace Essence.classes
                     {
                         API.triggerClientEvent(player, "Mission_Finish");
                         API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Mission Failed", "Fail");
+                        API.triggerClientEvent(player, "End_Lock_Pick_Minigame");
                     }
                     forceEmptyMission();
                 }
@@ -491,6 +492,7 @@ namespace Essence.classes
                 API.setEntitySyncedData(player, "Mission_Timer", -1);
                 API.triggerClientEvent(player, "Mission_Head_Notification", "~y~Awarded: ~w~$" + MissionReward, "Finish");
                 API.triggerClientEvent(player, "Play_Screen_FX", "SuccessNeutral", 5000, false);
+                API.triggerClientEvent(player, "End_Lock_Pick_Minigame");
                 Player instance = API.getEntityData(player, "Instance");
                 instance.Money += Convert.ToInt32(finalReward);
 
