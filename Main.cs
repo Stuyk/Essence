@@ -37,6 +37,35 @@ namespace Essence.classes
             API.givePlayerWeapon(player, gun, 999, true, true);
         }
 
+        [Command("tp")]
+        public void cmdInvitePlayerToMission(Client player, string target)
+        {
+            Client targetPlayer = null;
+
+            foreach (Client p in API.getAllPlayers())
+            {
+                if (p.name.Contains(target))
+                {
+                    targetPlayer = p;
+                    break;
+                }
+            }
+
+            if (targetPlayer == null)
+            {
+                API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Player does not exist.", "Error");
+                return;
+            }
+
+            if (targetPlayer == player)
+            {
+                API.triggerClientEvent(player, "Mission_Head_Notification", "~r~Stop trying to teleport to yourself you fuck.", "Error");
+                return;
+            }
+
+            API.setEntityPosition(targetPlayer, player.position);
+        }
+
         [Command("randomClothes")]
         public void randomClothes(Client player)
         {

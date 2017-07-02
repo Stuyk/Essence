@@ -124,7 +124,7 @@ namespace Essence.classes.jobs
 
             // Basic Setup.
             mission.useTimer();
-            mission.MissionTime = 90;
+            mission.MissionTime = 60 * 5;
             mission.MissionReward = reward;
             mission.MissionTitle = "Chop Shop";
             mission.RemoveFromMissionOnDeath = true;
@@ -175,7 +175,6 @@ namespace Essence.classes.jobs
             objective = mission.addEmptyObjective(mission);
             objectiveInfo = objective.addEmptyObjectiveInfo();
             objectiveInfo.Location = location;
-            API.sendChatMessageToPlayer(player, "/gopos" + location.ToString());
             objectiveInfo.Type = Objective.ObjectiveTypes.RetrieveVehicle;
             objectiveInfo.UniqueVehicleID = uniqueID;
             objectiveInfo = objective.addEmptyObjectiveInfo();

@@ -18,6 +18,7 @@
   <script src="clientside/ScreenFX.js" type="client" lang="javascript" />
   <script src="clientside/Lockpick.js" type="client" lang="javascript" />
   <script src="clientside/Interaction.js" type="client" lang="javascript" />
+  <script src="clientside/Inventory.js" type="client" lang="javascript" />
 
   <file src="clientside/images/essence.png" />
   <file src="clientside/images/keyboard_e.png" />
@@ -27,6 +28,8 @@
   <file src="clientside/images/lockpick/lockpick_0.png" />
   <file src="clientside/images/lockpick/lockpick_1.png" />
   <file src="clientside/images/lockpick/lockpick_2.png" />
+
+  <file src="clientside/images/crosshair/crosshair.png" />
   
   <file src="clientside/js/vue.min.js" />
   <file src="clientside/css/bulma.css" />

@@ -332,8 +332,12 @@ namespace Essence.classes
                         objective.removeAllAttachedObjects();
                     }
                 }
-                timer.Enabled = false;
-                timer.Stop();
+                if (timer != null)
+                {
+                    timer.Enabled = false;
+                    timer.Stop();
+                }
+                
             } else {
                 if (died)
                 {

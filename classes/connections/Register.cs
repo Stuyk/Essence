@@ -67,6 +67,9 @@ namespace Essence.classes
 
             // Setup skin table for new player.
             setupTableForPlayer(playerID, "Skin");
+
+            // Setup inventory table for new player.
+            setupTableForPlayer(playerID, "Inventory");
             API.triggerClientEvent(player, "FinishRegistration");
         }
 

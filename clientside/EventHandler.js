@@ -50,5 +50,9 @@ API.onServerEventTrigger.connect((eventName, args) => {
         case "Continue_Lock_Pick_Minigame":
             resource.Lockpick.newLockPickMiniGame();
             return;
+        // Inventory
+        case "Add_Inventory_Item":
+            resource.Inventory.addInventoryItem(args[0], args[1]);
+            return;
     }
 });

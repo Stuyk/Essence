@@ -33,6 +33,12 @@ namespace Essence.classes
             */
         }
 
+        [Command("ForceLogin")]
+        public void cmdForceLogin(Client player, string username, string password)
+        {
+            cmdLogin(player, username, password);
+        }
+
         public void cmdLogin(Client player, string username, string password)
         {
             if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
@@ -77,7 +83,6 @@ namespace Essence.classes
                 API.triggerClientEvent(player, "FinishLogin");
                 API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_IN, 5000);
             });
-            
         }
 
     }

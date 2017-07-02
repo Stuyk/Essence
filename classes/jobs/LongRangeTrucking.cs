@@ -182,12 +182,16 @@ namespace Essence.classes.jobs
             objectiveInfo.Type = Objective.ObjectiveTypes.RetrieveVehicle;
             objectiveInfo.UniqueVehicleID = uniqueVehicleID;
             NetHandle vehicle = objective.addObjectiveVehicle(mission, openSpot.Position, VehicleHash.Packer, openSpot.Rotation, uniqueID: uniqueVehicleID);
-            NetHandle trailer = objective.addObjectiveVehicle(mission, openSpot.Position.Add(new Vector3(0, 0, 50)), VehicleHash.Trailers, openSpot.Rotation, uniqueID: uniqueVehicleID);
+            API.delay(20000, true, () =>
+            {
+                NetHandle trailer = objective.addObjectiveVehicle(mission, openSpot.Position.Add(new Vector3(0, 0, 0)), VehicleHash.Trailers, openSpot.Rotation, uniqueID: uniqueVehicleID);
+            });
+            
             // All of this will go away on Client Update.
-            API.setEntityData(vehicle, "Mission_Truck_Trailer", true);
-            API.setEntityData(vehicle, "Mission_Truck_Sync_Time", DateTime.Now.AddSeconds(3));
-            API.setEntityData(vehicle, "Mission_Truck_Sync_Distance", truckSpawn);
-            API.setEntityData(vehicle, "Mission_Truck_Trailer_Attachment", trailer);
+            //API.setEntityData(vehicle, "Mission_Truck_Trailer", true);
+            //API.setEntityData(vehicle, "Mission_Truck_Sync_Time", DateTime.Now.AddSeconds(3));
+            //API.setEntityData(vehicle, "Mission_Truck_Sync_Distance", truckSpawn);
+           // API.setEntityData(vehicle, "Mission_Truck_Trailer_Attachment", trailer);
 
             // 2 - Major Objective - Drive Vehicle Out
             objective = mission.addEmptyObjective(mission);
