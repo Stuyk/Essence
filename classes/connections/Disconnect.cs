@@ -1,4 +1,5 @@
 ﻿using Essence.classes.connections;
+using Essence.classes.discord;
 using GTANetworkServer;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,8 @@ namespace Essence.classes
                 return;
             }
 
-            API.consoleOutput(string.Format("Disconnected registered user, {0}", player.name));
+            DiscordBot.sendMessageToServer(string.Format("{0} has logged out from the server.", player.name));
+
             Player instance = (Player)API.getEntityData(player, "Instance");
             instance.updatePlayerPosition();
             instance.PlayerClothing.savePlayerClothes();

@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using BCr = BCrypt.Net;
 using Essence;
 using GTANetworkShared;
+using Essence.classes.discord;
 
 namespace Essence.classes
 {

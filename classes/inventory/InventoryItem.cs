@@ -11,37 +11,32 @@ namespace Essence.classes.inventory
     public class InventoryItem : Script
     {
         private NetHandle attachedObject;
+        private DateTime expirationTime;
         private int quantity;
         private string type;
 
         public InventoryItem() { }
-        public InventoryItem(Client player, string type, int quantity)
+        public InventoryItem(Client player, string type, int quantity, Vector3 aimPos)
         {
+            expirationTime = DateTime.Now.ToUniversalTime().AddMinutes(2);
             this.type = type;
             this.quantity = quantity;
             switch (type)
             {
                 case "CarParts":
-                    attachedObject = API.createObject(232216084, player.position.Subtract(new Vector3(0, 0, 1)), player.rotation, player.dimension).handle;
+                    attachedObject = API.createObject(232216084, aimPos, player.rotation, player.dimension).handle;
                     API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
                 case "UnrefinedDrugs":
-                    attachedObject = API.createObject(371570974, player.position.Subtract(new Vector3(0, 0, 1)), player.rotation, player.dimension).handle;
+                    attachedObject = API.createObject(371570974, aimPos, player.rotation, player.dimension).handle;
                     API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
                 case "RefinedDrugs":
-                    attachedObject = API.createObject(1049338225, player.position.Subtract(new Vector3(0, 0, 1)), player.rotation, player.dimension).handle;
+                    attachedObject = API.createObject(1049338225, aimPos, player.rotation, player.dimension).handle;
                     API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
             }
-
-            API.delay(50000, true, () =>
-            {
-                if (API.doesEntityExist(attachedObject))
-                {
-                    API.deleteEntity(attachedObject);
-                }
-            });
+            
         }
 
         public string Type
@@ -65,6 +60,14 @@ namespace Essence.classes.inventory
             get
             {
                 return attachedObject;
+            }
+        }
+
+        public DateTime ExpirationTime
+        {
+            get
+            {
+                return expirationTime;
             }
         }
 

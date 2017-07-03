@@ -37,4 +37,12 @@
   
   <assembly ref="System.Data.SQLite.dll"/>
   <assembly ref="BCrypt.Net.dll"/>
+  
+  <assembly ref="Discord.Net.Core.dll"/>
+  <assembly ref="Discord.Net.Commands.dll"/>
+  <assembly ref="Discord.Net.Rest.dll"/>
+  <assembly ref="Discord.Net.Rpc.dll"/>
+  <assembly ref="Discord.Net.Webhook.dll"/>
+  <assembly ref="Discord.Net.WebSocket.dll"/>
+  <assembly ref="System.Interactive.Async.dll"/>
 </meta>

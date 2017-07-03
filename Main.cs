@@ -1,4 +1,5 @@
 ﻿using Essence.classes;
+using Essence.classes.discord;
 using GTANetworkServer;
 using GTANetworkShared;
 using System;

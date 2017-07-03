@@ -90,13 +90,11 @@ class InventoryItem {
         if (this.snapped) {
             API.drawText("" + this.type, Math.round(this.x + (this.width / 2)), Math.round(this.y + (this.height / 2)) - 10, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
             API.drawText("x" + this.quantity.toString(), Math.round(this.x + (this.width / 2)), Math.round(this.y + (this.height / 2)) + 30, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
-            //API.drawRectangle(this.x, this.y, this.width, this.height, 225, 225, 225, 200);
 
             if (this.attached) {
                 this.move();
             } else {
                 this.getSelection();
-                //this.gravity();
             }
         }
     }
@@ -123,7 +121,9 @@ class InventoryItem {
                 return;
             }
         }
-
+        if (!this.isAimPointValid()) {
+            return;
+        }
         this.snapped = false;
         this.dropItem();
     }
@@ -167,6 +167,10 @@ class InventoryItem {
                         }
                     }
                 }
+                // Check if the player's distance is proper for dropping the item.
+                if (!this.isAimPointValid()) {
+                    return;
+                }
                 this.snapped = false;
                 this.dropItem();
                 return;
@@ -190,7 +194,8 @@ class InventoryItem {
             return;
         }
         items.splice(index, 1);
-        API.triggerServerEvent("DROP_ITEM", this.type);
+        var aimCoords = API.getPlayerAimCoords(API.getLocalPlayer());
+        API.triggerServerEvent("DROP_ITEM", this.type, aimCoords);
     }
 
     private getSelection() {
@@ -214,6 +219,15 @@ class InventoryItem {
     private mouseCheck() {
         var mouse = API.getCursorPositionMantainRatio();
         if (mouse.X > this.x && mouse.X < this.x + this.width && mouse.Y > this.y && mouse.Y < this.y + this.height) {
+            return true;
+        }
+        return false;
+    }
+
+    private isAimPointValid() {
+        var aimPos = API.getPlayerAimCoords(API.getLocalPlayer());
+        var playerPOS = API.getEntityPosition(API.getLocalPlayer());
+        if (playerPOS.DistanceTo(aimPos) <= 5) {
             return true;
         }
         return false;
@@ -264,10 +278,6 @@ function addInventoryItem(type: string, quantity: number) {
 
 API.onUpdate.connect(() => {
     if (!opened) {
-        return;
-    }
-
-    if (items.length <= 0) {
         return;
     }
 
