@@ -15,3 +15,15 @@ obj/Debug/d20rp.pdb
 *.json
 *.csproj
 *.user
+Discord.Net.Commands.xml
+Discord.Net.Core.xml.xml
+Discord.Net.Core.xml
+Discord.Net.Rpc.xml
+Discord.Net.Webhook.xml
+Discord.Net.WebSocket.xml
+Microsoft.Extensions.DependencyInjection.Abstractions.xml
+Microsoft.Extensions.DependencyInjection.xml
+Newtonsoft.Json.xml
+System.Data.SQLite.xml
+System.Diagnostics.DiagnosticSource.xml
+System.Interactive.Async.xml
