@@ -35,10 +35,6 @@
         case "Play_Screen_FX":
             resource.ScreenFX.playScreenFX(args[0], args[1], args[2]);
             return;
-        // Mask Shop
-        case "OpenMaskShop":
-            resource.BrowserManager.showCEF("clientside/shops/mask.html")
-            return;
         // LockPick
         case "End_Lock_Pick_Minigame":
             resource.Lockpick.endLockPickMiniGame();
