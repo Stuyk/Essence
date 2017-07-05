@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Essence.classes
 {
-    class MaskInfo : Script
+    class TattooInfo : Script
     {
         private Vector3 location;
 
-        public MaskInfo() { }
+        public TattooInfo() { }
 
-        public MaskInfo(Vector3 loc)
+        public TattooInfo(Vector3 loc)
         {
             location = loc;
             generatePoint();
@@ -27,10 +27,10 @@ namespace Essence.classes
             PointInfo point = PointHelper.addNewPoint();
             point.Position = location;
             point.BlipColor = 3;
-            point.BlipType = 362;
-            point.Text = "Mask Shop";
+            point.BlipType = 75;
+            point.Text = "Tattoo Shop";
             point.DrawLabel = true;
-            point.ID = "SHOP_MASK";
+            point.ID = "SHOP_TATTOO";
             point.InteractionEnabled = true;
         }
 
@@ -47,24 +47,24 @@ namespace Essence.classes
         }
     }
 
-    class Mask : Script
+    class Tattoo : Script
     {
-        private List<MaskInfo> maskInfos;
+        private List<TattooInfo> tattooInfos;
         private List<Vector3> locations;
 
-        /** Returns a list of Masks. */
-        public List<MaskInfo> Masks
+        /** Returns a list of Tattoos. */
+        public List<TattooInfo> Tattoos
         {
             get
             {
-                return maskInfos;
+                return tattooInfos;
             }
         }
 
-        public Mask()
+        public Tattoo()
         {
             locations = new List<Vector3>();
-            maskInfos = new List<MaskInfo>();
+            tattooInfos = new List<TattooInfo>();
             API.onResourceStart += API_onResourceStart;
         }
 
@@ -76,7 +76,7 @@ namespace Essence.classes
 
         private void loadLocations()
         {
-            locations = Utility.pullLocationsFromFile("resources/Essence/data/masks.txt");
+            locations = Utility.pullLocationsFromFile("resources/Essence/data/tattoos.txt");
         }
 
         private void setupLocations()
@@ -85,19 +85,18 @@ namespace Essence.classes
 
             foreach (Vector3 location in locations)
             {
-                MaskInfo mask = new MaskInfo(location);
-                maskInfos.Add(mask);
+                TattooInfo tattoo = new TattooInfo(location);
+                tattooInfos.Add(tattoo);
                 count++;
             }
 
-            API.consoleOutput(string.Format("Added {0} Mask stores.", count));
+            API.consoleOutput(string.Format("Added {0} Tattoo locations.", count));
         }
 
-        public void startMaskShop(Client player)
+        public void startTattooShop(Client player)
         {
-            API.sendChatMessageToPlayer(player, "~b~Essence: ~r~Fire Mask shop code!.");
-            API.triggerClientEvent(player, "OPEN_MASK_MENU");
+            API.sendChatMessageToPlayer(player, "~b~Essence: ~r~We're Sorry! The tattoo shops are under contruction.");
         }
-    }
 
     }
+}

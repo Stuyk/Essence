@@ -124,6 +124,9 @@ namespace Essence.classes.events
                     case "SHOP_MASK":
                         API.call("Mask", "startMaskShop", player);
                         return;
+                    case "SHOP_TATTOO":
+                        API.call("Tattoo", "startTattooShop", player);
+                        return;
                     case "JOB_LONG_RANGE_TRUCKING":
                         API.call("LongRangeTrucking", "startLongRangeTruckingJob", player);
                         return;
