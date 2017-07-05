@@ -15,6 +15,7 @@ namespace Essence.classes.inventory
             API.onResourceStart += API_onResourceStart;
         }
 
+        // Start a timer that loops through Inventory Items when the server starts.
         private void API_onResourceStart()
         {
             Timer timer = new Timer();
@@ -23,6 +24,7 @@ namespace Essence.classes.inventory
             timer.Elapsed += ItemDeletionChecker;
         }
 
+        // This loops through all the ActiveItems backwards and deletes any that are past their 'expiration date'
         private void ItemDeletionChecker(object sender, ElapsedEventArgs e)
         {
             for (int i = Items.ActiveItems.Count - 1; i >= 0; i--)

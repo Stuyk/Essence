@@ -173,7 +173,7 @@ namespace Essence.classes.events
                     // INVENTORY SYSTEM
                     // ==========================
                     case "DROP_ITEM":
-                        Items.NewItem(player, arguments[0].ToString(), (Vector3)arguments[1]);
+                        Items.NewItem(player, arguments[0].ToString(), (Vector3)arguments[1], Convert.ToInt32(arguments[2]));
                         return;
                     case "PICKUP_ITEM":
                         Items.PickupItem(player, (NetHandle)arguments[0]);

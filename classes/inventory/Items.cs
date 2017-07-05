@@ -86,9 +86,8 @@ namespace Essence.classes.inventory
         /// Create a new item and spit it out.
         /// </summary>
         /// <param name="type"></param>
-        public static void NewItem(Client player, string type, Vector3 coords)
+        public static void NewItem(Client player, string type, Vector3 coords, int quantity)
         {
-        
             if (coords.DistanceTo(player.position) > 6)
             {
                 API.shared.sendChatMessageToPlayer(player, "~r~You're attempting to drop an item too far away. Try aiming down.");
@@ -101,31 +100,38 @@ namespace Essence.classes.inventory
             switch (type)
             {
                 case "CarParts":
-                    if (inventory.CarParts <= 0)
+                    if (inventory.CarParts >= quantity)
                     {
-                        return;
+                        inventory.CarParts -= quantity;
+                        newItem = new InventoryItem(player, type, quantity, coords);
+                        AddItem(newItem);
+                    } else {
+                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
                     }
-                    newItem = new InventoryItem(player, type, inventory.CarParts, coords);
-                    inventory.CarParts = 0;
-                    AddItem(newItem);
                     return;
                 case "UnrefinedDrugs":
-                    if (inventory.UnrefinedDrugs <= 0)
+                    if (inventory.UnrefinedDrugs >= quantity)
                     {
-                        return;
+                        inventory.UnrefinedDrugs -= quantity;
+                        newItem = new InventoryItem(player, type, quantity, coords);
+                        AddItem(newItem);
                     }
-                    newItem = new InventoryItem(player, type, inventory.UnrefinedDrugs, coords);
-                    inventory.UnrefinedDrugs = 0;
-                    AddItem(newItem);
+                    else
+                    {
+                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
+                    }
                     return;
                 case "RefinedDrugs":
-                    if (inventory.RefinedDrugs <= 0)
+                    if (inventory.RefinedDrugs >= quantity)
                     {
-                        return;
+                        inventory.RefinedDrugs -= quantity;
+                        newItem = new InventoryItem(player, type, quantity, coords);
+                        AddItem(newItem);
                     }
-                    newItem = new InventoryItem(player, type, inventory.RefinedDrugs, coords);
-                    inventory.RefinedDrugs = 0;
-                    AddItem(newItem);
+                    else
+                    {
+                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
+                    }
                     return;
             }
         }
