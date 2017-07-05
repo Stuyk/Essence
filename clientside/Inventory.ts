@@ -1,5 +1,5 @@
 ﻿var grid: Grid = null;
-var debugMode: boolean = true;
+var debugMode: boolean = false;
 var opened = false;
 var items: Item[] = new Array<Item>();
 // Used by our items.
@@ -72,7 +72,7 @@ class Box {
         return false;
     }
     // Draw our grids as a debug option.
-    debugGrids() {
+    drawBox() {
         API.drawRectangle(this.x, this.y, this.size, this.size, 255, 255, 255, 100);
     }
 }
@@ -87,11 +87,13 @@ class Item {
     private quantity: number;
     private selected: boolean;
     private splitTimer: number; // ms
-    constructor(type: string, quantity: number) {
+    private consumeable: boolean;
+    constructor(type: string, quantity: number, consumeable: boolean) {
         this.x = Math.round(API.getScreenResolutionMantainRatio().Width / 2);
         this.y = Math.round(API.getScreenResolutionMantainRatio().Height / 2);
         this.type = type;
         this.quantity = quantity;
+        this.consumeable = consumeable;
         this.box = null;
         this.selected = false;
         this.splitTimer = Date.now() + 3000;
@@ -114,6 +116,7 @@ class Item {
                this.splitSelection();
            } else {
                this.getSelection();
+               this.consumeSelection();
            }
        }
     }
@@ -143,6 +146,30 @@ class Item {
         this.centerX = Math.round(this.x + (itemSize / 2));
         this.centerY = Math.round(this.y + (itemSize / 2));
     }
+    // Consume Selection
+    private consumeSelection() {
+        if (!API.isControlJustReleased(Enums.Controls.CursorCancel)) {
+            return;
+        }
+
+        if (!this.mouseCheck()) {
+            return;
+        }
+
+        if (!this.consumeable) {
+            return;
+        }
+
+        this.quantity -= 1;
+
+        if (this.quantity <= 0) {
+            this.removeItem();
+        }
+
+        // Consumeable shit -->
+        API.triggerServerEvent("USE_ITEM", this.type);
+        API.playSoundFrontEnd("Load_Scene", "DLC_Dmod_Prop_Editor_Sounds");
+    }
     // Get our current selection.
     private getSelection() {
         // If our current selection is not open, don't bother.'
@@ -161,10 +188,10 @@ class Item {
         currentSelection = this;
         this.selected = true;
         this.removeBinding();
+        API.playSoundFrontEnd("Select_Placed_Prop", "DLC_Dmod_Prop_Editor_Sounds");
         if (debugMode) {
             API.sendChatMessage("Selected");
         }
-        
     }
     // Split your selection into two.
     private splitSelection() {
@@ -191,8 +218,9 @@ class Item {
         if (splitValue <= 0) {
             return;
         }
+        API.playSoundFrontEnd("Reset_Prop_Position", "DLC_Dmod_Prop_Editor_Sounds");
         this.quantity = possibleNewValue;
-        addInventoryItem(this.type, splitValue);
+        addInventoryItem(this.type, splitValue, this.consumeable);
     }
     // Remove item bind from box.
     private removeBinding() {
@@ -256,6 +284,7 @@ class Item {
                 this.x = closestBox.Position.X;
                 this.y = closestBox.Position.Y;
                 this.calculateCenterPoints();
+                API.playSoundFrontEnd("Place_Prop_Success", "DLC_Dmod_Prop_Editor_Sounds");
                 if (debugMode) {
                     API.sendChatMessage("Placement succeeded.");
                 }
@@ -264,8 +293,8 @@ class Item {
             }
         }
     }
-    // Used to drop the item. General idea of how it works. We loop through our array, find the index that matches this. Then we take that index splice it out of our array, and then we drop our item.
-    private dropItem() {
+    // Remove Item
+    private removeItem() {
         var index = 0;
         for (index = 0; index < items.length; index++) {
             if (items[index] === this) {
@@ -275,9 +304,14 @@ class Item {
         if (index > items.length) {
             return;
         }
+        items.splice(index, 1);
+    }
+    // Used to drop the item. General idea of how it works. We loop through our array, find the index that matches this. Then we take that index splice it out of our array, and then we drop our item.
+    private dropItem() {
+        this.removeItem();
         var playerPos = API.getEntityPosition(API.getLocalPlayer());
         var aimCoords = API.getPlayerAimCoords(API.getLocalPlayer());
-        items.splice(index, 1);
+        API.playSoundFrontEnd("Place_Prop_Fail", "DLC_Dmod_Prop_Editor_Sounds");
         // As a bonus we check if the aim coordinate is a viable position. If not we'll just drop it at ground height.'
         if (playerPos.DistanceTo(aimCoords) <= 6) {
             API.triggerServerEvent("DROP_ITEM", this.type, aimCoords, this.quantity);
@@ -307,12 +341,11 @@ function toggleInventory() {
         opened = true;
         API.triggerServerEvent("GET_ITEMS");
         API.showCursor(true);
-        API.sendChatMessage("Opened");
     }
 }
 
-function addInventoryItem(type: string, quantity: number) {
-    items.push(new Item(type, quantity));
+function addInventoryItem(type: string, quantity: number, consumeable: boolean) {
+    items.push(new Item(type, quantity, consumeable));
 }
 
 API.onUpdate.connect(() => {
@@ -330,10 +363,8 @@ API.onUpdate.connect(() => {
     var mouse = API.getCursorPositionMantainRatio();
     API.drawRectangle(mouse.X, mouse.Y, 5, 5, 150, 150, 150, 255);
 
-    if (debugMode) {
-        var gridBoxes = grid.GetBoxes;
-        for (var i = 0; i < gridBoxes.length; i++) {
-            gridBoxes[i].debugGrids();
-        }
+    var gridBoxes = grid.GetBoxes;
+    for (var i = 0; i < gridBoxes.length; i++) {
+        gridBoxes[i].drawBox();
     }
 });

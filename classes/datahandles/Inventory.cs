@@ -65,17 +65,18 @@ namespace Essence.classes.datahandles
         {
             if (CarParts != 0)
             {
-                API.triggerClientEvent(client, "Add_Inventory_Item", "CarParts", CarParts);
+                // Type of Item, Amount of Item, is It Consumeable?
+                API.triggerClientEvent(client, "Add_Inventory_Item", "CarParts", CarParts, false);
             }
 
             if (UnrefinedDrugs != 0)
             {
-                API.triggerClientEvent(client, "Add_Inventory_Item", "UnrefinedDrugs", UnrefinedDrugs);
+                API.triggerClientEvent(client, "Add_Inventory_Item", "UnrefinedDrugs", UnrefinedDrugs, false);
             }
             
             if (RefinedDrugs != 0)
             {
-                API.triggerClientEvent(client, "Add_Inventory_Item", "RefinedDrugs", RefinedDrugs);
+                API.triggerClientEvent(client, "Add_Inventory_Item", "RefinedDrugs", RefinedDrugs, true);
             }
         }
 

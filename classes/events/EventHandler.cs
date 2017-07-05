@@ -185,6 +185,9 @@ namespace Essence.classes.events
                         Player instance = API.getEntityData(player, "Instance");
                         instance.PlayerInventory.LoadItemsToLocal();
                         return;
+                    case "USE_ITEM":
+                        Items.UseItem(player, arguments[0].ToString());
+                        return;
 
                 }
             }

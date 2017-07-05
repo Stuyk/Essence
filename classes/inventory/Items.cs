@@ -82,6 +82,25 @@ namespace Essence.classes.inventory
             }
         }
 
+        public static void UseItem(Client player, string type)
+        {
+            Player instance = player.getData("Instance");
+            Inventory inventory = instance.PlayerInventory;
+            // We specify our item types here.
+            switch (type)
+            {
+                case "RefinedDrugs":
+                    if (inventory.RefinedDrugs <= 0)
+                    {
+                        return;
+                    }
+                    inventory.RefinedDrugs -= 1;
+                    API.shared.sendChatMessageToPlayer(player, "You consumed some drugs.");
+                    player.armor += 10;
+                    return;
+            }
+        }
+
         /// <summary>
         /// Create a new item and spit it out.
         /// </summary>
