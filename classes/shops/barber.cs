@@ -93,7 +93,7 @@ namespace Essence.classes
             API.consoleOutput(string.Format("Added {0} Barber locations.", count));
         }
 
-        public void startBarberShop(Client player)
+        public void startBarberShop(Client player, params object[] arguments)
         {
             API.sendChatMessageToPlayer(player, "~b~Essence: ~r~Fire Barber shop code!.");
         }

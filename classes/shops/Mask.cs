@@ -93,7 +93,7 @@ namespace Essence.classes
             API.consoleOutput(string.Format("Added {0} Mask stores.", count));
         }
 
-        public void startMaskShop(Client player)
+        public void startMaskShop(Client player, params object[] arguments)
         {
             API.sendChatMessageToPlayer(player, "~b~Essence: ~r~Fire Mask shop code!.");
             API.triggerClientEvent(player, "OPEN_MASK_MENU");

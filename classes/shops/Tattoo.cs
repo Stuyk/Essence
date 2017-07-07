@@ -93,7 +93,7 @@ namespace Essence.classes
             API.consoleOutput(string.Format("Added {0} Tattoo locations.", count));
         }
 
-        public void startTattooShop(Client player)
+        public void startTattooShop(Client player, params object[] arguments)
         {
             API.sendChatMessageToPlayer(player, "~b~Essence: ~r~We're Sorry! The tattoo shops are under contruction.");
         }

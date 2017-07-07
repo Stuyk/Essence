@@ -28,8 +28,16 @@ namespace Essence.classes.inventory
         /// Used to pickup an item.
         /// </summary>
         /// <param name="netValue"></param>
-        public static void PickupItem(Client player, NetHandle netValue)
+        public static void PickupItem(Client player, params object[] arguments)
         {
+            if (arguments.Length <= 0)
+            {
+                return;
+            }
+
+            NetHandle netValue = (NetHandle)arguments[0];
+
+
             if (!API.shared.doesEntityExist(netValue))
             {
                 return;
@@ -82,8 +90,15 @@ namespace Essence.classes.inventory
             }
         }
 
-        public static void UseItem(Client player, string type)
+        public static void UseItem(Client player, params object[] arguments)
         {
+            if (arguments.Length <= 0)
+            {
+                return;
+            }
+
+            string type = arguments[0].ToString();
+
             Player instance = player.getData("Instance");
             Inventory inventory = instance.PlayerInventory;
             // We specify our item types here.
@@ -101,12 +116,33 @@ namespace Essence.classes.inventory
             }
         }
 
+        public static void GetItems(Client player, params object[] arguments)
+        {
+            if (!player.hasData("Instance"))
+            {
+                return;
+            }
+
+            Player instance = player.getData("Instance");
+            instance.PlayerInventory.LoadItemsToLocal();
+            return;
+        }
+
         /// <summary>
         /// Create a new item and spit it out.
         /// </summary>
         /// <param name="type"></param>
-        public static void NewItem(Client player, string type, Vector3 coords, int quantity)
+        public static void NewItem(Client player, params object[] arguments)
         {
+            if (arguments.Length <= 0)
+            {
+                return;
+            }
+
+            string type = arguments[0].ToString();
+            Vector3 coords = (Vector3)arguments[1];
+            int quantity = Convert.ToInt32(arguments[2]);
+
             if (coords.DistanceTo(player.position) > 6)
             {
                 API.shared.sendChatMessageToPlayer(player, "~r~You're attempting to drop an item too far away. Try aiming down.");

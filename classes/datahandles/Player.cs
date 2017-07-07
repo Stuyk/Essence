@@ -147,7 +147,6 @@ namespace Essence.classes
 
             // Make our player controllable again.
             API.freezePlayer(player, false);
-            API.setEntityTransparency(player, 255);
             API.setEntityPosition(player, LastPosition);
 
             // Setup Player Vehicles

@@ -33,7 +33,7 @@ namespace Essence.classes.commands
             API.sendChatMessageToPlayer(player, string.Format("~b~Essence: ~w~Found a total of {0} vehicles.", count));
         }
 
-        public void ToggleEngine(Client player)
+        public void ToggleEngine(Client player, params object[] arguments)
         {
             if (!player.isInVehicle)
             {
@@ -56,7 +56,7 @@ namespace Essence.classes.commands
             }
         }
 
-        public void ToggleHood(Client player)
+        public void ToggleHood(Client player, params object[] arguments)
         {
             if (!player.isInVehicle)
             {
@@ -80,7 +80,7 @@ namespace Essence.classes.commands
             }
         }
 
-        public void ToggleTrunk(Client player)
+        public void ToggleTrunk(Client player, params object[] arguments)
         {
             if (!player.isInVehicle)
             {
@@ -104,8 +104,10 @@ namespace Essence.classes.commands
             }
         }
 
-        public void ToggleDoor(Client player, int door)
+        public void ToggleDoor(Client player, params object[] arguments)
         {
+            int door = Convert.ToInt32(arguments[0]);
+
             if (!player.isInVehicle)
             {
                 return;
@@ -128,8 +130,10 @@ namespace Essence.classes.commands
             }
         }
 
-        public void WindowState(Client player, bool status)
+        public void WindowState(Client player, params object[] arguments)
         {
+            bool status = Convert.ToBoolean(arguments[0]);
+                
             if (!player.isInVehicle)
             {
                 return;

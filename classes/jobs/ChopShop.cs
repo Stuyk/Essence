@@ -93,7 +93,7 @@ namespace Essence.classes.jobs
             vehicleList = Utility.pullTypesFromFile("resources/Essence/data/chopshopvehicletypes.txt");
         }
 
-        public void startChopShopJob(Client player)
+        public void startChopShopJob(Client player, params object[] arguments)
         {
             if (player.position.DistanceTo(startPoint) >= 5)
             {

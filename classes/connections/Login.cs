@@ -34,14 +34,23 @@ namespace Essence.classes
             */
         }
 
-        [Command("ForceLogin")]
-        public void cmdForceLogin(Client player, string username, string password)
+        [Command("forceLogin")]
+        public void cmdForceLogin(Client player, string user, string pass)
         {
-            cmdLogin(player, username, password);
+            cmdLogin(player, user, pass);
         }
 
-        public void cmdLogin(Client player, string username, string password)
+        public void cmdLogin(Client player, params object[] arguments)
         {
+            if (arguments.Length <= 0)
+            {
+                API.triggerClientEvent(player, "FailLogin");
+                return;
+            }
+
+            string username = arguments[0].ToString();
+            string password = arguments[1].ToString();
+
             if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
             {
                 return;
@@ -78,11 +87,11 @@ namespace Essence.classes
             }
 
             new Player(player, result.Rows[0]);
-            API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_OUT, 2000);
+            //API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_OUT, 2000);
             API.delay(3000, true, () =>
             {
                 API.triggerClientEvent(player, "FinishLogin");
-                API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_IN, 5000);
+                //API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_IN, 5000);
             });
         }
 
