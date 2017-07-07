@@ -32,7 +32,7 @@ namespace Essence.classes.inventory
                     API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
                 case "RefinedDrugs":
-                    attachedObject = API.createObject(1049338225, aimPos, player.rotation, player.dimension).handle;
+                    attachedObject = API.createObject(1049338225, aimPos.Add(new Vector3(0, 0, 0.3)), player.rotation, player.dimension).handle;
                     API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
             }

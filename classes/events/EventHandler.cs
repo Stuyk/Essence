@@ -176,7 +176,7 @@ namespace Essence.classes.events
                     // INVENTORY SYSTEM
                     // ==========================
                     case "DROP_ITEM":
-                        Items.NewItem(player, arguments[0].ToString(), (Vector3)arguments[1]);
+                        Items.NewItem(player, arguments[0].ToString(), (Vector3)arguments[1], Convert.ToInt32(arguments[2]));
                         return;
                     case "PICKUP_ITEM":
                         Items.PickupItem(player, (NetHandle)arguments[0]);
@@ -184,6 +184,9 @@ namespace Essence.classes.events
                     case "GET_ITEMS":
                         Player instance = API.getEntityData(player, "Instance");
                         instance.PlayerInventory.LoadItemsToLocal();
+                        return;
+                    case "USE_ITEM":
+                        Items.UseItem(player, arguments[0].ToString());
                         return;
 
                 }

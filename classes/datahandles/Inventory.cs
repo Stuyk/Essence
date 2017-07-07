@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.utility;
+using GTANetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -51,11 +52,9 @@ namespace Essence.classes.datahandles
 
         private void convertInventory(DataRow inv)
         {
-            CarParts = Convert.ToInt32(inv["CarParts"]);
-            UnrefinedDrugs = Convert.ToInt32(inv["UnrefinedDrugs"]);
-            RefinedDrugs = Convert.ToInt32(inv["RefinedDrugs"]);
-
-            Console.WriteLine(String.Format("Inventory: {0}, {1}, {2}", CarParts, UnrefinedDrugs, RefinedDrugs));
+            carParts = Convert.ToInt32(inv["CarParts"]);
+            unrefinedDrugs = Convert.ToInt32(inv["UnrefinedDrugs"]);
+            refinedDrugs = Convert.ToInt32(inv["RefinedDrugs"]);
         }
 
         /// <summary>
@@ -65,18 +64,28 @@ namespace Essence.classes.datahandles
         {
             if (CarParts != 0)
             {
-                API.triggerClientEvent(client, "Add_Inventory_Item", "CarParts", CarParts);
+                // Type of Item, Amount of Item, is It Consumeable?
+                API.triggerClientEvent(client, "Add_Inventory_Item", "CarParts", CarParts, false);
             }
 
             if (UnrefinedDrugs != 0)
             {
-                API.triggerClientEvent(client, "Add_Inventory_Item", "UnrefinedDrugs", UnrefinedDrugs);
+                API.triggerClientEvent(client, "Add_Inventory_Item", "UnrefinedDrugs", UnrefinedDrugs, false);
             }
             
             if (RefinedDrugs != 0)
             {
-                API.triggerClientEvent(client, "Add_Inventory_Item", "RefinedDrugs", RefinedDrugs);
+                API.triggerClientEvent(client, "Add_Inventory_Item", "RefinedDrugs", RefinedDrugs, true);
             }
+        }
+
+        private void saveInventory(string item, int amount)
+        {
+            string target = "UPDATE Inventory SET";
+            string where = string.Format("WHERE Owner='{0}'", player.ID);
+            string[] variables = { item };
+            object[] data = { amount };
+            Payload.addNewPayload(target, where, variables, data);
         }
 
         public void addBasedOnType(string type, int quantity)
@@ -85,21 +94,29 @@ namespace Essence.classes.datahandles
             {
                 case "CarParts":
                     CarParts += quantity;
+                    saveInventory(type, CarParts);
                     return;
                 case "UnrefinedDrugs":
                     UnrefinedDrugs += quantity;
+                    saveInventory(type, UnrefinedDrugs);
                     return;
                 case "RefinedDrugs":
                     RefinedDrugs += quantity;
+                    saveInventory(type, RefinedDrugs);
                     return;
             }
         }
-
+        // =====================================
+        // GETTERS AND SETTERS FOR OUR INVENTORY ITEMS
+        // ANYTHING YOU ADD HERE MUST BE ADDED INTO THE DATABASE TABLE AS WELL.
+        // ALSO EDIT ITEMS.CS, INVENTORYITEM.CS, and INVENTORYMANAGER.CS
+        // =====================================
         public int CarParts
         {
             set
             {
                 carParts = value;
+                saveInventory("CarParts", carParts);
             }
             get
             {
@@ -112,6 +129,7 @@ namespace Essence.classes.datahandles
             set
             {
                 unrefinedDrugs = value;
+                saveInventory("UnrefinedDrugs", unrefinedDrugs);
             }
             get
             {
@@ -124,6 +142,7 @@ namespace Essence.classes.datahandles
             set
             {
                 refinedDrugs = value;
+                saveInventory("RefinedDrugs", refinedDrugs);
             }
             get
             {
