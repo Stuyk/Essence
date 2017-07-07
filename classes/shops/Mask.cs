@@ -98,6 +98,13 @@ namespace Essence.classes
             API.sendChatMessageToPlayer(player, "~b~Essence: ~r~Fire Mask shop code!.");
             API.triggerClientEvent(player, "OPEN_MASK_MENU");
         }
+
+        [Command("mtest")]
+        public void MtestCommand(Client sender, int slot, int drawable, int texture)
+        {
+            API.setPlayerClothes(sender, slot, drawable, texture);
+            API.sendChatMessageToPlayer(sender, "Clothes applied successfully!");
+        }
     }
 
     }
