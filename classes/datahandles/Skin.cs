@@ -372,7 +372,7 @@ namespace Essence.classes.datahandles
 
         public Skin(Client p, Player pClass)
         {
-            client = p;
+            client = pClass.PlayerClient;
             player = pClass;
             Mother = 0;
             father = 0;
@@ -421,6 +421,20 @@ namespace Essence.classes.datahandles
             DataTable result = db.compileSelectQuery(before, varNames, data);
             DataRow face = result.Rows[0];
 
+            int gender = Convert.ToInt32(face["Model"]);
+
+            if (gender == 0)
+            {
+                API.setPlayerSkin(client, (PedHash)1885233650);
+                //API.setPlayerSkin(client, PedHash.FreemodeMale01);
+            }
+            else
+            {
+                API.setPlayerSkin(client, (PedHash)(-1667301416));
+                //API.setPlayerSkin(client, PedHash.FreemodeFemale01);
+            }
+
+
             Father = Convert.ToInt32(face["Father"]);
             Mother = Convert.ToInt32(face["Mother"]);
             MotherSkin = Convert.ToInt32(face["MotherSkin"]);
@@ -468,30 +482,59 @@ namespace Essence.classes.datahandles
             faceList[18] = Convert.ToSingle(face["Face18"]);
             faceList[19] = Convert.ToSingle(face["Face19"]);
             faceList[20] = Convert.ToSingle(face["Face20"]);
-
             API.setEntitySyncedData(client, "ESS_FaceList", FaceList);
 
-            int gender = Convert.ToInt32(face["Model"]);
-
-            if (gender == 0)
-            {
-                API.setPlayerSkin(client, PedHash.FreemodeMale01);
-            }
-            else
-            {
-                API.setPlayerSkin(client, PedHash.FreemodeFemale01);
-            }
-        }
-
-        public void updatePlayerFace()
-        {
             if (Hair == 23 || Hair == 24)
             {
                 Hair = 0;
             }
+            API.setPlayerClothes(client, 2, Hair, 0);
 
-            //API.setPlayerClothes(client, 2, Hair, 0);
             API.triggerClientEventForAll("ESS_SKIN_UPDATE", client);
+            //sendPlayerFaceToClient(client);
+        }
+
+        public void sendPlayerFaceToClient(Client requester)
+        {
+            // Native Hell Hole
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_BLEND_DATA, client.handle, Mother, Father, 0, MotherSkin, FatherSkin, 0, FaceBlend, SkinBlend, 0, false);
+            API.sendNativeToPlayer(requester, (ulong)Hash.UPDATE_PED_HEAD_BLEND_DATA, client.handle, FaceBlend, SkinBlend, 0);
+            // Eye Color
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_EYE_COLOR, client.handle, EyeColor);
+            // Eyebrows
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 2, Eyebrows, 0.9);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 2, 1, HairColor, HairHighlight);
+            // Lipstick
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 8, Lipstick, 0.9);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 8, 2, LipstickColor, LipstickColor2);
+            // Makeup
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 4, Makeup, 0.9);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 4, 0, MakeupColor, MakeupColor2);
+            // Blemishes
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 0, Blemishes, 0.9);
+            // FacialHair
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 1, FacialHair, 0.9);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 1, 1, HairColor, HairHighlight);
+            // Ageing
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 3, Ageing, 0.9);
+            // Complexion
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 6, Complexion, 0.9);
+            // Moles
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 9, Moles, 0.9);
+            // SunDamage
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 7, SunDamage, 0.9);
+            // ChestHair
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 10, ChestHair, 0.9);
+            // BodyBlemishes
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 7, BodyBlemishes, 0.9);
+            // Hair Color
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HAIR_COLOR, client.handle, HairColor, HairHighlight);
+            // FaceList (e.g. nose length, chin shape, etc)
+            for (var i = 0; i < 21; i++)
+            {
+                API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_FACE_FEATURE, client.handle, i, FaceList[i]);
+            }
+            
         }
     }
 }

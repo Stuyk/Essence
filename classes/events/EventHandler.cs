@@ -18,6 +18,10 @@ namespace Essence.classes.events
             API.onClientEventTrigger += API_onClientEventTrigger;
         }
 
+        // ==============
+        // This whole section needs some re-organizing.
+        // ==============
+
         private void API_onClientEventTrigger(Client player, string eventName, params object[] arguments)
         {
             // Login Switch

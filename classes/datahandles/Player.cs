@@ -119,6 +119,14 @@ namespace Essence.classes
             }
         }
 
+        public Skin PlayerSkin
+        {
+            get
+            {
+                return playerSkin;
+            }
+        }
+
         public Player() { }
 
         public Player(Client player, DataRow db)
@@ -148,7 +156,6 @@ namespace Essence.classes
             // Setup Player Skin
             playerSkin = new Skin(player, this);
             playerSkin.loadPlayerFace();
-            playerSkin.updatePlayerFace();
 
             // Setup Player Clothing
             playerClothing = new Clothing(player, this);

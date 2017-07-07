@@ -71,11 +71,26 @@ namespace Essence.classes
         public void randomClothes(Client player)
         {
             Player client = API.getEntityData(player, "Instance");
-            API.setPlayerSkin(player, PedHash.FreemodeMale01);
-            client.PlayerClothing.Top = new Random().Next(0, 50);
-            client.PlayerClothing.Legs = new Random().Next(0, 50);
-            client.PlayerClothing.Feet = new Random().Next(0, 50);
-
+            API.delay(1000, true, () =>
+            {
+                client.PlayerClothing.Top = new Random().Next(0, 100);
+            });
+            API.delay(1000, true, () =>
+            {
+                client.PlayerClothing.Legs = new Random().Next(0, 60);
+            });
+            API.delay(1000, true, () =>
+            {
+                client.PlayerClothing.Feet = new Random().Next(0, 100);
+            });
+            API.delay(1000, true, () =>
+            {
+                client.PlayerClothing.Torso = new Random().Next(0, 100);
+            });
+            API.delay(1000, true, () =>
+            {
+                client.PlayerClothing.Undershirt = new Random().Next(0, 60);
+            });
         }
 
         [Command("savePos", "~w~/savePos <location name>")]
