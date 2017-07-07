@@ -7,7 +7,7 @@ var menuPool = null;
 var MenuOpen = false;
 
 var mainMenu = null;
-var mainMenuItems = ["Animals", "Balaclavas", "Characters", "Clowns", "Crime Masks", "Cultural", "Festive", "Intimidation", "Monsters", "Paper Bags", "Ski Masks", "Sports", "Tactical", "Valentines", "Zombies", "Exit"];
+var mainMenuItems = ["Animals", "Balaclavas", "Characters", "Clowns", "Crime Masks", "Cultural", "Festive", "Intimidation", "Monsters", "Paper Bags", "Ski Masks", "Sports", "Tactical", "Valentines", "Zombies"];
 
 var AnimalMenu = null;
 var AnimalMenuItems = [
@@ -204,12 +204,12 @@ var CulturalMenuItems = [
 ["Blue Ornate Skull", 200, 99, 2],
 ["Silver Ornate Skull", 200, 99, 1],
 ["Red Ornate Skull", 200, 99, 0],
-["Green Oni", 200, 14, 10],
-["Gold Oni", 200, 14, 10],
-["Black Oni", 200, 14, 10],
-["White Oni", 200, 14, 10],
-["Blue Oni", 200, 14, 10],
-["Red Oni", 200, 14, 10],
+["Green Oni", 200, 94, 5],
+["Gold Oni", 200, 94, 4],
+["Black Oni", 200, 94, 3],
+["White Oni", 200, 94, 2],
+["Blue Oni", 200, 94, 1],
+["Red Oni", 200, 94, 0],
 ["Fashion Hockey", 200, 14, 10],
 ["Tourist Hockey", 200, 14, 2],
 ["Vinewood Hockey", 200, 14, 1],
@@ -221,7 +221,8 @@ var CulturalMenuItems = [
 
 var FestiveMenu = null;
 var FestiveMenuItems = [
-["Stocking", 200, 6, 0]
+["Stocking", 200, 32, 0],
+["Penguin", 200, 31, 0]
 ];
 
 var IntimidationMenu = null;
@@ -513,11 +514,15 @@ function createMainMenu()
 			openHolidayMenu();
 			break;
 			
-			case 15:
-			CloseMenu();
-			break;
 		}
 	});
+	
+	//Gets called when we Close this out
+	mainMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		CloseMenu();
+	});
+	
 }
 
 //----------
@@ -534,10 +539,6 @@ function createAnimalMenu()
 	
 	AnimalMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (AnimalMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = AnimalMenuItems[index][2];
 		TextureId = AnimalMenuItems[index][3];
@@ -546,13 +547,15 @@ function createAnimalMenu()
 
 	AnimalMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (AnimalMenuItems.length)) {			
-			mainMenu.Visible = true;
-			AnimalMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
+	});
+	
+	AnimalMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		AnimalMenu.Visible = false; 
+		resetMainMenu();
 	});
 }
 
@@ -571,10 +574,6 @@ function createBalacavaMenu()
 	
 	BalacavaMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (BalacavaMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = BalacavaMenuItems[index][2];
 		TextureId = BalacavaMenuItems[index][3];
@@ -583,13 +582,15 @@ function createBalacavaMenu()
 
 	BalacavaMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (BalacavaMenuItems.length)) {			
-			mainMenu.Visible = true;
-			BalacavaMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
+	});
+	
+	BalacavaMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		BalacavaMenu.Visible = false; 
+		resetMainMenu();
 	});
 }
 
@@ -607,10 +608,6 @@ function createCharacterMenu()
 	
 	CharacterMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (CharacterMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = CharacterMenuItems[index][2];
 		TextureId = CharacterMenuItems[index][3];
@@ -619,13 +616,15 @@ function createCharacterMenu()
 
 	CharacterMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (CharacterMenuItems.length)) {			
-			mainMenu.Visible = true;
-			CharacterMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
+	});
+	
+	CharacterMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		CharacterMenu.Visible = false; 
+		resetMainMenu();
 	});
 }
 
@@ -643,10 +642,6 @@ function createClownMenu()
 	
 	ClownMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (ClownMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = ClownMenuItems[index][2];
 		TextureId = ClownMenuItems[index][3];
@@ -655,14 +650,16 @@ function createClownMenu()
 
 	ClownMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (ClownMenuItems.length)) {			
-			mainMenu.Visible = true;
-			ClownMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
 	});
+	
+	ClownMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		ClownMenu.Visible = false; 
+		resetMainMenu();
+	});	
 }
 
 //----------
@@ -679,10 +676,6 @@ function createCrimeMenu()
 	
 	CrimeMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (CrimeMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = CrimeMenuItems[index][2];
 		TextureId = CrimeMenuItems[index][3];
@@ -691,14 +684,16 @@ function createCrimeMenu()
 
 	CrimeMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (CrimeMenuItems.length)) {			
-			mainMenu.Visible = true;
-			CrimeMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
 	});
+	
+	CrimeMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		CrimeMenu.Visible = false; 
+		resetMainMenu();
+	});	
 }
 
 //----------
@@ -715,10 +710,6 @@ function createCulturalMenu()
 	
 	CulturalMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (CulturalMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = CulturalMenuItems[index][2];
 		TextureId = CulturalMenuItems[index][3];
@@ -727,14 +718,16 @@ function createCulturalMenu()
 
 	CulturalMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (CulturalMenuItems.length)) {			
-			mainMenu.Visible = true;
-			CulturalMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
 	});
+	
+	CulturalMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		CulturalMenu.Visible = false; 
+		resetMainMenu();
+	});		
 }
 
 //----------
@@ -751,10 +744,6 @@ function createFestiveMenu()
 	
 	FestiveMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (FestiveMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = FestiveMenuItems[index][2];
 		TextureId = FestiveMenuItems[index][3];
@@ -763,14 +752,16 @@ function createFestiveMenu()
 
 	FestiveMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (FestiveMenuItems.length)) {			
-			mainMenu.Visible = true;
-			FestiveMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
 	});
+	
+	FestiveMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		FestiveMenu.Visible = false; 
+		resetMainMenu();
+	});		
 }
 
 //----------
@@ -787,10 +778,6 @@ function createIntimidationMenu()
 	
 	IntimidationMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (IntimidationMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = IntimidationMenuItems[index][2];
 		TextureId = IntimidationMenuItems[index][3];
@@ -799,14 +786,16 @@ function createIntimidationMenu()
 
 	IntimidationMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (IntimidationMenuItems.length)) {			
-			mainMenu.Visible = true;
-			IntimidationMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
 	});
+	
+	IntimidationMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		IntimidationMenu.Visible = false; 
+		resetMainMenu();
+	});		
 }
 
 //----------
@@ -823,10 +812,6 @@ function createMonsterMenu()
 	
 	MonsterMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (MonsterMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = MonsterMenuItems[index][2];
 		TextureId = MonsterMenuItems[index][3];
@@ -835,14 +820,16 @@ function createMonsterMenu()
 
 	MonsterMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (MonsterMenuItems.length)) {			
-			mainMenu.Visible = true;
-			MonsterMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
 	});
+	
+	MonsterMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		MonsterMenu.Visible = false; 
+		resetMainMenu();
+	});		
 }
 
 //----------
@@ -859,10 +846,6 @@ function createPaperBagMenu()
 	
 	PaperBagMenu.OnIndexChange.connect(function(sender, index)
 	{
-		if (index == (PaperBagMenuItems.length)) {
-			API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
-			return;
-		}
 		var TheDude = API.getLocalPlayer();
 		MaskId = PaperBagMenuItems[index][2];
 		TextureId = PaperBagMenuItems[index][3];
@@ -871,14 +854,16 @@ function createPaperBagMenu()
 
 	PaperBagMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		if (index == (PaperBagMenuItems.length)) {			
-			mainMenu.Visible = true;
-			PaperBagMenu.Visible = false; 
-			return;
-		}
 		// CALL SERVER "buy" code.
 		CloseMenu();
 	});
+	
+	PaperBagMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		PaperBagMenu.Visible = false; 
+		resetMainMenu();
+	});		
 }
 
 
@@ -904,11 +889,6 @@ function createHolidayMenu()
 	//Gets called when we select a mod category
 	HolidayMenu.OnItemSelect.connect(function(sender, item, index)
 	{
-		//the back button first.
-		if (index == (HolidayMenuItems.length)) {
-			mainMenu.Visible = true;
-			HolidayMenu.Visible = false; 	
-		}
 		
 	});
 }
@@ -917,8 +897,14 @@ function openMainMenu()
 {
 	MenuOpen = true;
 	CamOn();
+	resetMainMenu();
     mainMenu.CurrentSelection = 0;
 	mainMenu.Visible = true; 
+}
+
+function resetMainMenu()
+{
+	API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
 }
 
 // --------------------
@@ -945,7 +931,6 @@ function resetAnimalMenu()
 		}
         AnimalMenu.AddItem(newitem);
 	}
-	AnimalMenu.AddItem(API.createMenuItem("Back", ""));
 	AnimalMenu.CurrentSelection = 0;
 }
 
@@ -973,7 +958,6 @@ function resetBalacavaMenu()
 		}
         BalacavaMenu.AddItem(newitem);
 	}
-	BalacavaMenu.AddItem(API.createMenuItem("Back", ""));
 	BalacavaMenu.CurrentSelection = 0;
 }
 
@@ -1001,7 +985,6 @@ function resetCharacterMenu()
 		}
         CharacterMenu.AddItem(newitem);
 	}
-	CharacterMenu.AddItem(API.createMenuItem("Back", ""));
 	CharacterMenu.CurrentSelection = 0;
 }
 
@@ -1029,7 +1012,6 @@ function resetClownMenu()
 		}
         ClownMenu.AddItem(newitem);
 	}
-	ClownMenu.AddItem(API.createMenuItem("Back", ""));
 	ClownMenu.CurrentSelection = 0;
 }
 
@@ -1057,7 +1039,6 @@ function resetCrimeMenu()
 		}
         CrimeMenu.AddItem(newitem);
 	}
-	CrimeMenu.AddItem(API.createMenuItem("Back", ""));
 	CrimeMenu.CurrentSelection = 0;
 }
 
@@ -1085,7 +1066,6 @@ function resetCulturalMenu()
 		}
         CulturalMenu.AddItem(newitem);
 	}
-	CulturalMenu.AddItem(API.createMenuItem("Back", ""));
 	CulturalMenu.CurrentSelection = 0;
 }
 
@@ -1113,7 +1093,6 @@ function resetFestiveMenu()
 		}
         FestiveMenu.AddItem(newitem);
 	}
-	FestiveMenu.AddItem(API.createMenuItem("Back", ""));
 	FestiveMenu.CurrentSelection = 0;
 }
 
@@ -1141,7 +1120,6 @@ function resetIntimidationMenu()
 		}
         IntimidationMenu.AddItem(newitem);
 	}
-	IntimidationMenu.AddItem(API.createMenuItem("Back", ""));
 	IntimidationMenu.CurrentSelection = 0;
 }
 
@@ -1169,7 +1147,6 @@ function resetMonsterMenu()
 		}
         MonsterMenu.AddItem(newitem);
 	}
-	MonsterMenu.AddItem(API.createMenuItem("Back", ""));
 	MonsterMenu.CurrentSelection = 0;
 }
 
@@ -1197,7 +1174,6 @@ function resetPaperBagMenu()
 		}
         PaperBagMenu.AddItem(newitem);
 	}
-	PaperBagMenu.AddItem(API.createMenuItem("Back", ""));
 	PaperBagMenu.CurrentSelection = 0;
 }
 
