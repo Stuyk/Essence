@@ -35,6 +35,14 @@ namespace Essence.classes.inventory
                     attachedObject = API.createObject(1049338225, aimPos.Add(new Vector3(0, 0, 0.3)), player.rotation, player.dimension).handle;
                     API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
+                case "Radio":
+                    attachedObject = API.createObject(-1964402432, aimPos, player.rotation, player.dimension).handle;
+                    API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
+                    return;
+                case "Phone":
+                    attachedObject = API.createObject(974883178, aimPos, player.rotation, player.dimension).handle;
+                    API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
+                    return;
             }
             
         }

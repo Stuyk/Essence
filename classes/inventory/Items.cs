@@ -13,6 +13,12 @@ namespace Essence.classes.inventory
     {
         private static List<InventoryItem> items = new List<InventoryItem>();
 
+        private enum OneOffItems
+        {
+            Radio,
+            Phone
+        }
+
         /// <summary>
         /// Get all of the items that are currently spawned.
         /// </summary>
@@ -54,9 +60,22 @@ namespace Essence.classes.inventory
                 {
                     if (API.shared.doesEntityExist(items[i].AttachedObject))
                     {
-                        API.shared.deleteEntity(items[i].AttachedObject);
                         Player instance = player.getData("Instance");
                         Inventory inventory = instance.PlayerInventory;
+                        string itemType = items[i].Type;
+                        foreach (OneOffItems type in Enum.GetValues(typeof(OneOffItems)))
+                        {
+                            if (type.ToString() == itemType)
+                            {
+                                int value = inventory.getItemCountByType(itemType);
+                                if (value <= 0)
+                                {
+                                    break;
+                                }
+                                return;
+                            }
+                        }
+                        API.shared.deleteEntity(items[i].AttachedObject);
                         inventory.addBasedOnType(items[i].Type, items[i].Quantity);
                         API.shared.triggerClientEvent(player, "HeadNotification", string.Format("Picked up {0}. Total: {1}", items[i].Type, items[i].Quantity));
                         items.RemoveAt(i);
@@ -186,6 +205,30 @@ namespace Essence.classes.inventory
                     else
                     {
                         API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
+                    }
+                    return;
+                case "Radio":
+                    if (inventory.Radio >= quantity)
+                    {
+                        inventory.Radio -= quantity;
+                        newItem = new InventoryItem(player, type, quantity, coords);
+                        AddItem(newItem);
+                    }
+                    else
+                    {
+                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
+                    }
+                    return;
+                case "Phone":
+                    if(inventory.Phone >= quantity)
+                    {
+                        inventory.Phone -= quantity;
+                        newItem = new InventoryItem(player, type, quantity, coords);
+                        AddItem(newItem);
+                    }
+                    else
+                    {
+                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory");
                     }
                     return;
             }
