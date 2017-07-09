@@ -1,4 +1,5 @@
-﻿using Essence.classes.datahandles;
+﻿using Essence.classes.anticheat;
+using Essence.classes.datahandles;
 using Essence.classes.utility;
 using GTANetworkServer;
 using GTANetworkShared;
@@ -167,6 +168,7 @@ namespace Essence.classes
 
             // Set our entity dimension.
             API.setEntityDimension(player, 0);
+            Anticheat.addPlayer(player);
         }
 
         /** Spawn Player Vehicles */

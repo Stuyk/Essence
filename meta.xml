@@ -9,7 +9,6 @@
   <script src="clientside/BrowserManager.js" type="client" lang="javascript" />
   <script src="clientside/EventHandler.js" type="client" lang="javascript" />
   <script src="clientside/Vehicle.js" type="client" lang="javascript" />
-  <script src="clientside/BackgroundMusic.js" type="client" lang="javascript" />
   <script src="clientside/LoginCamera.js" type="client" lang="javascript" />
   <script src="clientside/HeadNotifications.js" type="client" lang="javascript" />
   <script src="clientside/Doors.js" type="client" lang="javascript" />

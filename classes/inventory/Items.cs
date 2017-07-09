@@ -137,6 +137,8 @@ namespace Essence.classes.inventory
 
         public static void GetItems(Client player, params object[] arguments)
         {
+            API.shared.sendChatMessageToPlayer(player, "Hello World");
+
             if (!player.hasData("Instance"))
             {
                 return;

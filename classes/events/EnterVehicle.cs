@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.anticheat;
+using GTANetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,6 @@ namespace Essence.classes.events
                 API.setVehicleDoorState(vehicle, 1, false);
             }
         }
+
     }
 }

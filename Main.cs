@@ -1,4 +1,5 @@
 ﻿using Essence.classes;
+using Essence.classes.anticheat;
 using Essence.classes.discord;
 using GTANetworkServer;
 using GTANetworkShared;
@@ -17,6 +18,12 @@ namespace Essence.classes
         {
             API.setGamemodeName("~g~By ~b~Stuyk");
             API.setServerName("~g~Essence ~b~Pure ~b~Roleplay");
+            API.onResourceStart += API_onResourceStart;
+        }
+
+        private void API_onResourceStart()
+        {
+            Anticheat.startAnticheat();
         }
 
         [Command("car")]

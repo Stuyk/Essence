@@ -113,6 +113,20 @@ namespace Essence.classes.datahandles
             phoneNumber = Convert.ToInt32(props["PhoneNumber"]);
         }
 
+        public int getItemCountByType(string type)
+        {
+            switch(type)
+            {
+                case "CarParts":
+                    return CarParts;
+                case "UnrefinedDrugs":
+                    return UnrefinedDrugs;
+                case "RefinedDrugs":
+                    return RefinedDrugs;
+            }
+            return -1;
+        }
+
         /// <summary>
         /// Loads items based on quantity. *** Type / Quantity ***
         /// </summary>
