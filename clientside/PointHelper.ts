@@ -1,8 +1,8 @@
 ﻿var list: BlipTextPoint[] = new Array<BlipTextPoint>();
 var keyboardPath = "clientside/images/keyboard_e.png";
 var actionCooldown: number = Date.now() + 3000;
-
 class BlipTextPoint {
+    private enabled: boolean;
     private position: Vector3;
     private type: number;
     private color: number;
@@ -20,6 +20,7 @@ class BlipTextPoint {
         this.draw = draw;
         this.id = id;
         this.interactable = interactable;
+        this.enabled = true;
         if (blipEnabled) {
             this.blip = API.createBlip(this.position);
             API.setBlipSprite(this.blip, this.type);
@@ -30,6 +31,10 @@ class BlipTextPoint {
     }
 
     run() {
+        if (!this.enabled) {
+            return;
+        }
+
         if (!this.draw) {
             return;
         }
@@ -63,6 +68,14 @@ class BlipTextPoint {
 
     get Interactable(): boolean {
         return this.interactable;
+    }
+
+    set Enabled(value: boolean) {
+        this.enabled = value;
+    }
+
+    get Enabled(): boolean {
+        return this.enabled;
     }
 
     // Used to interact with pretty much everything ever.
@@ -120,5 +133,15 @@ function checkIfNearPointOnce() {
             }
         }
     }
-    
+}
+
+// Toggles all of the points off.
+function togglePointHelpers() {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].Enabled) {
+            list[i].Enabled = false;
+        } else {
+            list[i].Enabled = true;
+        }
+    }
 }

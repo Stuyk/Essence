@@ -129,7 +129,7 @@ namespace Essence.classes.jobs
             API.setEntityPosition(player, startPoint);
         }
 
-        public void startLongRangeTruckingJob(Client player)
+        public void startLongRangeTruckingJob(Client player, params object[] arguments)
         {
             if (player.position.DistanceTo(startPoint) >= 5)
             {

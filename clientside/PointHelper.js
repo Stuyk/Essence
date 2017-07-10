@@ -11,6 +11,7 @@ class BlipTextPoint {
         this.draw = draw;
         this.id = id;
         this.interactable = interactable;
+        this.enabled = true;
         if (blipEnabled) {
             this.blip = API.createBlip(this.position);
             API.setBlipSprite(this.blip, this.type);
@@ -20,6 +21,9 @@ class BlipTextPoint {
         }
     }
     run() {
+        if (!this.enabled) {
+            return;
+        }
         if (!this.draw) {
             return;
         }
@@ -46,6 +50,12 @@ class BlipTextPoint {
     }
     get Interactable() {
         return this.interactable;
+    }
+    set Enabled(value) {
+        this.enabled = value;
+    }
+    get Enabled() {
+        return this.enabled;
     }
     // Used to interact with pretty much everything ever.
     triggerServerEvent() {
@@ -93,6 +103,17 @@ function checkIfNearPointOnce() {
                 list[i].triggerServerEvent();
                 return;
             }
+        }
+    }
+}
+// Toggles all of the points off.
+function togglePointHelpers() {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i].Enabled) {
+            list[i].Enabled = false;
+        }
+        else {
+            list[i].Enabled = true;
         }
     }
 }

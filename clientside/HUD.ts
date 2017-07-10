@@ -27,6 +27,7 @@ API.onEntityDataChange.connect(function(entity, key, oldValue) {
 
 API.onResourceStop.connect(() => {
     API.setHudVisible(true);
+    API.setCanOpenChat(true);
     loggedIn = false;
 });
 

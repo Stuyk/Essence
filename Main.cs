@@ -1,4 +1,5 @@
 ﻿using Essence.classes;
+using Essence.classes.anticheat;
 using Essence.classes.discord;
 using GTANetworkServer;
 using GTANetworkShared;
@@ -17,6 +18,12 @@ namespace Essence.classes
         {
             API.setGamemodeName("~g~By ~b~Stuyk");
             API.setServerName("~g~Essence ~b~Pure ~b~Roleplay");
+            API.onResourceStart += API_onResourceStart;
+        }
+
+        private void API_onResourceStart()
+        {
+            Anticheat.startAnticheat();
         }
 
         [Command("car")]
@@ -64,7 +71,7 @@ namespace Essence.classes
                 return;
             }
 
-            API.setEntityPosition(targetPlayer, player.position);
+            API.setEntityPosition(player, targetPlayer.position);
         }
 
         [Command("randomClothes")]
@@ -159,6 +166,17 @@ namespace Essence.classes
         public void cmdClientWeather(Client player)
         {
             API.sendNativeToPlayer(player, (ulong)Hash._SET_WEATHER_TYPE_OVER_TIME, "RAIN", 25f);
+        }
+
+        [Command("healme")]
+        public void cmdHealMe(Client player)
+        {
+            int oldHealth = player.health;
+
+            if (oldHealth <= 50)
+            {
+                player.health = 100;
+            }
         }
     }
 }

@@ -22,15 +22,32 @@ function vehicleCenterMenus() {
 }
 
 function vehicleLeftMenus() {
-    vehicleMenuButtons.push(new InteractionButton(new Point(widthHalf - 325, heightHalf - 100), new Size(200, 50), "Vehicle_Door_0", "Driver Door"));
-    vehicleMenuButtons.push(new InteractionButton(new Point(widthHalf - 325, heightHalf - 25), new Size(200, 50), "Vehicle_Door_2", "Driver Rear Door"));
-    vehicleMenuButtons.push(new InteractionButton(new Point(widthHalf - 325, heightHalf + 50), new Size(200, 50), "Vehicle_Windows_Down", "Windows Down"));
+    var DriverDoor = new InteractionButton(new Point(widthHalf - 325, heightHalf - 100), new Size(200, 50), "Vehicle_Door", "Driver Door");
+    DriverDoor.Argument = 0;
+    vehicleMenuButtons.push(DriverDoor);
+
+    var DriverRearDoor = new InteractionButton(new Point(widthHalf - 325, heightHalf - 25), new Size(200, 50), "Vehicle_Door", "Driver Rear Door");
+    DriverRearDoor.Argument = 2;
+    vehicleMenuButtons.push(DriverRearDoor);
+
+    
+    var WindowsDown = new InteractionButton(new Point(widthHalf - 325, heightHalf + 50), new Size(200, 50), "Vehicle_Windows_Down", "Windows Down");
+    WindowsDown.Argument = true;
+    vehicleMenuButtons.push(WindowsDown);
 }
 
 function vehicleRightMenus() {
-    vehicleMenuButtons.push(new InteractionButton(new Point(widthHalf + 125, heightHalf - 100), new Size(200, 50), "Vehicle_Door_1", "Passenger Door"));
-    vehicleMenuButtons.push(new InteractionButton(new Point(widthHalf + 125, heightHalf - 25), new Size(200, 50), "Vehicle_Door_3", "Passenger Rear Door"));
-    vehicleMenuButtons.push(new InteractionButton(new Point(widthHalf + 125, heightHalf + 50), new Size(200, 50), "Vehicle_Windows_Up", "Windows Up"));
+    var PassengerDoor = new InteractionButton(new Point(widthHalf + 125, heightHalf - 100), new Size(200, 50), "Vehicle_Door", "Passenger Door");
+    PassengerDoor.Argument = 1;
+    vehicleMenuButtons.push(PassengerDoor);
+
+    var PassengerRearDoor = new InteractionButton(new Point(widthHalf + 125, heightHalf - 25), new Size(200, 50), "Vehicle_Door", "Passenger Rear Door");
+    PassengerRearDoor.Argument = 3;
+    vehicleMenuButtons.push(PassengerRearDoor);
+
+    var WindowsUp = new InteractionButton(new Point(widthHalf + 125, heightHalf + 50), new Size(200, 50), "Vehicle_Windows_Up", "Windows Up")
+    WindowsUp.Argument = false;
+    vehicleMenuButtons.push(WindowsUp);
 }
 
 function animationCenterMenus() {
@@ -189,6 +206,7 @@ class InteractionButton {
     private r: number;
     private g: number;
     private b: number;
+    private argument: string;
     // We need a new Point(x, y) which is the starting point of our button. We need a new Size(width, height) of 
     constructor(pos: Point, size: Size, clientEvent: string, action: string) {
         this.position = pos;
@@ -209,6 +227,10 @@ class InteractionButton {
             this.drawtext();
         }
     }
+    set Argument(value: any) {
+        this.argument = value;
+    }
+
     private collision() {
         var mouse = API.getCursorPositionMantainRatio();
         API.drawRectangle(mouse.X, mouse.Y, 5, 5, 255, 255, 255, 255);
@@ -221,7 +243,11 @@ class InteractionButton {
     private clicked() {
         if (API.isControlJustPressed(Enums.Controls.CursorAccept)) {
             API.playSoundFrontEnd("CONTINUE", "HUD_FRONTEND_DEFAULT_SOUNDSET");
-            API.triggerServerEvent(this.clientEvent);
+            if (this.argument != null) {
+                API.triggerServerEvent(this.clientEvent, this.argument);
+            } else {
+                API.triggerServerEvent(this.clientEvent);
+            }
         }
     }
     private drawtext() {

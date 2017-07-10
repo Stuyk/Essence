@@ -93,6 +93,11 @@ namespace Essence.classes
             API.consoleOutput(string.Format("Added {0} ATM locations.", count));
         }
 
+        public void loadATM(Client player, params object[] arguments)
+        {
+            API.sendChatMessageToPlayer(player, "This hasn't been implemented yet.");
+        }
+
         [Command("deposit", Description = "/deposit [amount]")]
         public void depositMoney(Client player, int amount)
         {

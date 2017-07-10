@@ -8,7 +8,6 @@
 /Properties/*
 obj/Debug/d20rp.dll
 obj/Debug/d20rp.pdb
-*.db
 *.dll
 *.exe
 *.config

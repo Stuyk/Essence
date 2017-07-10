@@ -79,7 +79,7 @@ namespace Essence.classes.jobs
             }
         }
 
-        public void startShortRangeTruckingJob(Client player)
+        public void startShortRangeTruckingJob(Client player, params object[] arguments)
         {
             if (player.position.DistanceTo(startPoint) >= 5)
             {

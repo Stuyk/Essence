@@ -1,7 +1,7 @@
 ﻿API.onServerEventTrigger.connect((eventName, args) => {
     switch (eventName) {
         case "ShowLogin":
-            resource.BrowserManager.showCEF("clientside/login.html")
+            //resource.BrowserManager.showCEF("clientside/login.html")
             return;
         case "FinishLogin":
             resource.LoginCamera.killLoginCamera();

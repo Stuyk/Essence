@@ -18,8 +18,23 @@ namespace Essence.classes
             // Nothing
         }
 
-        public void cmdRegister(Client player, string username, string password)
+        [Command("forceRegistration")]
+        public void cmdForceReg(Client player, string user, string pass)
         {
+            cmdRegister(player, user, pass);
+        }
+
+        public void cmdRegister(Client player, params object[] arguments)
+        {
+            if (arguments.Length <= 0)
+            {
+                API.triggerClientEvent(player, "FailRegistration");
+                return;
+            }
+
+            string username = arguments[0].ToString();
+            string password = arguments[1].ToString();
+
             if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
             {
                 return;

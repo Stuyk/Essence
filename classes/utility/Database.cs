@@ -32,7 +32,8 @@ namespace Essence.classes
                             [Health] INTEGER DEFAULT 100,
                             [Armor] INTEGER DEFAULT 0,
                             [Ip] INTEGER,
-                            [RegistrationDate])";
+                            [RegistrationDate],
+                            [Faction] INTEGER DEFAULT -1)";
 
         static string stashTable = @"CREATE TABLE IF NOT EXISTS
                             [Stash] (
@@ -49,7 +50,16 @@ namespace Essence.classes
                             [Owner] INTEGER DEFAULT -1,
                             [CarParts] INTEGER DEFAULT 0,
                             [UnrefinedDrugs] INTEGER DEFAULT 0,
-                            [RefinedDrugs] INTEGER DEFAULT 0)";
+                            [RefinedDrugs] INTEGER DEFAULT 0,
+                            [Radio] INTEGER DEFAULT 0,
+                            [Phone] INTEGER DEFAULT 0)";
+
+        static string itemProperties = @"CREATE TABLE IF NOT EXISTS
+                            [ItemProperties] (
+                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [Owner] INTEGER DEFAULT -1,
+                            [RadioFrequency] INTEGER DEFAULT 0,
+                            [PhoneNumber] INTEGER DEFAULT 0)";
 
         // Contains Vehicle Information - Owner is the owner's Player Table ID.
         static string vehicleTable = @"CREATE TABLE IF NOT EXISTS
@@ -225,6 +235,7 @@ namespace Essence.classes
             executeQuery(skinTable);
             executeQuery(stashTable);
             executeQuery(inventoryTable);
+            executeQuery(itemProperties);
 
             //DataTable table = executeQueryWithResult("SELECT * FROM Players");
         }

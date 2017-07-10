@@ -1,4 +1,5 @@
-﻿using Essence.classes.datahandles;
+﻿using Essence.classes.anticheat;
+using Essence.classes.datahandles;
 using Essence.classes.utility;
 using GTANetworkServer;
 using GTANetworkShared;
@@ -24,6 +25,7 @@ namespace Essence.classes
         private Clothing playerClothing;
         private Skin playerSkin;
         private Inventory playerInventory;
+        private AnticheatInfo anticheatInfo;
 
         private List<Vehicle> vehicles;
 
@@ -41,6 +43,18 @@ namespace Essence.classes
             get
             {
                 return playerInventory;
+            }
+        }
+
+        public AnticheatInfo CheatInfo
+        {
+            get
+            {
+                return anticheatInfo;
+            }
+            set
+            {
+                anticheatInfo = value;
             }
         }
 
@@ -141,13 +155,14 @@ namespace Essence.classes
             ID = Convert.ToInt32(db["ID"]);
             bank = Convert.ToInt32(db["Bank"]);
             money = Convert.ToInt32(db["Money"]);
+            player.health = Convert.ToInt32(db["Health"]);
+            player.armor = Convert.ToInt32(db["Armor"]);
             API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
             lastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             // Don't move on until the players dimension is ready.
 
             // Make our player controllable again.
             API.freezePlayer(player, false);
-            API.setEntityTransparency(player, 255);
             API.setEntityPosition(player, LastPosition);
 
             // Setup Player Vehicles
@@ -168,6 +183,9 @@ namespace Essence.classes
 
             // Set our entity dimension.
             API.setEntityDimension(player, 0);
+
+            // Setup our anticheat info.
+            anticheatInfo = Anticheat.addPlayer(player);
         }
 
         /** Spawn Player Vehicles */
