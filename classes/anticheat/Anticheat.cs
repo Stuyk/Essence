@@ -18,6 +18,8 @@ namespace Essence.classes.anticheat
         private bool diedRecently;
         private int currentStrikes;
         private bool leftCarRecently;
+        private bool healthChangedRecently;
+        private bool armorChangedRecently;
         
         public AnticheatInfo(Client client)
         {
@@ -26,6 +28,8 @@ namespace Essence.classes.anticheat
             this.lastPosition = client.position;
             this.diedRecently = false;
             this.currentStrikes = 0;
+            this.healthChangedRecently = false;
+            this.armorChangedRecently = false;
             client.setData("Anticheat", this);
         }
 
@@ -96,26 +100,53 @@ namespace Essence.classes.anticheat
                 leftCarRecently = value;
             }
         }
+
+        public bool HealthChangedRecently
+        {
+            get
+            {
+                return healthChangedRecently;
+            }
+            set
+            {
+                healthChangedRecently = value;
+            }
+        }
+
+        public bool ArmorChangedRecently
+        {
+            get
+            {
+                return armorChangedRecently;
+            }
+            set
+            {
+                armorChangedRecently = value;
+            }
+        }
     }
 
     public static class Anticheat
     {
+        private static List<string> peopleNames = new List<string>();
+
         private static List<AnticheatInfo> AntiCheatPlayers = new List<AnticheatInfo>();
         private static Timer timer = new Timer(3000);
 
-        public static void addPlayer(Client player)
+        public static AnticheatInfo addPlayer(Client player)
         {
             foreach (AnticheatInfo info in AntiCheatPlayers)
             {
                 if (info.GetClient == player)
                 {
                     info.CurrentStrikes = 0;
-                    return;
+                    return info;
                 }
             }
 
             AnticheatInfo antiInfo = new AnticheatInfo(player);
             AntiCheatPlayers.Add(antiInfo);
+            return antiInfo;
         }
 
         public static void startAnticheat()
@@ -142,7 +173,77 @@ namespace Essence.classes.anticheat
                 player.GetClient.kick("Anticheat");
             }
         }
-        
+
+        public static void checkHealth(Client player, int oldValue)
+        {
+            if (!player.hasData("Anticheat"))
+            {
+                return;
+            }
+
+            AnticheatInfo info = player.getData("Anticheat");
+
+            if (player.health > oldValue)
+            {
+                if (info.HealthChangedRecently)
+                {
+                    info.HealthChangedRecently = false;
+                    return;
+                } else {
+                    info.CurrentStrikes += 1;
+                    DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, possible health hacking.", player.name));
+                }
+            }
+        }
+
+        private static void setHealth(Client player, int value)
+        {
+            if (!player.hasData("Anticheat"))
+            {
+                return;
+            }
+
+            AnticheatInfo info = player.getData("Anticheat");
+            info.HealthChangedRecently = true;
+            player.health += value;
+        }
+
+        public static void checkArmor(Client player, int oldValue)
+        {
+            if (!player.hasData("Anticheat"))
+            {
+                return;
+            }
+
+            AnticheatInfo info = player.getData("Anticheat");
+
+            if (player.armor > oldValue)
+            {
+                if (info.HealthChangedRecently)
+                {
+                    info.ArmorChangedRecently = false;
+                    return;
+                }
+                else
+                {
+                    info.CurrentStrikes += 1;
+                    DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, possible armor hacking.", player.name));
+                }
+            }
+        }
+
+        private static void setArmor(Client player, int value)
+        {
+            if (!player.hasData("Anticheat"))
+            {
+                return;
+            }
+
+            AnticheatInfo info = player.getData("Anticheat");
+            info.ArmorChangedRecently = true;
+            player.armor += value;
+        }
+
         private static void isModelHacking(AnticheatInfo player)
         {
             if (player.GetClient.model != player.Model)

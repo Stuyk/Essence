@@ -32,7 +32,8 @@ namespace Essence.classes
                             [Health] INTEGER DEFAULT 100,
                             [Armor] INTEGER DEFAULT 0,
                             [Ip] INTEGER,
-                            [RegistrationDate])";
+                            [RegistrationDate],
+                            [Faction] INTEGER DEFAULT -1)";
 
         static string stashTable = @"CREATE TABLE IF NOT EXISTS
                             [Stash] (

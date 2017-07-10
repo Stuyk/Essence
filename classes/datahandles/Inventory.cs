@@ -27,7 +27,6 @@ namespace Essence.classes.datahandles
         private int radioFrequency;
         private int phoneNumber;
         
-
         public Inventory() {}
 
         public Inventory(Client client, Player player)
@@ -111,20 +110,6 @@ namespace Essence.classes.datahandles
         {
             radioFrequency = Convert.ToInt32(props["RadioFrequency"]);
             phoneNumber = Convert.ToInt32(props["PhoneNumber"]);
-        }
-
-        public int getItemCountByType(string type)
-        {
-            switch(type)
-            {
-                case "CarParts":
-                    return CarParts;
-                case "UnrefinedDrugs":
-                    return UnrefinedDrugs;
-                case "RefinedDrugs":
-                    return RefinedDrugs;
-            }
-            return -1;
         }
 
         /// <summary>
