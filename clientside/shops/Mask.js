@@ -111,6 +111,22 @@ var BalacavaMenuItems = [
 
 var CharacterMenu = null;
 var CharacterMenuItems = [
+["Teen Wolf", 200, 59, 0],
+["Albino Teen Wolf", 200, 79, 2],
+["Tan Teen Wolf", 200, 79, 1],
+["Dark Teen Wolf", 200, 79, 0],
+["White Gangsta Teen Wolf", 200, 80, 2],
+["Red Gangsta Teen Wolf", 200, 80, 1],
+["Black Gangsta Teen Wolf", 200, 80, 0],
+["Albino Visor Teen Wolf", 200, 81, 2],
+["Dark Visor Teen Wolf", 200, 81, 1],
+["Tan Visor Teen Wolf", 200, 81, 0],
+["Albino Workout Teen Wolf", 200, 82, 2],
+["Dark Workout Teen Wolf", 200, 82, 1],
+["Tan Workout Teen Wolf", 200, 82, 0],
+["Albino Santa Teen Wolf", 200, 83, 2],
+["Dark Santa Teen Wolf", 200, 83, 1],
+["Tan Santa Teen Wolf", 200, 83, 0],
 ["Mime Plastic Face", 200, 50, 9],
 ["Puppet Plastic Face", 200, 50, 8],
 ["Doll Plastic Face", 200, 50, 7],
@@ -121,6 +137,7 @@ var CharacterMenuItems = [
 ["Pink Plastic Face", 200, 50, 2],
 ["The Don Plastic Face", 200, 50, 1], 
 ["Green Plastic Face", 200, 50, 0],
+["Berserker", 200, 91, 5],
 ["Moorehead", 200, 45, 0],
 ["Princess Robot Bubblegum", 200, 44, 0],
 ["Impotent Rage", 200, 43, 0],
@@ -221,8 +238,46 @@ var CulturalMenuItems = [
 
 var FestiveMenu = null;
 var FestiveMenuItems = [
+["Latino Mrs Claus", 200, 88, 2],
+["Black Mrs Claus", 200, 88, 1],
+["White Mrs Claus", 200, 88, 0],
+["Badass Bad Elf", 200, 87, 2],
+["Gangsta Bad Elf", 200, 87, 1],
+["Rebel Bad Elf", 200, 87, 0],
+["High Mrs Claus", 200, 86, 2],
+["Smashed Mrs Claus", 200, 86, 1],
+["Wasted Mrs Claus", 200, 86, 0],
+["Burnt Turkey", 200, 85, 2],
+["Cooked Turkey", 200, 85, 1],
+["Raw Turkey", 200, 85, 0],
+["Light Pudding", 200, 78, 1],
+["Dark Pudding", 200, 78, 0],
+["Purple Festive Luchador", 200, 77, 5],
+["Red Festive Luchador", 200, 77, 4],
+["White Festive Luchador", 200, 77, 3],
+["Black Festive Luchador", 200, 77, 2],
+["Dark Green Festive Luchador", 200, 77, 1],
+["Green Festive Luchador", 200, 77, 0],
+["Filty Bad Santa", 200, 76, 2],
+["Grumpy Bad Santa", 200, 76, 1],
+["Bruised Bad Santa", 200, 76, 0],
+["Brown Crazy Gingerbread", 200, 75, 2],
+["Blue Crazy Gingerbread", 200, 75, 1],
+["Pink Crazy Gingerbread", 200, 75, 0],
+["Angry Gingerbread", 200, 74, 2],
+["Mad Gingerbread", 200, 74, 1],
+["Manic Gingerbread", 200, 74, 0],
+["Latino Elf", 200, 34, 2],
+["Black Elf", 200, 34, 1],
+["White Elf", 200, 34, 0],
+["Gingerbread", 200, 33, 0],
 ["Stocking", 200, 32, 0],
-["Penguin", 200, 31, 0]
+["Penguin", 200, 31, 0],
+["Snowman Mask", 200, 10, 0],
+["Reindeer Mask", 200, 9, 0],
+["Latino Santa", 200, 8, 2],
+["Black Santa", 200, 8, 1],
+["White Santa", 200, 8, 0]
 ];
 
 var IntimidationMenu = null;
@@ -248,6 +303,45 @@ var IntimidationMenuItems = [
 
 var MonsterMenu = null;
 var MonsterMenuItems = [
+["Black Bearded Lucifer", 200, 72, 2],
+["Orange Bearded Lucifer", 200, 72, 1],
+["Red Bearded Lucifer", 200, 72, 0],
+["White Haggard Witch", 200, 71, 2],
+["Gray Haggard Witch", 200, 71, 1],
+["Yellow Haggard Witch", 200, 71, 0],
+["Red Hypnotic Alien", 200, 70, 2],
+["Green Hypnotic Alien", 200, 70, 1],
+["Blue Hypnotic Alien", 200, 70, 0],
+["Black Sack Slasher", 200, 69, 2],
+["Bloody Sack Slasher", 200, 69, 1],
+["Classic Sack Slasher", 200, 69, 0],
+["Black Classic Lucifer", 200, 68, 2],
+["Orange Classic Lucifer", 200, 68, 1],
+["Red Classic Lucifer", 200, 68, 0],
+["Scabby Sewer Creature", 200, 67, 2],
+["Rotten Sewer Creature", 200, 67, 1],
+["Dirty Sewer Creature", 200, 67, 0],
+["Purple Toxic Insect", 200, 66, 2],
+["Red Toxic Insect", 200, 66, 1],
+["Green Toxic Insect", 200, 66, 0],
+["Gray Lycanthrope", 200, 65, 2],
+["Dark Lycanthrope", 200, 65, 1],
+["Pale Lycanthrope", 200, 65, 0],
+["Cream Skull Burst", 200, 64, 2],
+["Red Skull Burst", 200, 64, 1],
+["White Skull Burst", 200, 64, 0],
+["Gray Flayed Demon", 200, 63, 2],
+["Green Flayed Demon", 200, 63, 1],
+["Red Flayed Demon", 200, 63, 0],
+["Black Scalded Psycho", 200, 62, 2],
+["Bloody Scalded Psycho", 200, 62, 1],
+["White Scalded Psycho", 200, 62, 0],
+["Rotten Butler", 200, 61, 2],
+["Dead Butler", 200, 61, 1],
+["Creepy Butler", 200, 61, 0],
+["Nasty Watermelon", 200, 60, 2],
+["Rotten Pumpkin", 200, 60, 1],
+["Evil Pumpkin", 200, 60, 0],
 ["Striped Skull", 200, 108, 23],
 ["Terracotta Skull", 200, 108, 22],
 ["Leather Solar-Eyed Skull", 200, 108, 21],
@@ -299,14 +393,14 @@ var MonsterMenuItems = [
 ["Flame Skull Hockey", 200, 14, 13],
 ["Rotten Zombie Hockey", 200, 14, 12],
 ["Vile Zombie Hockey", 200, 14, 11],
-["Silver Skull", 200, 2, 0],
+["Silver Skull", 200, 2, 3],
 ["Gray Skull", 200, 2, 2],
-["Black Skull", 200, 2, 3],
-["Bone Skull", 200, 2, 1],
-["Green Monster", 200, 7, 0],
-["Red Monster", 200, 7, 1],
-["Black Monster", 200, 7, 2],
-["White Monster", 200, 7, 3]
+["Black Skull", 200, 2, 1],
+["Bone Skull", 200, 2, 0],
+["Green Monster", 200, 7, 3],
+["Red Monster", 200, 7, 2],
+["Black Monster", 200, 7, 1],
+["White Monster", 200, 7, 0]
 ];
 
 var PaperBagMenu = null;
@@ -339,11 +433,162 @@ var PaperBagMenuItems = [
 ["Up-n-Atom Paper Bag", 200, 49, 0]
 ];
 
+var SkiMenu = null;
+var SkiMenuItems = [
+["Skull Tactical Ski", 200, 104, 25],
+["Olive Tactical Ski", 200, 104, 24],
+["Pink Camo Tactical Ski", 200, 104, 23],
+["Purple Camo Tactical Ski", 200, 104, 22],
+["Tan Camo Tactical Ski", 200, 104, 21],
+["Green Camo Tactical Ski", 200, 104, 20],
+["Sand Tactical Ski", 200, 104, 19],
+["Moss Tactical Ski", 200, 104, 18],
+["Light Woodland Tactical Ski", 200, 104, 17],
+["Flecktarn Tactical Ski", 200, 104, 16],
+["Brushstroke Tactical Ski", 200, 104, 15],
+["Peach Camo Tactical Ski", 200, 104, 14],
+["Cobble Tactical Ski", 200, 104, 13],
+["Contrast Tactical Ski", 200, 104, 12],
+["Splinter Tactical Ski", 200, 104, 11],
+["Aqua Camo Tactical Ski", 200, 104, 10],
+["Gray Woodland Tactical Ski", 200, 104, 9],
+["Moss Digital Tactical Ski", 200, 104, 8],
+["Crosshatch Tactical Ski", 200, 104, 7],
+["Dark Woodland Tactical Ski", 200, 104, 6],
+["Fall Tactical Ski", 200, 104, 5],
+["Peach Digital Tactical Ski", 200, 104, 4],
+["Gray Digital Tactical Ski", 200, 104, 3],
+["Green Digital Tactical Ski", 200, 104, 2],
+["Brown Digital Tactical Ski", 200, 104, 1],
+["Blue Digital Tactical Ski", 200, 104, 0],
+["Blue Camo Bigness Face", 200, 101, 15],
+["Gray Leopard Bigness Face", 200, 101, 14],
+["Gray Abstract Bigness Face", 200, 101, 13],
+["Pale Abstract Bigness Face", 200, 101, 12],
+["Bold Abstract Bigness Face", 200, 101, 11],
+["Zebra Bigness Face", 200, 101, 10],
+["Black Bigness Face", 200, 101, 9],
+["Geo Camo Bigness Face", 200, 101, 8],
+["Gray Camo Bigness Face", 200, 101, 7],
+["Camo Bigness Face", 200, 101, 6],
+["Gray Bigness Face", 200, 101, 5],
+["Fall Bigness Face", 200, 101, 4],
+["Yellow Bigness Face", 200, 101, 3],
+["Magenta Bigness Face", 200, 101, 2],
+["Blue Bigness Face", 200, 101, 1],
+["Orange Bigness Face", 200, 101, 0],
+["Khaki Toggle Ski", 200, 55, 1],
+["Charcoal Toggle Ski", 200, 55, 0],
+["Skull Hooded Ski", 200, 53, 8],
+["Urban Hooded Ski", 200, 53, 7],
+["Forest Hooded Ski", 200, 53, 6],
+["Charcoal Hooded Ski", 200, 53, 5],
+["Khaki Hooded Ski", 200, 53, 4],
+["Green Hooded Ski", 200, 53, 3],
+["White Hooded Ski", 200, 53, 2],
+["Gray Hooded Ski", 200, 53, 1],
+["Black Hooded Ski", 200, 53, 0],
+["Skull Tight Ski", 200, 52, 10],
+["Yellow Tight Ski", 200, 52, 9],
+["Blue Tight Ski", 200, 52, 8],
+["Urban Tight Ski", 200, 52, 7],
+["Forest Tight Ski", 200, 52, 6],
+["Charcoal Tight Ski", 200, 52, 5],
+["Khaki Tight Ski", 200, 52, 4],
+["Green Tight Ski", 200, 52, 3],
+["White Tight Ski", 200, 52, 2],
+["Gray Tight Ski", 200, 52, 1],
+["Black Tight Ski", 200, 52, 0]
+];
 
+var SportMenu = null;
+var SportMenuItems = [
+["Crossed Rampage Hockey", 200, 15, 3],
+["Royal Hockey", 200, 14, 9],
+["Striped Rampage Hockey", 200, 14, 8],
+["Dust Devils Hockey", 200, 14, 7], 
+["Red Hockey", 200, 4, 1],
+["Dust Devils Hockey", 200, 4, 3]
+];
 
+var TacticalMenu = null;
+var TacticalMenuItems = [
+["White Snake Skull", 200, 106, 25],
+["Red Snake Skull", 200, 106, 24],
+["Pink Camo Snake Skull", 200, 106, 23],
+["Purple Camo Skull", 200, 106, 22],
+["Tan Camo Snake Skull", 200, 106, 21],
+["Green Camo Snake Skull", 200, 106, 20],
+["Sand Snake Skull", 200, 106, 19],
+["Moss Snake Skull", 200, 106, 18],
+["Light Woodland Snake Skull", 200, 106, 17],
+["Flecktarn Snake Skull", 200, 106, 16],
+["Brush Stroke Snake Skull", 200, 106, 15],
+["Peach Camo Snake Skull", 200, 106, 14],
+["Cobble Snake Skull", 200, 106, 13],
+["Contrast Camo Snake Skull", 200, 106, 12],
+["Splinter Snake Skull", 200, 106, 11],
+["Aqua Camo Snake Skull", 200, 106, 10],
+["Gray Woodland Snake Skull", 200, 106, 9],
+["Moss Digital Snake Skull", 200, 106, 8],
+["Crosshatch Snake Skull", 200, 106, 7],
+["Dark Woodland Snake Skull", 200, 106, 6],
+["Fall Snake Snake Skull", 200, 106, 5],
+["Peach Digital Snake Skull", 200, 106, 4],
+["Gray Digital Snake Skull", 200, 106, 3],
+["Green Snake Skull", 200, 106, 2],
+["Brown Snake Skull", 200, 106, 1],
+["Blue Snake Skull", 200, 106, 0],
+["Forest Combat Mask", 200, 28, 4],
+["Tan Combat Mask", 200, 28, 3],
+["Charcoal Combat Mask", 200, 28, 2],
+["Gray Combat Mask", 200, 28, 1], 
+["Black Combat Mask", 200, 28, 0],
+["Gas Mask", 200, 38, 0],
+["Gas Mask Breather", 200, 36, 0],
+["Gas Mask Face", 200, 46, 0],
+];
 
-var HolidayMenu = null;
-var HolidayMenuItems = ["If you see this","It means that I","Done goofed on","Something."];
+var ValentinesMenu = null;
+var ValentinesMenuItems = [
+["Cupid", 200, 13, 0],
+["Black & Gold Masquerade", 200, 12, 2],
+["Silver Masqurade", 200, 12, 1],
+["Bronze Masqurade", 200, 12, 0],
+["Black Mysterious", 200, 11, 2],
+["Red Mysterious", 200, 11, 1],
+["White Mysterious", 200, 11, 0]
+];
+
+var ZombieMenu = null;
+var ZombieMenuItems = [
+["Moss Camo Putrefied Zombie", 200, 103, 25],
+["Woodland Putrefied Zombie", 200, 103, 24],
+["Green Putrefied Zombie", 200, 103, 23],
+["Stone Putrefied Zombie", 200, 103, 22],
+["Slate Putrefied Zombie", 200, 103, 21],
+["Black Putrefied Zombie", 200, 103, 20],
+["Sand Zombie", 200, 103, 19],
+["Moss Zombie", 200, 103, 18],
+["Light Woodland Zombie", 200, 103, 17],
+["Flecktarn Zombie", 200, 103, 16],
+["Brushstroke Zombie", 200, 103, 15],
+["Peach Camo Zombie", 200, 103, 14],
+["Cobble Zombie", 200, 103, 13],
+["Contrast Camo Zombie", 200, 103, 12],
+["Splinter Zombie", 200, 103, 11],
+["Aqua Camo Zombie", 200, 103, 10],
+["Gray Woodland Zombie", 200, 103, 9],
+["Moss Digital Zombie", 200, 103, 8],
+["Crosshatch Zombie", 200, 103, 7],
+["Dark Woodland Zombie", 200, 103, 6],
+["Fall Zombie", 200, 103, 5],
+["Peach Digital Zombie", 200, 103, 4],
+["Gray Digital Zombie", 200, 103, 3],
+["Green Digital Zombie", 200, 103, 2],
+["Brown Digital Zombie", 200, 103, 1],
+["Blue Digital Zombie", 200, 103, 0]
+];
 
 var CameraPos = new Vector3(-1336.287, -1277.151, 5.679597);
 var CameraRot = new Vector3(0, 0, 120);
@@ -377,7 +622,11 @@ API.onResourceStart.connect(function(s, e)
 	createIntimidationMenu();	
 	createMonsterMenu();		
 	createPaperBagMenu();		
-	createHolidayMenu();
+	createSkiMenu();
+	createSportMenu();
+	createTacticalMenu();
+	createValentinesMenu();
+	createZombieMenu();
 });
 
 API.onServerEventTrigger.connect(function (eventName, args) 
@@ -396,7 +645,7 @@ API.onServerEventTrigger.connect(function (eventName, args)
 function createMainMenu() 
 {
 	//Create the main menu
-	mainMenu = API.createMenu(" ", 0, 0, 3);
+	mainMenu = API.createMenu(" ", "Main Menu", 0, 0, 3);
 	API.setMenuTitle(mainMenu, "");
 	API.setMenuBannerSprite(mainMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 	
@@ -495,23 +744,43 @@ function createMainMenu()
 			break;
 			
 			case 10:
-			openHolidayMenu();
+			openSkiMenu();
+			var TheDude = API.getLocalPlayer();
+			MaskId = SkiMenuItems[0][2];
+			TextureId = SkiMenuItems[0][3];
+			API.setPlayerClothes(TheDude, 1, MaskId, TextureId);
 			break;
 			
 			case 11:
-			openHolidayMenu();
+			openSportMenu();
+			var TheDude = API.getLocalPlayer();
+			MaskId = SportMenuItems[0][2];
+			TextureId = SportMenuItems[0][3];
+			API.setPlayerClothes(TheDude, 1, MaskId, TextureId);
 			break;
 			
 			case 12:
-			openHolidayMenu();
+			openTacticalMenu();
+			var TheDude = API.getLocalPlayer();
+			MaskId = TacticalMenuItems[0][2];
+			TextureId = TacticalMenuItems[0][3];
+			API.setPlayerClothes(TheDude, 1, MaskId, TextureId);
 			break;
 			
 			case 13:
-			openHolidayMenu();
+			openValentinesMenu();
+			var TheDude = API.getLocalPlayer();
+			MaskId = ValentinesMenuItems[0][2];
+			TextureId = ValentinesMenuItems[0][3];
+			API.setPlayerClothes(TheDude, 1, MaskId, TextureId);
 			break;
 
 			case 14:
-			openHolidayMenu();
+			openZombieMenu();
+			var TheDude = API.getLocalPlayer();
+			MaskId = ZombieMenuItems[0][2];
+			TextureId = ZombieMenuItems[0][3];
+			API.setPlayerClothes(TheDude, 1, MaskId, TextureId);
 			break;
 			
 		}
@@ -529,7 +798,7 @@ function createMainMenu()
 function createAnimalMenu() 
 {
 	//Create the Animal mask selection menu
-	AnimalMenu = API.createMenu("      ", 0, 0, 3);
+	AnimalMenu = API.createMenu("      ", "Animals", 0, 0, 3);
     API.setMenuTitle(AnimalMenu, "");
 	API.setMenuBannerSprite(AnimalMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -564,7 +833,7 @@ function createAnimalMenu()
 function createBalacavaMenu() 
 {
 	//Create the Animal mask selection menu
-	BalacavaMenu = API.createMenu("      ", 0, 0, 3);
+	BalacavaMenu = API.createMenu("      ", "Balaclavas", 0, 0, 3);
     API.setMenuTitle(BalacavaMenu, "");
 	API.setMenuBannerSprite(BalacavaMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -598,7 +867,7 @@ function createBalacavaMenu()
 function createCharacterMenu() 
 {
 	//Create the Character mask selection menu
-	CharacterMenu = API.createMenu("      ", 0, 0, 3);
+	CharacterMenu = API.createMenu("      ", "Characters", 0, 0, 3);
     API.setMenuTitle(CharacterMenu, "");
 	API.setMenuBannerSprite(CharacterMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -632,7 +901,7 @@ function createCharacterMenu()
 function createClownMenu() 
 {
 	//Create the Clown mask selection menu
-	ClownMenu = API.createMenu("      ", 0, 0, 3);
+	ClownMenu = API.createMenu("      ", "Clowns", 0, 0, 3);
     API.setMenuTitle(ClownMenu, "");
 	API.setMenuBannerSprite(ClownMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -666,7 +935,7 @@ function createClownMenu()
 function createCrimeMenu() 
 {
 	//Create the Crime mask selection menu
-	CrimeMenu = API.createMenu("      ", 0, 0, 3);
+	CrimeMenu = API.createMenu("      ", "Crime", 0, 0, 3);
     API.setMenuTitle(CrimeMenu, "");
 	API.setMenuBannerSprite(CrimeMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -700,7 +969,7 @@ function createCrimeMenu()
 function createCulturalMenu() 
 {
 	//Create the Cultural mask selection menu
-	CulturalMenu = API.createMenu("      ", 0, 0, 3);
+	CulturalMenu = API.createMenu("      ", "Cultural", 0, 0, 3);
     API.setMenuTitle(CulturalMenu, "");
 	API.setMenuBannerSprite(CulturalMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -734,7 +1003,7 @@ function createCulturalMenu()
 function createFestiveMenu() 
 {
 	//Create the Festive mask selection menu
-	FestiveMenu = API.createMenu("      ", 0, 0, 3);
+	FestiveMenu = API.createMenu("      ", "Festive", 0, 0, 3);
     API.setMenuTitle(FestiveMenu, "");
 	API.setMenuBannerSprite(FestiveMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -768,7 +1037,7 @@ function createFestiveMenu()
 function createIntimidationMenu() 
 {
 	//Create the Intimidation mask selection menu
-	IntimidationMenu = API.createMenu("      ", 0, 0, 3);
+	IntimidationMenu = API.createMenu("      ", "Intimidation", 0, 0, 3);
     API.setMenuTitle(IntimidationMenu, "");
 	API.setMenuBannerSprite(IntimidationMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -802,7 +1071,7 @@ function createIntimidationMenu()
 function createMonsterMenu() 
 {
 	//Create the Monster mask selection menu
-	MonsterMenu = API.createMenu("      ", 0, 0, 3);
+	MonsterMenu = API.createMenu("      ", "Monsters", 0, 0, 3);
     API.setMenuTitle(MonsterMenu, "");
 	API.setMenuBannerSprite(MonsterMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -836,7 +1105,7 @@ function createMonsterMenu()
 function createPaperBagMenu() 
 {
 	//Create the PaperBag mask selection menu
-	PaperBagMenu = API.createMenu("      ", 0, 0, 3);
+	PaperBagMenu = API.createMenu("      ", "Paper Bags", 0, 0, 3);
     API.setMenuTitle(PaperBagMenu, "");
 	API.setMenuBannerSprite(PaperBagMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
@@ -866,31 +1135,174 @@ function createPaperBagMenu()
 	});		
 }
 
-
-
-
-function createHolidayMenu() 
+//----------
+function createSkiMenu() 
 {
-	//Create the Holiday mask selection menu
-	HolidayMenu = API.createMenu("      ", 0, 0, 3);
-    API.setMenuTitle(HolidayMenu, "");		
-	API.setMenuBannerSprite(HolidayMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
-	
-	for (var i = 0; i < HolidayMenuItems.length; i++) 
-	{
-		HolidayMenu.AddItem(API.createMenuItem(HolidayMenuItems[i], ""));
-	}
-	HolidayMenu.AddItem(API.createMenuItem("Back", ""));	
+	//Create the Ski mask selection menu
+	SkiMenu = API.createMenu("      ", "Ski Masks", 0, 0, 3);
+    API.setMenuTitle(SkiMenu, "");
+	API.setMenuBannerSprite(SkiMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
 
-	HolidayMenu.CurrentSelection = 0;
-	menuPool.Add(HolidayMenu);
-	HolidayMenu.Visible = false; 
+
+	menuPool.Add(SkiMenu);
+	SkiMenu.Visible = false; 
 	
-	//Gets called when we select a mod category
-	HolidayMenu.OnItemSelect.connect(function(sender, item, index)
+	SkiMenu.OnIndexChange.connect(function(sender, index)
 	{
-		
+		var TheDude = API.getLocalPlayer();
+		MaskId = SkiMenuItems[index][2];
+		TextureId = SkiMenuItems[index][3];
+		API.setPlayerClothes(TheDude, 1, MaskId, TextureId);	
 	});
+
+	SkiMenu.OnItemSelect.connect(function(sender, item, index)
+	{
+		// CALL SERVER "buy" code.
+		CloseMenu();
+	});
+	
+	SkiMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		SkiMenu.Visible = false; 
+		resetMainMenu();
+	});		
+}
+
+//----------
+function createSportMenu() 
+{
+	//Create the Sport mask selection menu
+	SportMenu = API.createMenu("      ", "Sports", 0, 0, 3);
+    API.setMenuTitle(SportMenu, "");
+	API.setMenuBannerSprite(SportMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
+
+
+	menuPool.Add(SportMenu);
+	SportMenu.Visible = false; 
+	
+	SportMenu.OnIndexChange.connect(function(sender, index)
+	{
+		var TheDude = API.getLocalPlayer();
+		MaskId = SportMenuItems[index][2];
+		TextureId = SportMenuItems[index][3];
+		API.setPlayerClothes(TheDude, 1, MaskId, TextureId);	
+	});
+
+	SportMenu.OnItemSelect.connect(function(sender, item, index)
+	{
+		// CALL SERVER "buy" code.
+		CloseMenu();
+	});
+	
+	SportMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		SportMenu.Visible = false; 
+		resetMainMenu();
+	});		
+}
+
+//----------
+function createTacticalMenu() 
+{
+	//Create the Tactical mask selection menu
+	TacticalMenu = API.createMenu("      ", "Tactical", 0, 0, 3);
+    API.setMenuTitle(TacticalMenu, "");
+	API.setMenuBannerSprite(TacticalMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
+
+
+	menuPool.Add(TacticalMenu);
+	TacticalMenu.Visible = false; 
+	
+	TacticalMenu.OnIndexChange.connect(function(sender, index)
+	{
+		var TheDude = API.getLocalPlayer();
+		MaskId = TacticalMenuItems[index][2];
+		TextureId = TacticalMenuItems[index][3];
+		API.setPlayerClothes(TheDude, 1, MaskId, TextureId);	
+	});
+
+	TacticalMenu.OnItemSelect.connect(function(sender, item, index)
+	{
+		// CALL SERVER "buy" code.
+		CloseMenu();
+	});
+	
+	TacticalMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		TacticalMenu.Visible = false; 
+		resetMainMenu();
+	});		
+}
+
+//----------
+function createValentinesMenu() 
+{
+	//Create the Valentines mask selection menu
+	ValentinesMenu = API.createMenu("      ", "Valentines", 0, 0, 3);
+    API.setMenuTitle(ValentinesMenu, "");
+	API.setMenuBannerSprite(ValentinesMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
+
+
+	menuPool.Add(ValentinesMenu);
+	ValentinesMenu.Visible = false; 
+	
+	ValentinesMenu.OnIndexChange.connect(function(sender, index)
+	{
+		var TheDude = API.getLocalPlayer();
+		MaskId = ValentinesMenuItems[index][2];
+		TextureId = ValentinesMenuItems[index][3];
+		API.setPlayerClothes(TheDude, 1, MaskId, TextureId);	
+	});
+
+	ValentinesMenu.OnItemSelect.connect(function(sender, item, index)
+	{
+		// CALL SERVER "buy" code.
+		CloseMenu();
+	});
+	
+	ValentinesMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		ValentinesMenu.Visible = false; 
+		resetMainMenu();
+	});		
+}
+
+//----------
+function createZombieMenu() 
+{
+	//Create the Zombie mask selection menu
+	ZombieMenu = API.createMenu("      ", "Zombies", 0, 0, 3);
+    API.setMenuTitle(ZombieMenu, "");
+	API.setMenuBannerSprite(ZombieMenu, "shopui_title_movie_masks", "shopui_title_movie_masks");
+
+
+	menuPool.Add(ZombieMenu);
+	ZombieMenu.Visible = false; 
+	
+	ZombieMenu.OnIndexChange.connect(function(sender, index)
+	{
+		var TheDude = API.getLocalPlayer();
+		MaskId = ZombieMenuItems[index][2];
+		TextureId = ZombieMenuItems[index][3];
+		API.setPlayerClothes(TheDude, 1, MaskId, TextureId);	
+	});
+
+	ZombieMenu.OnItemSelect.connect(function(sender, item, index)
+	{
+		// CALL SERVER "buy" code.
+		CloseMenu();
+	});
+	
+	ZombieMenu.OnMenuClose.connect(function(sender, item, index)
+	{
+		mainMenu.Visible = true;
+		ZombieMenu.Visible = false; 
+		resetMainMenu();
+	});		
 }
 
 function openMainMenu() 
@@ -1177,13 +1589,139 @@ function resetPaperBagMenu()
 	PaperBagMenu.CurrentSelection = 0;
 }
 
-
-
-
-function openHolidayMenu() 
+// --------------------
+function openSkiMenu() 
 {
 	mainMenu.Visible = false;
-	HolidayMenu.Visible = true; 
+	Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+	resetSkiMenu();
+	SkiMenu.Visible = true; 
+}
+
+function resetSkiMenu()
+{
+	SkiMenu.Clear();
+	for (var i = 0; i < SkiMenuItems.length; i++) 
+	{
+		var newitem = API.createMenuItem(SkiMenuItems[i][0], "");
+		var vCost = SkiMenuItems[i][1];
+			
+		if ( vCost <= Pmoney){
+			newitem.SetRightLabel("$" + vCost + "");
+		}else {
+		    newitem.SetRightLabel("~r~$" + vCost + "");
+		}
+        SkiMenu.AddItem(newitem);
+	}
+	SkiMenu.CurrentSelection = 0;
+}
+
+// --------------------
+function openSportMenu() 
+{
+	mainMenu.Visible = false;
+	Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+	resetSportMenu();
+	SportMenu.Visible = true; 
+}
+
+function resetSportMenu()
+{
+	SportMenu.Clear();
+	for (var i = 0; i < SportMenuItems.length; i++) 
+	{
+		var newitem = API.createMenuItem(SportMenuItems[i][0], "");
+		var vCost = SportMenuItems[i][1];
+			
+		if ( vCost <= Pmoney){
+			newitem.SetRightLabel("$" + vCost + "");
+		}else {
+		    newitem.SetRightLabel("~r~$" + vCost + "");
+		}
+        SportMenu.AddItem(newitem);
+	}
+	SportMenu.CurrentSelection = 0;
+}
+
+// --------------------
+function openTacticalMenu() 
+{
+	mainMenu.Visible = false;
+	Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+	resetTacticalMenu();
+	TacticalMenu.Visible = true; 
+}
+
+function resetTacticalMenu()
+{
+	TacticalMenu.Clear();
+	for (var i = 0; i < TacticalMenuItems.length; i++) 
+	{
+		var newitem = API.createMenuItem(TacticalMenuItems[i][0], "");
+		var vCost = TacticalMenuItems[i][1];
+			
+		if ( vCost <= Pmoney){
+			newitem.SetRightLabel("$" + vCost + "");
+		}else {
+		    newitem.SetRightLabel("~r~$" + vCost + "");
+		}
+        TacticalMenu.AddItem(newitem);
+	}
+	TacticalMenu.CurrentSelection = 0;
+}
+
+// --------------------
+function openValentinesMenu() 
+{
+	mainMenu.Visible = false;
+	Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+	resetValentinesMenu();
+	ValentinesMenu.Visible = true; 
+}
+
+function resetValentinesMenu()
+{
+	ValentinesMenu.Clear();
+	for (var i = 0; i < ValentinesMenuItems.length; i++) 
+	{
+		var newitem = API.createMenuItem(ValentinesMenuItems[i][0], "");
+		var vCost = ValentinesMenuItems[i][1];
+			
+		if ( vCost <= Pmoney){
+			newitem.SetRightLabel("$" + vCost + "");
+		}else {
+		    newitem.SetRightLabel("~r~$" + vCost + "");
+		}
+        ValentinesMenu.AddItem(newitem);
+	}
+	ValentinesMenu.CurrentSelection = 0;
+}
+
+// --------------------
+function openZombieMenu() 
+{
+	mainMenu.Visible = false;
+	Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+	resetZombieMenu();
+	ZombieMenu.Visible = true; 
+}
+
+function resetZombieMenu()
+{
+	ZombieMenu.Clear();
+	for (var i = 0; i < ZombieMenuItems.length; i++) 
+	{
+		var newitem = API.createMenuItem(ZombieMenuItems[i][0], "");
+		var vCost = ZombieMenuItems[i][1];
+			
+		if ( vCost <= Pmoney){
+			newitem.SetRightLabel("$" + vCost + "");
+		}else {
+		    newitem.SetRightLabel("~r~$" + vCost + "");
+		}
+        ZombieMenu.AddItem(newitem);
+	}
+	ZombieMenu.CurrentSelection = 0;
 }
 
 function CamOn() 
@@ -1192,10 +1730,16 @@ function CamOn()
 	MaskCamera = API.createCamera(CameraPos, new Vector3());
 	API.pointCameraAtPosition(MaskCamera, API.getEntityPosition(API.getLocalPlayer()).Add(new Vector3(0, 0, .75)));
 	API.setActiveCamera(MaskCamera);
+	API.setHudVisible(false);	
+	API.setChatVisible(false);
+	resource.PointHelper.togglePointHelpers();
 }
 
 function CloseMenu() 
 {
+	API.setHudVisible(true);
+	API.setChatVisible(true);
+	resource.PointHelper.togglePointHelpers();
 	mainMenu.Visible = false;
 	AnimalMenu.Visible = false;
 	BalacavaMenu.Visible = false;
@@ -1207,6 +1751,11 @@ function CloseMenu()
 	IntimidationMenu.Visible = false;		
 	MonsterMenu.Visible = false;		
 	PaperBagMenu.Visible = false;		
+	SkiMenu.Visible = false;
+	SportMenu.Visible = false;
+	TacticalMenu.Visible = false;
+	ValentinesMenu.Visible = false;
+	ZombieMenu.Visible = false;
 	API.setActiveCamera(null);
 	MenuOpen = false;
 }
