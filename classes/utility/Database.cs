@@ -120,6 +120,7 @@ namespace Essence.classes
                             [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                             [Owner] INTEGER DEFAULT 0,
                             [Mask] INTEGER DEFAULT 0,
+                            [MaskVariant] INTEGER DEFAULT 0,
                             [Torso] INTEGER DEFAULT 0,
                             [TorsoVariant] INTEGER DEFAULT 0,
                             [Legs] INTEGER DEFAULT 0,

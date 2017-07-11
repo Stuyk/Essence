@@ -817,7 +817,17 @@ function createAnimalMenu()
 	AnimalMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = AnimalMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, AnimalMenuItems[index][2], AnimalMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	AnimalMenu.OnMenuClose.connect(function(sender, item, index)
@@ -852,7 +862,17 @@ function createBalacavaMenu()
 	BalacavaMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = BalacavaMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, BalacavaMenuItems[index][2], BalacavaMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	BalacavaMenu.OnMenuClose.connect(function(sender, item, index)
@@ -886,7 +906,17 @@ function createCharacterMenu()
 	CharacterMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = CharacterMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, CharacterMenuItems[index][2], CharacterMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	CharacterMenu.OnMenuClose.connect(function(sender, item, index)
@@ -920,7 +950,17 @@ function createClownMenu()
 	ClownMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = ClownMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, ClownMenuItems[index][2], ClownMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	ClownMenu.OnMenuClose.connect(function(sender, item, index)
@@ -954,7 +994,17 @@ function createCrimeMenu()
 	CrimeMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = CrimeMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, CrimeMenuItems[index][2], CrimeMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	CrimeMenu.OnMenuClose.connect(function(sender, item, index)
@@ -988,7 +1038,17 @@ function createCulturalMenu()
 	CulturalMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = CulturalMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, CulturalMenuItems[index][2], CulturalMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	CulturalMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1022,7 +1082,17 @@ function createFestiveMenu()
 	FestiveMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = FestiveMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, FestiveMenuItems[index][2], FestiveMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	FestiveMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1056,7 +1126,17 @@ function createIntimidationMenu()
 	IntimidationMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = IntimidationMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, IntimidationMenuItems[index][2], IntimidationMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	IntimidationMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1090,7 +1170,17 @@ function createMonsterMenu()
 	MonsterMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = MonsterMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, MonsterMenuItems[index][2], MonsterMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	MonsterMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1124,7 +1214,17 @@ function createPaperBagMenu()
 	PaperBagMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = PaperBagMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, PaperBagMenuItems[index][2], PaperBagMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	PaperBagMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1158,7 +1258,17 @@ function createSkiMenu()
 	SkiMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = SkiMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, SkiMenuItems[index][2], SkiMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	SkiMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1192,7 +1302,17 @@ function createSportMenu()
 	SportMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = SportMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, SportMenuItems[index][2], SportMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	SportMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1226,7 +1346,17 @@ function createTacticalMenu()
 	TacticalMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = TacticalMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, TacticalMenuItems[index][2], TacticalMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	TacticalMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1260,7 +1390,17 @@ function createValentinesMenu()
 	ValentinesMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = ValentinesMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, ValentinesMenuItems[index][2], ValentinesMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	ValentinesMenu.OnMenuClose.connect(function(sender, item, index)
@@ -1294,7 +1434,17 @@ function createZombieMenu()
 	ZombieMenu.OnItemSelect.connect(function(sender, item, index)
 	{
 		// CALL SERVER "buy" code.
-		CloseMenu();
+		Pmoney = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_Money");
+		var vCost = ZombieMenuItems[index][1];
+			
+		if ( vCost <= Pmoney){
+			//send buy command here
+			API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
+			API.triggerServerEvent("Buy_Mask", vCost, ZombieMenuItems[index][2], ZombieMenuItems[index][3]);
+			CloseMenu();
+		}else {
+		    API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
+		}
 	});
 	
 	ZombieMenu.OnMenuClose.connect(function(sender, item, index)

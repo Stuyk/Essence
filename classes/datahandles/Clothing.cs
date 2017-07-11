@@ -15,6 +15,7 @@ namespace Essence.classes.datahandles
         private Client client;
         private Player player;
         private int mask;
+        private int maskVariant;
         private int torso;
         private int torsoVariant;
         private int legs;
@@ -37,6 +38,7 @@ namespace Essence.classes.datahandles
             client = p;
             player = pClass;
             mask = 0;
+            maskVariant = 0;
             torso = 0;
             torsoVariant = 0;
             legs = 0;
@@ -56,9 +58,9 @@ namespace Essence.classes.datahandles
         public void savePlayerClothes()
         {
             string before = "UPDATE Clothing SET";
-            string[] varNames = { "Mask", "Torso", "TorsoVariant", "Legs", "LegsVariant", "Bag", "Feet", "FeetVariant", "Accessories", "Undershirt", "UndershirtVariant", "BodyArmor", "BodyArmorVariant", "Top", "TopVariant" };
+            string[] varNames = { "Mask", "MaskVariant", "Torso", "TorsoVariant", "Legs", "LegsVariant", "Bag", "Feet", "FeetVariant", "Accessories", "Undershirt", "UndershirtVariant", "BodyArmor", "BodyArmorVariant", "Top", "TopVariant" };
             string after = string.Format("WHERE Owner='{0}'", player.ID);
-            object[] args = { mask, torso, torsoVariant, legs, legsVariant, bags, feet, feetVariant, accessories, undershirt, undershirtVariant, bodyArmor, bodyArmorVariant, top, topVariant };
+            object[] args = { mask, maskVariant, torso, torsoVariant, legs, legsVariant, bags, feet, feetVariant, accessories, undershirt, undershirtVariant, bodyArmor, bodyArmorVariant, top, topVariant };
             db.compileQuery(before, after, varNames, args);
         }
 
@@ -72,6 +74,7 @@ namespace Essence.classes.datahandles
             DataRow clothing = result.Rows[0];
 
             Mask = Convert.ToInt32(clothing["Mask"]);
+            MaskVariant = Convert.ToInt32(clothing["MaskVariant"]);
             Torso = Convert.ToInt32(clothing["Torso"]);
             TorsoVariant = Convert.ToInt32(clothing["TorsoVariant"]);
             Legs = Convert.ToInt32(clothing["Legs"]);
@@ -91,8 +94,9 @@ namespace Essence.classes.datahandles
         public void updatePlayerClothes()
         {
             // Mask
-            API.setPlayerClothes(client, 1, mask, 0);
+            API.setPlayerClothes(client, 1, mask, maskVariant);
             API.setEntitySyncedData(client, "ESS_Mask", mask);
+            API.setEntitySyncedData(client, "ESS_MaskVariant", maskVariant);
             // Torso
             API.setPlayerClothes(client, 3, torso, torsoVariant);
             API.setEntitySyncedData(client, "ESS_Torso", torso);
@@ -135,6 +139,18 @@ namespace Essence.classes.datahandles
             get
             {
                 return mask;
+            }
+        }
+        public int MaskVariant
+        {
+            set
+            {
+                maskVariant = value;
+                updatePlayerClothes();
+            }
+            get
+            {
+                return maskVariant;
             }
         }
         public int Torso

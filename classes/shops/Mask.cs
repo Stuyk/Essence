@@ -95,15 +95,33 @@ namespace Essence.classes
 
         public void startMaskShop(Client player, params object[] arguments)
         {
-            API.sendChatMessageToPlayer(player, "~b~Essence: ~r~Fire Mask shop code!.");
             API.triggerClientEvent(player, "OPEN_MASK_MENU");
+        }
+
+        public void Purchase(Client player, params object[] arguments)
+        {
+            if (!API.hasEntityData(player, "Instance"))
+            {
+                return;
+            }
+            //take money
+            Player instance = (Player)API.getEntityData(player, "Instance");
+            instance.Money -= 200;
+
+            //save mask
+            int Msk = Convert.ToInt32(arguments[1]);
+            int MskVar = Convert.ToInt32(arguments[2]);
+            instance.PlayerClothing.Mask = Msk;
+            instance.PlayerClothing.MaskVariant = MskVar;
+            instance.PlayerClothing.savePlayerClothes();
+
         }
 
         [Command("mtest")]
         public void MtestCommand(Client sender, int slot, int drawable, int texture)
         {
             API.setPlayerClothes(sender, slot, drawable, texture);
-            API.sendChatMessageToPlayer(sender, "Clothes applied successfully!");
+            API.sendChatMessageToPlayer(sender, "Item " + drawable + "," + texture + " applied successfully!");
         }
     }
 
