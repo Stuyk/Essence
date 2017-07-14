@@ -13,6 +13,7 @@ function mainMenu() {
     item.Description = "This will go to a sub menu.";
     var holder = item.getSelectFunction();
     holder.Function = subClothing;
+    var item = contentHolder.addItem("Item");
     // This will tell the client that the menu is ready.
     contentHolder.IsReady = true;
 }

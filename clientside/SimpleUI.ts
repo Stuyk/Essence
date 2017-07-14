@@ -12,19 +12,23 @@ API.onKeyDown.connect((sender, e) => {
 
     if (e.KeyCode == Keys.W || e.KeyCode == Keys.Up) {
         contentHolder.scrollDown();
+        API.playSoundFrontEnd("NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET");
     }
 
     if (e.KeyCode == Keys.S || e.KeyCode == Keys.Down) {
         contentHolder.scrollUp();
+        API.playSoundFrontEnd("NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET");
     }
 
     if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.F) {
         contentHolder.ContentItems[contentHolder.CurrentSelection].runSelectFunction();
+        API.playSoundFrontEnd("SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET");
     }
 });
 
 API.onUpdate.connect(() => {
     if (contentHolder != null) {
+        API.disableAllControlsThisFrame();
         contentHolder.draw();
     }
 });
