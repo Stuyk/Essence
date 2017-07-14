@@ -18,7 +18,9 @@
   <script src="clientside/Lockpick.js" type="client" lang="javascript" />
   <script src="clientside/Interaction.js" type="client" lang="javascript" />
   <script src="clientside/Inventory.js" type="client" lang="javascript" />
-
+  <script src="clientside/Utility.js" type="client" lang="javascript" />
+  <script src="clientside/SimpleUI.js" type="client" lang="javascript" />
+  <script src="clientside/sandbox.js" type="client" lang="javascript" />
   
   <script src="clientside/shops/Mask.js" type="client" lang="javascript" />
   <script src="clientside/shops/Barber.js" type="client" lang="javascript" /> 
@@ -33,6 +35,9 @@
   <file src="clientside/images/lockpick/lockpick_2.png" />
 
   <file src="clientside/images/crosshair/crosshair.png" />
+  
+  <file src="clientside/images/cursor/cursor.png" />
+  <file src="clientside/images/cursor/hand.png" />
   
   <file src="clientside/js/vue.min.js" />
   <file src="clientside/css/bulma.css" />
