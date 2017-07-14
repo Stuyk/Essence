@@ -1,4 +1,5 @@
-﻿using GTANetworkServer;
+﻿using Essence.classes.doors;
+using GTANetworkServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,10 +39,22 @@ namespace Essence.classes.events
             events.Add(new EventInfo("JOB_SHORT_RANGE_TRUCKING", "ShortRangeTrucking", "startShortRangeTruckingJob"));
             events.Add(new EventInfo("JOB_CHOP_SHOP", "ChopShop", "startChopShopJob"));
             // Inventory
-            events.Add(new EventInfo("DROP_ITEM", "ItemCalls", "NewItem"));
+            events.Add(new EventInfo("DROP_ITEM", "ItemCalls", "DropItem"));
             events.Add(new EventInfo("PICKUP_ITEM", "ItemCalls", "PickupItem"));
             events.Add(new EventInfo("GET_ITEMS", "ItemCalls", "GetItems"));
             events.Add(new EventInfo("USE_ITEM", "ItemCalls", "UseItem"));
+
+
+            // Doors
+            API.shared.delay(10000, true, () =>
+            {
+                foreach (DoorInfo door in DoorManager.Doors)
+                {
+                    events.Add(new EventInfo(door.ID, "DoorCalls", "EnterInterior"));
+                }
+            });
+
+
 
             Console.WriteLine("Events setup with {0} events.", events.Count);
         }

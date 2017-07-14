@@ -61,6 +61,16 @@ namespace Essence.classes
                             [RadioFrequency] INTEGER DEFAULT 0,
                             [PhoneNumber] INTEGER DEFAULT 0)";
 
+        static string doorsTable = @"CREATE TABLE IF NOT EXISTS
+                            [Doors] (
+                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                            [Owner] INTEGER DEFAULT -1,
+                            [X] INTEGER DEFAULT 0,
+                            [Y] INTEGER DEFAULT 0,
+                            [Z] INTEGER DEFAULT 0,
+                            [Locked] INTEGER DEFAULT 0,
+                            [IPL] NVARCHAR(2048) DEFAULT apa_v_mp_h_01_a)";
+
         // Contains Vehicle Information - Owner is the owner's Player Table ID.
         static string vehicleTable = @"CREATE TABLE IF NOT EXISTS
                             [Vehicles] (
@@ -237,6 +247,7 @@ namespace Essence.classes
             executeQuery(stashTable);
             executeQuery(inventoryTable);
             executeQuery(itemProperties);
+            executeQuery(doorsTable);
 
             //DataTable table = executeQueryWithResult("SELECT * FROM Players");
         }

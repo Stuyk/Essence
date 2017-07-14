@@ -123,6 +123,7 @@ namespace Essence.classes
             API.setPlayerClothes(sender, slot, drawable, texture);
             API.sendChatMessageToPlayer(sender, "Item " + drawable + "," + texture + " applied successfully!");
         }
+
     }
 
     }

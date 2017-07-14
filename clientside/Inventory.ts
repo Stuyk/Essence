@@ -101,12 +101,10 @@ class Item {
     }
     // This is used to draw our items.
     public draw() {
-        if (!API.isCursorShown()) {
-            API.showCursor(true);
-        }
-
         API.drawText("" + this.type, this.centerX, this.centerY - 10, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
         API.drawText("x" + this.quantity.toString(), this.centerX, this.centerY + 30, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+
+        this.mouseCheck();
 
        // If this is selected. Move it, else let's get the selection.
        if (this.selected) {
@@ -259,7 +257,9 @@ class Item {
             this.x = mouse.X - Math.round(itemSize / 2);
             this.y = mouse.Y - Math.round(itemSize / 2);
             this.calculateCenterPoints();
+            resource.Utility.setHand(true);
         } else {
+            resource.Utility.setHand(false);
             // If our mouse isn't pressed down drop our item.'
             this.selected = false;
             currentSelection = null;
@@ -331,16 +331,16 @@ API.onResourceStart.connect(() => {
 function toggleInventory() {
     if (opened) {
         opened = false;
-        API.showCursor(false);
         items = [];
+        resource.Utility.toggleCursor();
         var gridBoxes = grid.GetBoxes;
         for (var i = 0; i < gridBoxes.length; i++) {
             gridBoxes[i].BoxItem = null;
         }
     } else {
+        resource.Utility.toggleCursor();
         opened = true;
         API.triggerServerEvent("GET_ITEMS");
-        API.showCursor(true);
     }
 }
 
@@ -357,11 +357,6 @@ API.onUpdate.connect(() => {
     for (var i = 0; i < items.length; i++) {
         items[i].draw();
     }
-    
-
-    // Temporary mouse draw.
-    var mouse = API.getCursorPositionMantainRatio();
-    API.drawRectangle(mouse.X, mouse.Y, 5, 5, 150, 150, 150, 255);
 
     var gridBoxes = grid.GetBoxes;
     for (var i = 0; i < gridBoxes.length; i++) {

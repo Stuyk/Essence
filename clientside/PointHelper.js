@@ -59,7 +59,7 @@ class BlipTextPoint {
     }
     // Used to interact with pretty much everything ever.
     triggerServerEvent() {
-        API.triggerServerEvent(this.id);
+        API.triggerServerEvent(this.id, this.id);
     }
 }
 API.onUpdate.connect(() => {
