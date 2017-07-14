@@ -95,7 +95,28 @@ namespace Essence.classes
 
         public void startBarberShop(Client player, params object[] arguments)
         {
-            API.sendChatMessageToPlayer(player, "~b~Essence: ~r~Fire Barber shop code!.");
+            API.triggerClientEvent(player, "OPEN_BARBER_MENU");
+        }
+
+        public void PurchaseBarber(Client player, params object[] arguments)
+        {
+            if (!API.hasEntityData(player, "Instance"))
+            {
+                return;
+            }
+            //take money
+            Player instance = (Player)API.getEntityData(player, "Instance");
+            instance.Money -= 200;
+
+            //save Hairs
+            int Hurr = Convert.ToInt32(arguments[1]);
+            int HurrDye = Convert.ToInt32(arguments[2]);
+            int HurrDye2 = Convert.ToInt32(arguments[3]);
+            instance.PlayerSkin.Hair = Hurr;
+            instance.PlayerSkin.HairColor = HurrDye;
+            instance.PlayerSkin.HairHighlight = HurrDye2;
+            instance.PlayerSkin.savePlayerFace();
+
         }
 
     }

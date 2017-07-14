@@ -24,7 +24,7 @@ namespace Essence.classes.connections
         {
             if (ConnectionManager.CheckAddress(player.address))
             {
-                API.kickPlayer(player, "Please wait up to 60 seconds since your last logout to rejoin.");
+                API.kickPlayer(player, "Please wait up to 10 seconds since your last logout to rejoin.");
                 return;
             }
         }
@@ -32,7 +32,7 @@ namespace Essence.classes.connections
         private void API_onResourceStart()
         {
             Timer timer = new Timer();
-            timer.Interval = 60000;
+            timer.Interval = 10000;
             timer.Start();
             timer.Elapsed += Timer_Elapsed;
         }

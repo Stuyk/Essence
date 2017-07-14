@@ -32,7 +32,8 @@ namespace Essence.classes.events
             events.Add(new EventInfo("SHOP_MASK", "Mask", "startMaskShop"));
             events.Add(new EventInfo("SHOP_TATTOO", "Tattoo", "startTattooShop"));
             //shop Buying
-            events.Add(new EventInfo("BUY_MASK", "Mask", "Purchase"));
+            events.Add(new EventInfo("BUY_MASK", "Mask", "PurchaseMask"));
+            events.Add(new EventInfo("BARBER_BUY", "Barber", "PurchaseBarber"));
             // Jobs
             events.Add(new EventInfo("JOB_LONG_RANGE_TRUCKING", "LongRangeTrucking", "startLongRangeTruckingJob"));
             events.Add(new EventInfo("JOB_SHORT_RANGE_TRUCKING", "ShortRangeTrucking", "startShortRangeTruckingJob"));

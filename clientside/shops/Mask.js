@@ -11,6 +11,7 @@ var mainMenuItems = ["Animals", "Balaclavas", "Characters", "Clowns", "Crime Mas
 
 var AnimalMenu = null;
 var AnimalMenuItems = [
+["No Mask", 0, 0, 0],
 ["Black and Tan Pug", 200, 100, 5],
 ["Josephine Pug", 200, 100, 4],
 ["Brown Pug", 200, 100, 3],
@@ -65,6 +66,7 @@ var AnimalMenuItems = [
 
 var BalacavaMenu = null;
 var BalacavaMenuItems = [
+["No Mask", 0, 0, 0],
 ["Pink Stripe Knit Balaclava", 200, 58, 9],
 ["Black Stripe Knit Balaclava", 200, 58, 8],
 ["Blue Stripe Knit Balaclava", 200, 58, 7],
@@ -111,6 +113,7 @@ var BalacavaMenuItems = [
 
 var CharacterMenu = null;
 var CharacterMenuItems = [
+["No Mask", 0, 0, 0],
 ["Teen Wolf", 200, 59, 0],
 ["Albino Teen Wolf", 200, 79, 2],
 ["Tan Teen Wolf", 200, 79, 1],
@@ -146,6 +149,7 @@ var CharacterMenuItems = [
 
 var ClownMenu = null;
 var ClownMenuItems = [
+["No Mask", 0, 0, 0],
 ["Sinister Clown", 200, 95, 7],
 ["Franken Clown", 200, 95, 6],
 ["Neon Clown", 200, 95, 5],
@@ -158,6 +162,7 @@ var ClownMenuItems = [
 
 var CrimeMenu = null;
 var CrimeMenuItems = [
+["No Mask", 0, 0, 0],
 ["LSPD T-Shirt Mask", 200, 54, 10],
 ["Pink Camo T-Shirt Mask", 200, 54, 9],
 ["TPI T-Shirt Mask", 200, 54, 8],
@@ -191,6 +196,7 @@ var CrimeMenuItems = [
 
 var CulturalMenu = null;
 var CulturalMenuItems = [
+["No Mask", 0, 0, 0],
 ["Purple Oni", 200, 105, 23],
 ["Sea Green Oni", 200, 105, 22],
 ["Stone Oni", 200, 105, 21],
@@ -238,6 +244,7 @@ var CulturalMenuItems = [
 
 var FestiveMenu = null;
 var FestiveMenuItems = [
+["No Mask", 0, 0, 0],
 ["Latino Mrs Claus", 200, 88, 2],
 ["Black Mrs Claus", 200, 88, 1],
 ["White Mrs Claus", 200, 88, 0],
@@ -282,6 +289,7 @@ var FestiveMenuItems = [
 
 var IntimidationMenu = null;
 var IntimidationMenuItems = [
+["No Mask", 0, 0, 0],
 ["Please Stop Me Hockey", 200, 30, 0],
 ["Wooden Warrior", 200, 16, 8], 
 ["Lighting Warrior", 200, 16, 7],
@@ -303,6 +311,7 @@ var IntimidationMenuItems = [
 
 var MonsterMenu = null;
 var MonsterMenuItems = [
+["No Mask", 0, 0, 0],
 ["Black Bearded Lucifer", 200, 72, 2],
 ["Orange Bearded Lucifer", 200, 72, 1],
 ["Red Bearded Lucifer", 200, 72, 0],
@@ -405,6 +414,7 @@ var MonsterMenuItems = [
 
 var PaperBagMenu = null;
 var PaperBagMenuItems = [
+["No Mask", 0, 0, 0],
 ["Blackout Paper Bag", 200, 49, 25], 
 ["Love Paper Bag", 200, 49, 24],
 ["Modernist Paper Bag", 200, 49, 23],
@@ -435,6 +445,7 @@ var PaperBagMenuItems = [
 
 var SkiMenu = null;
 var SkiMenuItems = [
+["No Mask", 0, 0, 0],
 ["Skull Tactical Ski", 200, 104, 25],
 ["Olive Tactical Ski", 200, 104, 24],
 ["Pink Camo Tactical Ski", 200, 104, 23],
@@ -503,6 +514,7 @@ var SkiMenuItems = [
 
 var SportMenu = null;
 var SportMenuItems = [
+["No Mask", 0, 0, 0],
 ["Crossed Rampage Hockey", 200, 15, 3],
 ["Royal Hockey", 200, 14, 9],
 ["Striped Rampage Hockey", 200, 14, 8],
@@ -513,6 +525,7 @@ var SportMenuItems = [
 
 var TacticalMenu = null;
 var TacticalMenuItems = [
+["No Mask", 0, 0, 0],
 ["White Snake Skull", 200, 106, 25],
 ["Red Snake Skull", 200, 106, 24],
 ["Pink Camo Snake Skull", 200, 106, 23],
@@ -551,6 +564,7 @@ var TacticalMenuItems = [
 
 var ValentinesMenu = null;
 var ValentinesMenuItems = [
+["No Mask", 0, 0, 0],
 ["Cupid", 200, 13, 0],
 ["Black & Gold Masquerade", 200, 12, 2],
 ["Silver Masqurade", 200, 12, 1],
@@ -562,6 +576,7 @@ var ValentinesMenuItems = [
 
 var ZombieMenu = null;
 var ZombieMenuItems = [
+["No Mask", 0, 0, 0],
 ["Moss Camo Putrefied Zombie", 200, 103, 25],
 ["Woodland Putrefied Zombie", 200, 103, 24],
 ["Green Putrefied Zombie", 200, 103, 23],
@@ -1466,7 +1481,7 @@ function openMainMenu()
 
 function resetMainMenu()
 {
-	API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
+	//API.setPlayerClothes(API.getLocalPlayer(), 1, 0, 0);
 }
 
 // --------------------
@@ -1876,6 +1891,9 @@ function resetZombieMenu()
 
 function CamOn() 
 {
+	//tyesting new cam location
+	var playerspos = API.getLocalPlayer();
+	CameraPos = API.returnNative("GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS", 5, playerspos, 0.0, 1.75, 0.75);
 	//set the camera
 	MaskCamera = API.createCamera(CameraPos, new Vector3());
 	API.pointCameraAtPosition(MaskCamera, API.getEntityPosition(API.getLocalPlayer()).Add(new Vector3(0, 0, .75)));

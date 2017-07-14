@@ -98,7 +98,7 @@ namespace Essence.classes
             API.triggerClientEvent(player, "OPEN_MASK_MENU");
         }
 
-        public void Purchase(Client player, params object[] arguments)
+        public void PurchaseMask(Client player, params object[] arguments)
         {
             if (!API.hasEntityData(player, "Instance"))
             {
@@ -114,15 +114,22 @@ namespace Essence.classes
             instance.PlayerClothing.Mask = Msk;
             instance.PlayerClothing.MaskVariant = MskVar;
             instance.PlayerClothing.savePlayerClothes();
-
         }
 
-        [Command("mtest")]
-        public void MtestCommand(Client sender, int slot, int drawable, int texture)
+        [Command("ctest")]
+        public void CtestCommand(Client sender, int slot, int drawable, int texture)
         {
             API.setPlayerClothes(sender, slot, drawable, texture);
             API.sendChatMessageToPlayer(sender, "Item " + drawable + "," + texture + " applied successfully!");
         }
+
+        [Command("atest")]
+        public void AtestCommand(Client sender, int slot, int drawable, int texture)
+        {
+            API.setPlayerAccessory(sender, slot, drawable, texture);
+            API.sendChatMessageToPlayer(sender, "Item " + drawable + "," + texture + " applied successfully!");
+        }
+
     }
 
     }

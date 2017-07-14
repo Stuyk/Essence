@@ -21,7 +21,7 @@
 
   
   <script src="clientside/shops/Mask.js" type="client" lang="javascript" />
-  
+  <script src="clientside/shops/Barber.js" type="client" lang="javascript" /> 
   
   <file src="clientside/images/essence.png" />
   <file src="clientside/images/keyboard_e.png" />
