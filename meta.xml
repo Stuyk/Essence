@@ -38,6 +38,8 @@
   
   <file src="clientside/images/cursor/cursor.png" />
   <file src="clientside/images/cursor/hand.png" />
+
+  <file src="clientside/images/banners/fmsu.jpg" />
   
   <file src="clientside/js/vue.min.js" />
   <file src="clientside/css/bulma.css" />

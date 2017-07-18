@@ -24,6 +24,15 @@ API.onKeyDown.connect((sender, e) => {
         contentHolder.ContentItems[contentHolder.CurrentSelection].runSelectFunction();
         API.playSoundFrontEnd("SELECT", "HUD_FRONTEND_DEFAULT_SOUNDSET");
     }
+
+    if (e.KeyCode == Keys.A || e.KeyCode == Keys.Left) {
+        contentHolder.ContentItems[contentHolder.CurrentSelection].previousContent();
+        
+    }
+
+    if (e.KeyCode == Keys.D || e.KeyCode == Keys.Right) {
+        contentHolder.ContentItems[contentHolder.CurrentSelection].nextContent();
+    }
 });
 
 API.onUpdate.connect(() => {
@@ -196,6 +205,9 @@ class ContentItem {
     private hoverFunction: FunctionHolder;
     private selectFunction: FunctionHolder;
     private description: string;
+    private isVariedContent: boolean;
+    private variedContents: Array<ContentItem>;
+    private currentSelection: number;
     constructor(contentHolder: ContentHolder, itemName: string) {
         this.contentHolder = contentHolder;
         this.itemName = itemName;
@@ -207,53 +219,124 @@ class ContentItem {
         this.hoverFunction = null;
         this.selectFunction = null;
         this.description = null;
+        this.isVariedContent = false;
+        this.variedContents = new Array<ContentItem>();
+        this.currentSelection = 0;
     }
+    // Get the ID of this item.
     private getID() {
         this.id = this.contentHolder.ContentItems.length + 1;
-        //API.sendChatMessage(`MY NAME IS: ${this.itemName} and my ID IS: ${this.id}`);
     }
+    // Used to turn on left and right scrolling, and add new items. Returns the item you just added.
+    public addVariedContentItem(contentHolder: ContentHolder, itemName: string) {
+        if (!this.isVariedContent) {
+            this.itemName = `< ${this.itemName} >`
+        }
+        var item: ContentItem = new ContentItem(contentHolder, itemName);
+        this.isVariedContent = true;
+        this.variedContents.push(item);
+        return item;
+    }
+    // Next content display.
+    public nextContent() {
+        if (!this.isVariedContent) {
+            return;
+        }
 
+        API.playSoundFrontEnd("NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET");
+        if (this.currentSelection + 1 > this.variedContents.length) {
+            this.currentSelection = 0;
+        } else {
+            this.currentSelection += 1;
+        }
+
+        this.setTextToCurrentContent();
+        this.runVariedHoverFunction();
+    }
+    // Previous content display.
+    public previousContent() {
+        if (!this.isVariedContent) {
+            return;
+        }
+
+        API.playSoundFrontEnd("NAV_UP_DOWN", "HUD_FRONTEND_DEFAULT_SOUNDSET");
+        if (this.currentSelection - 1 <= -1) {
+            this.currentSelection = this.variedContents.length;
+        } else {
+            this.currentSelection -= 1;
+        }
+
+        this.setTextToCurrentContent();
+        this.runVariedHoverFunction();
+    }
+    //
+    public runVariedHoverFunction() {
+        this.variedContents[this.currentSelection].runHoverFunction();
+    }
+    // Set the text from other content.
+    private setTextToCurrentContent() {
+        this.itemName = `< ${this.variedContents[this.currentSelection].Text} >`
+    }
+    // Is this item currently selected?
     set IsSelected(value: boolean) {
         this.isSelected = value;
     }
-
+    // Set the item price of this item.
     set ItemPrice(value: string) {
         this.itemPrice = value;
     }
-
+    // Used to draw the text, images, etc.
     draw(currentOffset: number) {
         this.drawText(currentOffset);
         this.drawBackground(currentOffset);
     }
-
+    // Used for hovering.
     runHoverFunction() {
         if (this.hoverFunction != null) {
             this.hoverFunction.run();
         }
     }
-
+    // Used when the F or Enter key is pressed.
     runSelectFunction() {
         if (this.selectFunction != null) {
             this.selectFunction.run();
         }
-    }
 
+        if (this.isVariedContent) {
+            if (this.variedContents[this.currentSelection].selectFunction != null) {
+                this.variedContents[this.currentSelection].runSelectFunction();
+            }
+        }
+    }
+    // Current Selection
+    set CurrentSelection(value: number) {
+        this.currentSelection = value;
+    }
+    // Used to set the text color.
     public setTextColor(r: number, g: number, b: number) {
         this.color = [r, g, b];
     }
-
+    // Attach a FunctionHolder to this Item. Fires when it gets hovered.
     set HoverFunction(value: FunctionHolder) {
         this.hoverFunction = value;
     }
-
+    // Attach a description to this Item
     set Description(value: string) {
         this.description = value;
     }
-
+    // Attach a selective FunctionHolder to this item. Fires when the action key is pressed.
     set SelectFunction(value: FunctionHolder) {
         this.selectFunction = value;
     }
-
+    // Get Text
+    get Text(): string {
+        return this.itemName;
+    }
+    // Get Price
+    get Price(): string {
+        return this.itemPrice;
+    }
+    // Draw the background.
     private drawBackground(currentOffset: number) {
         if (this.isSelected) {
             API.drawRectangle(this.contentHolder.Point.X, headerHeight + (height * currentOffset) - height, width, height, 255, 255, 255, 150);
@@ -261,7 +344,7 @@ class ContentItem {
             API.drawRectangle(this.contentHolder.Point.X, headerHeight + (height * currentOffset) - height, width, height, 0, 0, 0, 150);
         }
     }
-
+    // DRaw the text.
     private drawText(currentOffset) {
         if (this.isSelected) {
             API.drawText(this.itemName, this.contentHolder.Point.X + 10, headerHeight + Math.round(height * currentOffset) - (Math.round(height / 2)) - 12, 0.4, 0, 0, 0, 255, 4, 0, false, false, 500);
@@ -275,7 +358,7 @@ class ContentItem {
 
         this.drawDescription();
     }
-
+    // Draw the description text.
     private drawDescription() {
         if (!this.isSelected) {
             return;
@@ -319,7 +402,7 @@ class FunctionHolder {
             if (this.localArgs != null) {
                 this.localFunction(this.localArgs);
             } else {
-                this.localFunction(this.localArgs);
+                this.localFunction();
             }
         }
     }
