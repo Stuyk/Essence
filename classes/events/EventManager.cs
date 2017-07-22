@@ -62,6 +62,7 @@ namespace Essence.classes.events
 
         public static EventInfo GetEvent(string eventName)
         {
+            API.shared.consoleOutput("Getting Event: " + eventName);
             for (int i = 0; i < events.Count; i++)
             {
                 if (events[i].EventName == eventName)

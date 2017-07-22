@@ -11,18 +11,9 @@ namespace Essence.classes.inventory
 {
     public static class Items
     {
-        private static List<InventoryItem> items = new List<InventoryItem>();
-
-        private enum OneOffItems
-        {
-            Radio,
-            Phone
-        }
-
-        /// <summary>
-        /// Get all of the items that are currently spawned.
-        /// </summary>
-        public static List<InventoryItem> ActiveItems
+        // List of spawned Items
+        private static List<OverworldItem> items = new List<OverworldItem>();
+        public static List<OverworldItem> ActiveItems
         {
             get
             {
@@ -30,10 +21,49 @@ namespace Essence.classes.inventory
             }
         }
 
-        /// <summary>
-        /// Used to pickup an item.
-        /// </summary>
-        /// <param name="netValue"></param>
+        // List of all types of Items that a player can carry in his inventory
+        public enum ItemTypes
+        {
+            //Food
+            SANDWICH = 101,
+            HAMBURGER,
+            DONUT,
+            PIZZA_SLICE,
+            HOT_DOG,
+
+            //Drinks
+            SPRUNK = 201,
+            PISSWASSER,
+            ECOLA,
+
+            //Drugs
+            COCAINE = 301,
+            XTC,
+            MARIJUANA,
+            HEROIN,
+            LSD,
+
+            //Tools
+            SCREWDRIVER = 401,
+            CROWBAR,
+            LIGHTER,
+            WRISTWATCH,
+            HAMMER,
+            RADIO,
+
+            //Phones
+            IPHONE_7 = 501,
+            SAMSUNG_GALAXY_S8,
+            NOKIA_3310,
+
+            //Keys
+            VEHICLE_KEY = 601,
+            HOUSE_KEY,
+            GARAGE_KEY,
+            SHOP_KEY,
+        }
+
+        // On player Pickup an Item
         public static void PickupItem(Client player, params object[] arguments)
         {
             if (arguments.Length <= 0)
@@ -42,7 +72,6 @@ namespace Essence.classes.inventory
             }
 
             NetHandle netValue = (NetHandle)arguments[0];
-
 
             if (!API.shared.doesEntityExist(netValue))
             {
@@ -54,42 +83,31 @@ namespace Essence.classes.inventory
                 return;
             }
 
-            for (int i = items.Count - 1; i >= 0; i--)
+            foreach (OverworldItem i in items)
             {
-                if (items[i].AttachedObject == netValue)
+                if (i.AttachedObject == netValue)
                 {
-                    if (API.shared.doesEntityExist(items[i].AttachedObject))
+                    if (API.shared.doesEntityExist(i.AttachedObject))
                     {
                         Player instance = player.getData("Instance");
                         Inventory inventory = instance.PlayerInventory;
-                        string itemType = items[i].Type;
-                        foreach (OneOffItems type in Enum.GetValues(typeof(OneOffItems)))
-                        {
-                            if (type.ToString() == itemType)
-                            {
-                                int value = inventory.getItemCountByType(itemType);
-                                if (value <= 0)
-                                {
-                                    break;
-                                }
-                                return;
-                            }
-                        }
-                        API.shared.deleteEntity(items[i].AttachedObject);
-                        inventory.addBasedOnType(items[i].Type, items[i].Quantity);
-                        API.shared.triggerClientEvent(player, "HeadNotification", string.Format("Picked up {0}. Total: {1}", items[i].Type, items[i].Quantity));
-                        items.RemoveAt(i);
+                        Item item = i.Item;
+
+                        //Delete item in overworld
+                        API.shared.deleteEntity(i.AttachedObject);
+
+                        //Add Item to player inventory
+                        inventory.addItem(item);
+                        API.shared.triggerClientEvent(player, "HeadNotification", string.Format("Picked up {0}. Total: {1}", item.Type, item.Quantity));
+                        items.Remove(i);
                         break;
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Add an item to the item list.
-        /// </summary>
-        /// <param name="item"></param>
-        public static void AddItem(InventoryItem item)
+        // Add item to the item list
+        public static void AddItem(OverworldItem item)
         {
             if (!items.Contains(item))
             {
@@ -97,140 +115,116 @@ namespace Essence.classes.inventory
             }
         }
 
-        /// <summary>
-        /// Remove an item from the item list.
-        /// </summary>
-        /// <param name="item"></param>
-        public static void RemoveItem(InventoryItem item)
+        // Remove item from the item list
+        public static void RemoveItem(OverworldItem item)
         {
             if (!items.Contains(item))
             {
                 items.Remove(item);
             }
         }
-
+        
+        // Use item
         public static void UseItem(Client player, params object[] arguments)
         {
-            if (arguments.Length <= 0)
+            if(arguments.Length <= 0)
             {
                 return;
             }
 
-            string type = arguments[0].ToString();
+            ItemTypes type = (ItemTypes)Enum.Parse(typeof(ItemTypes), arguments[0].ToString());
 
             Player instance = player.getData("Instance");
             Inventory inventory = instance.PlayerInventory;
-            // We specify our item types here.
+
+            //Item Types & Uses
             switch (type)
             {
-                case "RefinedDrugs":
-                    if (inventory.RefinedDrugs <= 0)
-                    {
-                        return;
-                    }
-                    inventory.RefinedDrugs -= 1;
-                    API.shared.sendChatMessageToPlayer(player, "You consumed some drugs.");
+                case ItemTypes.COCAINE:
                     player.armor += 10;
-                    return;
+                    break;
+
+                case ItemTypes.RADIO:
+                    API.shared.sendChatMessageToPlayer(player, "This is a radio");
+                    break;
+
+                case ItemTypes.HOT_DOG:
+                    player.health += 10;
+                    break;
             }
         }
 
+        // Get All Items (on Clientside)
         public static void GetItems(Client player, params object[] arguments)
         {
+            API.shared.consoleOutput("Getting Items for Client");
             if (!player.hasData("Instance"))
             {
                 return;
             }
-
+            API.shared.consoleOutput("Has Instance");
             Player instance = player.getData("Instance");
+            API.shared.consoleOutput("Get Instance");
             instance.PlayerInventory.LoadItemsToLocal();
+            API.shared.consoleOutput("Loading to local Client");
             return;
         }
 
-        /// <summary>
-        /// Create a new item and spit it out.
-        /// </summary>
-        /// <param name="type"></param>
-        public static void NewItem(Client player, params object[] arguments)
+        // Dropping an item from the inventory into the overworld
+        public static void DropItem(Client player, params object[] arguments)
         {
+            //[0] = id
+            //[1] = type
+            //[2] = coords
+            //[3] = quantity
+
             if (arguments.Length <= 0)
             {
                 return;
             }
 
-            string type = arguments[0].ToString();
-            Vector3 coords = (Vector3)arguments[1];
-            int quantity = Convert.ToInt32(arguments[2]);
+            int id = (int)arguments[0];
+            ItemTypes type = (ItemTypes)Enum.Parse(typeof(ItemTypes), arguments[1].ToString());
+            Vector3 coords = (Vector3)arguments[2];
+            int quantity = Convert.ToInt32(arguments[3]);
 
+            //Must drop it nearby
             if (coords.DistanceTo(player.position) > 6)
             {
                 API.shared.sendChatMessageToPlayer(player, "~r~You're attempting to drop an item too far away. Try aiming down.");
                 return;
             }
 
+            //Check if player owns item to drop
             Player instance = player.getData("Instance");
             Inventory inventory = instance.PlayerInventory;
-            InventoryItem newItem;
-            switch (type)
+
+            foreach(Item i in inventory.CurrentItems)
             {
-                case "CarParts":
-                    if (inventory.CarParts >= quantity)
+                if (i.ID == id && i.Type == type && i.Quantity >= quantity) //Owns item & same Type & Enough to drop
+                {
+                    OverworldItem newOverworldItem;
+
+                    if (i.Data.Length <= 0) //Item is stackable, remove from stack and create new Item for overworld item
                     {
-                        inventory.CarParts -= quantity;
-                        newItem = new InventoryItem(player, type, quantity, coords);
-                        AddItem(newItem);
-                    } else {
-                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
+                        i.Quantity -= quantity;
+                        Item item = new Item(type, quantity);
+                        newOverworldItem = new OverworldItem(player, item, coords);
+                        items.Add(newOverworldItem);
+                        return;
                     }
-                    return;
-                case "UnrefinedDrugs":
-                    if (inventory.UnrefinedDrugs >= quantity)
+                    else //Item isn't stackable, remove item from inventory and attach to new overworld item
                     {
-                        inventory.UnrefinedDrugs -= quantity;
-                        newItem = new InventoryItem(player, type, quantity, coords);
-                        AddItem(newItem);
+                        inventory.CurrentItems.Remove(i);
+                        newOverworldItem = new OverworldItem(player, i, coords);
+                        items.Add(newOverworldItem);
+                        return;
                     }
-                    else
-                    {
-                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
-                    }
-                    return;
-                case "RefinedDrugs":
-                    if (inventory.RefinedDrugs >= quantity)
-                    {
-                        inventory.RefinedDrugs -= quantity;
-                        newItem = new InventoryItem(player, type, quantity, coords);
-                        AddItem(newItem);
-                    }
-                    else
-                    {
-                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
-                    }
-                    return;
-                case "Radio":
-                    if (inventory.Radio >= quantity)
-                    {
-                        inventory.Radio -= quantity;
-                        newItem = new InventoryItem(player, type, quantity, coords);
-                        AddItem(newItem);
-                    }
-                    else
-                    {
-                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory.");
-                    }
-                    return;
-                case "Phone":
-                    if(inventory.Phone >= quantity)
-                    {
-                        inventory.Phone -= quantity;
-                        newItem = new InventoryItem(player, type, quantity, coords);
-                        AddItem(newItem);
-                    }
-                    else
-                    {
-                        API.shared.sendChatMessageToPlayer(player, "~r~You don't have that much to drop. Re-open your inventory");
-                    }
-                    return;
+                }
+                else
+                {
+                    API.shared.sendChatMessageToPlayer(player, "~r~ERROR: ~w~Item not found.");
+                }
             }
         }
     }

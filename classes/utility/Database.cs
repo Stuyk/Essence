@@ -44,22 +44,13 @@ namespace Essence.classes
                             [Y] FLOAT DEFAULT 0,
                             [Z] FLOAT DEFAULT 0)";
 
-        static string inventoryTable = @"CREATE TABLE IF NOT EXISTS
-                            [Inventory] (
-                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                            [Owner] INTEGER DEFAULT -1,
-                            [CarParts] INTEGER DEFAULT 0,
-                            [UnrefinedDrugs] INTEGER DEFAULT 0,
-                            [RefinedDrugs] INTEGER DEFAULT 0,
-                            [Radio] INTEGER DEFAULT 0,
-                            [Phone] INTEGER DEFAULT 0)";
-
-        static string itemProperties = @"CREATE TABLE IF NOT EXISTS
-                            [ItemProperties] (
-                            [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                            [Owner] INTEGER DEFAULT -1,
-                            [RadioFrequency] INTEGER DEFAULT 0,
-                            [PhoneNumber] INTEGER DEFAULT 0)";
+        static string itemsTable = @"CREATE TABLE IF NOT EXISTS 
+                            [Items] (
+	                        [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	                        [Owner] INTEGER DEFAULT -1,
+	                        [ItemType] INTEGER DEFAULT 101,
+                            [Quantity] INTEGER DEFAULT 1,
+	                        [Data] TEXT)";
 
         static string doorsTable = @"CREATE TABLE IF NOT EXISTS
                             [Doors] (
@@ -245,8 +236,7 @@ namespace Essence.classes
             executeQuery(clothingTable);
             executeQuery(skinTable);
             executeQuery(stashTable);
-            executeQuery(inventoryTable);
-            executeQuery(itemProperties);
+            executeQuery(itemsTable);
             executeQuery(doorsTable);
 
             //DataTable table = executeQueryWithResult("SELECT * FROM Players");
@@ -322,6 +312,34 @@ namespace Essence.classes
                     API.consoleOutput(string.Format("[SQLITE] [ERROR] {0}", ex));
                 }
             }
+        }
+
+        // Execute a single prepared query fro the database and return the unique auto incremented ID
+        public int executePreparedQueryReturnLastId(string query, Dictionary<string, string> parameters)
+        {
+            int primaryKey = -1;
+
+            using (SQLiteConnection conn = new SQLiteConnection(connString))
+            {
+                try
+                {
+                    SQLiteCommand cmd = new SQLiteCommand(query + "SELECT SCOPE_IDENTITY()", conn);
+                    conn.Open();
+                    // Execute a foreach statement. Loops through each entry of the dictionary and add to our command.
+                    foreach (KeyValuePair<string, string> entry in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(entry.Key, entry.Value);
+                    }
+                    primaryKey = (int)cmd.ExecuteScalar();
+                    conn.Close();
+                }
+                catch (Exception ex)
+                {
+                    API.consoleOutput(string.Format("[SQLITE] [ERROR] {0}", ex));
+                }
+            }
+
+            return primaryKey;
         }
 
         public DataTable executePreparedQueryWithResult(string query, Dictionary<string, string> parameters)
@@ -437,6 +455,50 @@ namespace Essence.classes
             }
 
             executePreparedQuery(query, parameters);
+        }
+
+        //Insert Query which returns ID of Auto Incremented ID from DB
+        public int compileInsertQueryReturnLastId(string tableName, string[] vars, object[] data)
+        {
+            int i = 0;
+            string query;
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+
+            //Add the beginning of our query
+            query = string.Format("INSERT INTO {0} (", tableName);
+
+            //format and add our params
+            foreach (string label in vars)
+            {
+                if (i == vars.Length - 1)
+                {
+                    query = string.Format("{0} {1}) VALUES (", query, label);
+                }
+                else
+                {
+                    query = string.Format("{0} {1},", query, label);
+                }
+
+                parameters.Add(string.Format("@{0}", label), data[i].ToString());
+                ++i;
+            }
+
+            i = 0;
+            foreach (string label in vars)
+            {
+                if (i == vars.Length - 1)
+                {
+                    query = string.Format("{0} @{1})", query, label);
+                }
+                else
+                {
+                    query = string.Format("{0} @{1},", query, label);
+                }
+                ++i;
+            }
+
+            int lastId = executePreparedQueryReturnLastId(query, parameters);
+            return lastId;
         }
 
         // Compile Select Query

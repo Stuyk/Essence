@@ -16,7 +16,7 @@ namespace Essence.classes.inventory
 
         public void DropItem(Client player, params object[] arguments)
         {
-            Items.NewItem(player, arguments);
+            Items.DropItem(player, arguments);
         }
 
         public void PickupItem(Client player, params object[] arguments)
@@ -26,6 +26,7 @@ namespace Essence.classes.inventory
 
         public void GetItems(Client player, params object[] arguments)
         {
+            API.consoleOutput("ITEM CALL GET ITEMS");
             Items.GetItems(player, arguments);
         }
 

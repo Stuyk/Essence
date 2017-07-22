@@ -74,9 +74,10 @@ class Box {
 }
 // An item element will represent a 'phsyical item' that can be split up or dropped.
 class Item {
-    constructor(type, quantity, consumeable) {
+    constructor(id, type, quantity, consumeable) {
         this.x = Math.round(API.getScreenResolutionMantainRatio().Width / 2);
         this.y = Math.round(API.getScreenResolutionMantainRatio().Height / 2);
+        this.id = id;
         this.type = type;
         this.quantity = quantity;
         this.consumeable = consumeable;
@@ -146,7 +147,7 @@ class Item {
             this.removeItem();
         }
         // Consumeable shit -->
-        API.triggerServerEvent("USE_ITEM", this.type);
+        API.triggerServerEvent("USE_ITEM", this.id);
         API.playSoundFrontEnd("Load_Scene", "DLC_Dmod_Prop_Editor_Sounds");
     }
     // Get our current selection.
@@ -199,7 +200,7 @@ class Item {
         }
         API.playSoundFrontEnd("Reset_Prop_Position", "DLC_Dmod_Prop_Editor_Sounds");
         this.quantity = possibleNewValue;
-        addInventoryItem(this.type, splitValue, this.consumeable);
+        addInventoryItem(this.id, this.type, splitValue, this.consumeable);
     }
     // Remove item bind from box.
     removeBinding() {
@@ -297,12 +298,12 @@ class Item {
         API.playSoundFrontEnd("Place_Prop_Fail", "DLC_Dmod_Prop_Editor_Sounds");
         // As a bonus we check if the aim coordinate is a viable position. If not we'll just drop it at ground height.'
         if (playerPos.DistanceTo(aimCoords) <= 6) {
-            API.triggerServerEvent("DROP_ITEM", this.type, aimCoords, this.quantity);
+            API.triggerServerEvent("DROP_ITEM", this.id, this.type, aimCoords, this.quantity);
         }
         else {
             var groundHeight = API.getGroundHeight(playerPos);
             var newPos = new Vector3(playerPos.X, playerPos.Y, groundHeight);
-            API.triggerServerEvent("DROP_ITEM", this.type, newPos, this.quantity);
+            API.triggerServerEvent("DROP_ITEM", this.id, this.type, newPos, this.quantity);
         }
     }
 }
@@ -326,8 +327,8 @@ function toggleInventory() {
         API.triggerServerEvent("GET_ITEMS");
     }
 }
-function addInventoryItem(type, quantity, consumeable) {
-    items.push(new Item(type, quantity, consumeable));
+function addInventoryItem(id, type, quantity, consumeable) {
+    items.push(new Item(id, type, quantity, consumeable));
 }
 API.onUpdate.connect(() => {
     if (!opened) {

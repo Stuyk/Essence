@@ -48,7 +48,7 @@ API.onServerEventTrigger.connect((eventName, args) => {
             return;
         // Inventory
         case "Add_Inventory_Item":
-            resource.Inventory.addInventoryItem(args[0], args[1], args[2]);
+            resource.Inventory.addInventoryItem(args[0], args[1], args[2], args[3]);
             return;
     }
 });
