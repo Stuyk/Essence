@@ -1,6 +1,8 @@
 ﻿using Essence.classes.datahandles;
-using GTANetworkServer;
-using GTANetworkShared;
+using GrandTheftMultiplayer.Server.API;
+using GrandTheftMultiplayer.Server.Elements;
+using GrandTheftMultiplayer.Shared;
+using GrandTheftMultiplayer.Shared.Math;
 using System;
 using System.Collections.Generic;
 using System.Linq;
