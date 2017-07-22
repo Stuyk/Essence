@@ -171,6 +171,7 @@ namespace Essence.classes.datahandles
             }
         }
 
+        /*
         //Radio
         [Command("radio", Alias = "r", GreedyArg = true)]
         public void cmdRadioChat(Client player, string message)
@@ -242,6 +243,8 @@ namespace Essence.classes.datahandles
 
             instance.PlayerInventory.RadioFrequency = frequency;
         }
+
+        */
 
         //Find Chat Hex Color based on distance between sender and receiver
         private string calculateChatColor(float distance, float chatRange = shortRange)

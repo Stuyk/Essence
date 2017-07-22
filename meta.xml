@@ -1,7 +1,7 @@
 ﻿<meta>
   <info name="Disorder District" type="gamemode" author="Stuyk" version="0.1" description="Unassigned" />
   <script src="Essence.dll" type="server" lang="compiled" />
- 
+
   <script src="clientside/MissionHandler.js" type="client" lang="javascript" />
   <script src="clientside/HUD.js" type="client" lang="javascript" />
   <script src="clientside/TemporaryBlip.js" type="client" lang="javascript" />
@@ -20,10 +20,10 @@
   <script src="clientside/Inventory.js" type="client" lang="javascript" />
   <script src="clientside/Utility.js" type="client" lang="javascript" />
   <script src="clientside/SimpleUI.js" type="client" lang="javascript" />
-  <script src="clientside/sandbox.js" type="client" lang="javascript" />
+  <!--<script src="clientside/sandbox.js" type="client" lang="javascript" />-->
   
   <script src="clientside/shops/Mask.js" type="client" lang="javascript" />
-  <script src="clientside/shops/Barber.js" type="client" lang="javascript" /> 
+  <script src="clientside/shops/Barber.js" type="client" lang="javascript" />
   
   <file src="clientside/images/essence.png" />
   <file src="clientside/images/keyboard_e.png" />

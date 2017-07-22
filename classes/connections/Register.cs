@@ -73,7 +73,7 @@ namespace Essence.classes
             string[] dataTwo = { username, hash, player.address, "100", "0", date.ToString("yyyy-MM-dd HH:mm:ss") };
             db.compileInsertQuery(tableName, varNamesTwo, dataTwo);
 
-            // Get the ID that belongs to the player.
+            // Get the ID that belongs to the player. (THIS IS NOT SECURE, COULD BE WRONG IF TWO PEOPLE REGISTER AT THE SAME TIME)
             result = db.executeQueryWithResult("SELECT ID FROM Players ORDER BY ID DESC LIMIT 1");
             string playerID = Convert.ToString(result.Rows[0]["ID"]);
 
