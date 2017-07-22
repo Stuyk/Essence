@@ -21,6 +21,7 @@
   <script src="clientside/Utility.js" type="client" lang="javascript" />
   <script src="clientside/SimpleUI.js" type="client" lang="javascript" />
   <script src="clientside/sandbox.js" type="client" lang="javascript" />
+  <script src="clientside/StuykEngine.js" type="client" lang="javascript" />
   
   <script src="clientside/shops/Mask.js" type="client" lang="javascript" />
   <script src="clientside/shops/Barber.js" type="client" lang="javascript" /> 
