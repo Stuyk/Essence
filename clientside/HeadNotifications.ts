@@ -18,7 +18,7 @@ class HeadNotification {
         }
 
         var loc = API.getEntityPosition(API.getLocalPlayer()).Add(new Vector3(0, 0, 1));
-        var pointer = Point.Round(API.worldToScreenMantainRatio(loc));
+        var pointer = API.worldToScreenMaintainRatio(loc);
         API.drawText(this.text, pointer.X, pointer.Y - this.modY, 0.6, 255, 255, 255, this.alpha, 4, 1, false, true, 600);
         this.alpha -= 2;
         this.modY += 1;

@@ -1,9 +1,8 @@
-"use strict";
 var cursorPath = "clientside/images/cursor/cursor.png";
 var handPath = "clientside/images/cursor/hand.png";
 var cursorEnabled = false;
 var handEnabled = false;
-API.onUpdate.connect(() => {
+API.onUpdate.connect(function () {
     drawCursor();
 });
 // #######################
@@ -31,11 +30,12 @@ function drawCursor() {
         return;
     }
     API.disableAllControlsThisFrame();
-    var mouse = API.getCursorPositionMantainRatio();
+    var mouse = API.getCursorPositionMaintainRatio();
     if (handEnabled) {
-        API.dxDrawTexture(handPath, Point.Round(mouse), new Size(12, 19), 0, 255, 255, 255, 255);
+        API.dxDrawTexture(handPath, new Point(Math.round(mouse.X), Math.round(mouse.Y)), new Size(12, 19), 0);
     }
     else {
-        API.dxDrawTexture(cursorPath, Point.Round(mouse), new Size(12, 19), 0, 255, 255, 255, 255);
+        API.dxDrawTexture(cursorPath, new Point(Math.round(mouse.X), Math.round(mouse.Y)), new Size(12, 19), 0);
     }
 }
+//# sourceMappingURL=Utility.js.map

@@ -1,4 +1,3 @@
-"use strict";
 // Screen Stuff
 var screenX = API.getScreenResolution().Width;
 var screenY = API.getScreenResolution().Height;
@@ -20,18 +19,15 @@ var objectives = new Array();
 // Array of mission blips / markers.
 var objectiveMarkers = [];
 // Array of current allied players on team.
-var teammates = new Set();
+var teammates = new Array();
 var team = "";
-API.onResourceStop.connect(() => {
+API.onResourceStop.connect(function () {
     fullCleanup();
 });
-API.onPlayerRespawn.connect(() => {
+API.onPlayerRespawn.connect(function () {
     deathPause = true;
 });
 API.onServerEventTrigger.connect(function (event, args) {
-    if (!event.includes("Mission")) {
-        return;
-    }
     switch (event) {
         // Team Removal / Updates
         case "Mission_Add_Player":
@@ -69,7 +65,7 @@ API.onServerEventTrigger.connect(function (event, args) {
             return;
         case "Mission_Head_Notification":
             headNotification = new PlayerHeadNotification(args[0]);
-            if (args.Count <= 1) {
+            if (args.length <= 1) {
                 return;
             }
             switch (args[1]) {
@@ -128,31 +124,31 @@ function setupMarkers() {
     cleanupMarkers();
     // Get all of our objective locations, loop through and determine the type of marker we need.
     for (var i = 0; i < objectives.length; i++) {
-        let newMarker = null;
+        var newMarker = null;
         switch (objectives[i].Type) {
             case "Location":
-                newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "Capture":
-                newMarker = API.createMarker(1 /* VerticalCylinder */, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(1, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "Destroy":
-                newMarker = API.createMarker(28 /* DebugSphere */, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(0.2, 0.2, 0.2), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(28, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(0.2, 0.2, 0.2), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "VehicleCapture":
-                newMarker = API.createMarker(1 /* VerticalCylinder */, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(1, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "VehicleLocation":
-                newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "PickupObject":
-                newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 1)), new Vector3(), new Vector3(0, 180, 0), new Vector3(0.5, 0.5, 0.5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 1)), new Vector3(), new Vector3(0, 180, 0), new Vector3(0.5, 0.5, 0.5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "RetrieveVehicle":
-                newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "BreakIntoVehicle":
-                newMarker = API.createMarker(20 /* ChevronUpX1 */, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "KillPlayer":
                 return;
@@ -245,11 +241,11 @@ function cleanupBlips() {
 * Cleanup Teammates.
 */
 function cleanupTeammates() {
-    if (teammates.size <= 0) {
+    if (teammates.length <= 0) {
         return;
     }
     //teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
-    teammates.clear();
+    teammates = new Array();
     team = "";
     deathPause = false;
 }
@@ -273,8 +269,8 @@ function removeObjective(id) {
     objectiveMarkers.splice(index, 1);
     objectives.splice(index, 1);
 }
-class Teammate {
-    constructor(id) {
+var Teammate = (function () {
+    function Teammate(id) {
         this.teammateID = id;
         //this.teammateBlip = API.createBlip(API.getEntityPosition(id));
         this.teammateName = API.getPlayerName(id);
@@ -284,13 +280,13 @@ class Teammate {
         //API.setBlipShortRange(this.teammateBlip, true);
         //this.adjustColor();
     }
-    removeBlip() {
+    Teammate.prototype.removeBlip = function () {
         if (API.doesEntityExist(this.teammateBlip)) {
             API.deleteEntity(this.teammateBlip);
             return;
         }
-    }
-    updateBlip() {
+    };
+    Teammate.prototype.updateBlip = function () {
         if (!API.doesEntityExist(this.teammateID)) {
             return;
         }
@@ -311,59 +307,72 @@ class Teammate {
 
         updateTeamVariable();
         */
-    }
-    updatePosition() {
+    };
+    Teammate.prototype.updatePosition = function () {
         /*
         if (API.hasEntitySyncedData(this.teammateID, "Current_Position")) {
             API.setBlipPosition(this.Blip, API.getEntitySyncedData(this.teammateID, "Current_Position"));
         }
         */
-    }
-    adjustColor() {
-        let playerHealth = API.getPlayerHealth(this.teammateID);
+    };
+    Teammate.prototype.adjustColor = function () {
+        var playerHealth = API.getPlayerHealth(this.teammateID);
         // Set Green
         if (playerHealth >= 80) {
             //API.setBlipColor(this.teammateBlip, 69);
-            this.teammateName = `~g~${API.getPlayerName(this.teammateID)}`;
+            this.teammateName = "~g~" + API.getPlayerName(this.teammateID);
         }
         // Set Orange / Green
         if (playerHealth <= 79 && playerHealth >= 56) {
             //API.setBlipColor(this.teammateBlip, 24);
-            this.teammateName = `~g~${API.getPlayerName(this.teammateID)}`;
+            this.teammateName = "~g~" + API.getPlayerName(this.teammateID);
         }
         // Set Orange
         if (playerHealth <= 55 && playerHealth >= 30) {
             //API.setBlipColor(this.teammateBlip, 81);
-            this.teammateName = `~o~${API.getPlayerName(this.teammateID)}`;
+            this.teammateName = "~o~" + API.getPlayerName(this.teammateID);
         }
         // Set Red
         if (playerHealth <= 29 && playerHealth >= 16) {
             //API.setBlipColor(this.teammateBlip, 49);
-            this.teammateName = `~r~${API.getPlayerName(this.teammateID)}`;
+            this.teammateName = "~r~" + API.getPlayerName(this.teammateID);
         }
         // Set Deep Red
         if (playerHealth <= 15 && playerHealth >= 1) {
             //API.setBlipColor(this.teammateBlip, 76);
-            this.teammateName = `~r~${API.getPlayerName(this.teammateID)}`;
+            this.teammateName = "~r~" + API.getPlayerName(this.teammateID);
         }
         // Dead
         if (playerHealth <= 0) {
             //API.setBlipColor(this.teammateBlip, 85);
-            this.teammateName = `~h~~u~${API.getPlayerName(this.teammateID)}`;
+            this.teammateName = "~h~~u~" + API.getPlayerName(this.teammateID);
         }
-    }
-    get Name() {
-        return this.teammateName;
-    }
-    get Blip() {
-        return this.teammateBlip;
-    }
-    get ID() {
-        return this.teammateID;
-    }
-}
-class Objective {
-    constructor(loc, type, objectiveID) {
+    };
+    Object.defineProperty(Teammate.prototype, "Name", {
+        get: function () {
+            return this.teammateName;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Teammate.prototype, "Blip", {
+        get: function () {
+            return this.teammateBlip;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Teammate.prototype, "ID", {
+        get: function () {
+            return this.teammateID;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return Teammate;
+}());
+var Objective = (function () {
+    function Objective(loc, type, objectiveID) {
         this.objectiveLocation = loc;
         this.objectiveType = type;
         this.objectiveProgress = -1;
@@ -371,60 +380,82 @@ class Objective {
         this.objectiveBlip = null;
         API.setWaypoint(loc.X, loc.Y);
     }
-    set ObjectiveBlip(value) {
-        this.objectiveBlip = value;
-    }
-    get ObjectiveBlip() {
-        return this.objectiveBlip;
-    }
-    get ObjectiveID() {
-        return this.objectiveID;
-    }
-    set Location(value) {
-        this.objectiveLocation = value;
-    }
-    get Location() {
-        return this.objectiveLocation;
-    }
-    set Type(value) {
-        this.objectiveType = value;
-    }
-    get Type() {
-        return this.objectiveType;
-    }
-    set Progress(value) {
-        this.objectiveProgress = value;
-    }
-    get Progress() {
-        return this.objectiveProgress;
-    }
-    run() {
+    Object.defineProperty(Objective.prototype, "ObjectiveBlip", {
+        get: function () {
+            return this.objectiveBlip;
+        },
+        set: function (value) {
+            this.objectiveBlip = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Objective.prototype, "ObjectiveID", {
+        get: function () {
+            return this.objectiveID;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Objective.prototype, "Location", {
+        get: function () {
+            return this.objectiveLocation;
+        },
+        set: function (value) {
+            this.objectiveLocation = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Objective.prototype, "Type", {
+        get: function () {
+            return this.objectiveType;
+        },
+        set: function (value) {
+            this.objectiveType = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Objective.prototype, "Progress", {
+        get: function () {
+            return this.objectiveProgress;
+        },
+        set: function (value) {
+            this.objectiveProgress = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Objective.prototype.run = function () {
         if (this.objectiveProgress > -1) {
             if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(this.objectiveLocation) <= 15) {
-                var pointer = Point.Round(API.worldToScreenMantainRatio(this.objectiveLocation));
-                API.drawText(`${this.objectiveProgress}%`, pointer.X, pointer.Y - 100, 0.5, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 600);
+                var pointer = API.worldToScreenMaintainRatio(this.objectiveLocation);
+                API.drawText(this.objectiveProgress + "%", Math.round(pointer.X), Math.round(pointer.Y - 100), 0.5, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 600);
             }
         }
-    }
-}
-class PlayerHeadNotification {
-    constructor(value) {
+    };
+    return Objective;
+}());
+var PlayerHeadNotification = (function () {
+    function PlayerHeadNotification(value) {
         this.headText = value;
         this.headAlpha = 255;
         this.headAddon = 0;
     }
-    run() {
+    PlayerHeadNotification.prototype.run = function () {
         if (this.headAlpha <= 0) {
             headNotification = null;
             return;
         }
         var location = API.getEntityPosition(API.getLocalPlayer()).Add(new Vector3(0, 0, 1.2));
-        var pointer = Point.Round(API.worldToScreenMantainRatio(location));
-        API.drawText(`${this.headText}`, pointer.X, Math.round(pointer.Y + this.headAddon), 0.5, textRGBA[0], textRGBA[1], textRGBA[2], Math.round(this.headAlpha), 4, 1, false, true, 600);
+        var pointer = API.worldToScreenMaintainRatio(location);
+        API.drawText("" + this.headText, Math.round(pointer.X), Math.round(pointer.Y + this.headAddon), 0.5, textRGBA[0], textRGBA[1], textRGBA[2], Math.round(this.headAlpha), 4, 1, false, true, 600);
         this.headAddon -= 0.5;
         this.headAlpha -= 3;
-    }
-}
+    };
+    return PlayerHeadNotification;
+}());
 /** OnUpdate Event */
 API.onUpdate.connect(function () {
     if (deathPause) {
@@ -436,7 +467,7 @@ API.onUpdate.connect(function () {
     if (missionPauseState) {
         return;
     }
-    if (teammates.size >= 1) {
+    if (teammates.length >= 1) {
         displayCurrentPlayers();
         updateAllyHealth();
     }
@@ -493,7 +524,7 @@ function missionObjectives() {
 }
 // Display player list.
 function displayCurrentPlayers() {
-    API.drawText(`~b~Current Team ~w~~n~${team}`, screenX - 100, 20, 0.4, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 150);
+    API.drawText("~b~Current Team ~w~~n~" + team, screenX - 100, 20, 0.4, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 150);
 }
 // Display current objectives progress.
 function displayObjectiveProgress() {
@@ -502,10 +533,10 @@ function displayObjectiveProgress() {
     }
 }
 function updateAllyHealth() {
-    if (teammates.size <= 0) {
+    if (teammates.length <= 0) {
         return;
     }
-    teammates.forEach((value) => {
+    teammates.forEach(function (value) {
         value.updateBlip();
     });
 }
@@ -513,9 +544,10 @@ function updateAllyHealth() {
 function addPlayer(target) {
     var teammate = new Teammate(target);
     var exists = false;
-    if (teammates.size > 0) {
-        for (var member of teammates) {
-            let value = member.Name;
+    if (teammates.length > 0) {
+        for (var _i = 0, teammates_1 = teammates; _i < teammates_1.length; _i++) {
+            var member = teammates_1[_i];
+            var value = member.Name;
             if (value === teammate.Name) {
                 exists = true;
                 break;
@@ -523,13 +555,13 @@ function addPlayer(target) {
         }
     }
     if (!exists) {
-        teammates.add(teammate);
+        teammates.push(teammate);
     }
     updateTeamVariable();
 }
 function updateTeamVariable() {
     team = "";
-    teammates.forEach((value) => {
+    teammates.forEach(function (value) {
         team = team.concat(value.Name + "~n~");
     });
 }
@@ -575,14 +607,14 @@ function objectiveDestroy() {
     }
 }
 function objectivePickupObject() {
-    if (API.isControlJustPressed(51 /* Context */)) {
+    if (API.isControlJustPressed(51)) {
         if (confirmPlayerIsNear(3)) {
             API.triggerServerEvent("checkObjective");
         }
     }
 }
 function objectiveBreakIntoVehicle() {
-    if (API.isControlJustPressed(51 /* Context */)) {
+    if (API.isControlJustPressed(51)) {
         if (confirmPlayerIsNear(3)) {
             resource.Lockpick.newLockPickMiniGame();
         }
@@ -614,3 +646,4 @@ function confirmPlayerAimIsNear(distanceToCheck) {
     }
     return false;
 }
+//# sourceMappingURL=MissionHandler.js.map

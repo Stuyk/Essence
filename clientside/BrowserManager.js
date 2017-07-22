@@ -1,21 +1,19 @@
-"use strict";
-var resX = API.getScreenResolutionMantainRatio().Width;
-var resY = API.getScreenResolutionMantainRatio().Height;
-var res = API.getScreenResolutionMantainRatio();
+var resX = API.getScreenResolutionMaintainRatio().Width;
+var resY = API.getScreenResolutionMaintainRatio().Height;
+var res = API.getScreenResolutionMaintainRatio();
 var cef = null; // Main CEF Page
 // Main CEFHelper Class.
-class CefHelper {
+var CefHelper = (function () {
     // Main Constructor - Requires the Path of the CEF File or HTML File or whatever.
-    constructor(resourcePath) {
+    function CefHelper(resourcePath) {
         this.path = resourcePath;
         this.open = false;
     }
     // Displays the HTML File we pushed up.
-    show() {
+    CefHelper.prototype.show = function () {
         if (this.open == false) {
             this.open = true;
             var resolution = API.getScreenResolution();
-            API.setCefDrawState(true);
             this.browser = API.createCefBrowser(resolution.Width, resolution.Height, true);
             API.waitUntilCefBrowserInit(this.browser);
             API.setCefBrowserPosition(this.browser, 0, 0);
@@ -25,12 +23,11 @@ class CefHelper {
             API.setHudVisible(false);
             API.setChatVisible(false);
         }
-    }
-    showNonLocal() {
+    };
+    CefHelper.prototype.showNonLocal = function () {
         if (this.open == false) {
             this.open = true;
             var resolution = API.getScreenResolution();
-            API.setCefDrawState(true);
             this.browser = API.createCefBrowser(resolution.Width, resolution.Height, false);
             API.waitUntilCefBrowserInit(this.browser);
             API.setCefBrowserPosition(this.browser, 0, 0);
@@ -40,21 +37,22 @@ class CefHelper {
             API.setHudVisible(false);
             API.setChatVisible(false);
         }
-    }
+    };
     // Destroys the CEF Browser.
-    destroy() {
+    CefHelper.prototype.destroy = function () {
         this.open = false;
         API.destroyCefBrowser(this.browser);
         API.showCursor(false);
         API.setCanOpenChat(true);
         API.setHudVisible(true);
         API.setChatVisible(true);
-    }
+    };
     // No idea what the fuck this does.
-    eval(string) {
+    CefHelper.prototype.eval = function (string) {
         this.browser.eval(string);
-    }
-}
+    };
+    return CefHelper;
+}());
 // Destroy the CEF Panel if the user disconnects. That way we don't fucking destroy their game and aliens invade and shit.
 API.onResourceStop.connect(function () {
     if (cef !== null) {
@@ -104,3 +102,4 @@ function Login(username, password) {
 function Register(username, password) {
     API.triggerServerEvent("clientRegister", username, password);
 }
+//# sourceMappingURL=BrowserManager.js.map

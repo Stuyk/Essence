@@ -152,7 +152,7 @@
 		RefreshIndex(): void;
 		Clear(): void;
 		Draw(): void;
-		GetScreenResolutionMantainRatio(): System.Drawing.SizeF;
+		GetScreenResolutionMaintainRatio(): System.Drawing.SizeF;
 		IsMouseInBounds(topLeft: System.Drawing.Point, boxSize: System.Drawing.Size): boolean;
 		IsMouseInListItemArrows(item: NativeUI.UIMenuListItem, topLeft: System.Drawing.Point, safezone: System.Drawing.Point): number;
 		GetSafezoneBounds(): System.Drawing.Point;

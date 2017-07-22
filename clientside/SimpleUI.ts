@@ -190,7 +190,7 @@ class ContentHeader {
         }
 
         if (this.path != null) {
-            API.dxDrawTexture(this.path, this.contentHolder.Point, new Size(width, headerHeight), 0, 255, 255, 255, 255);
+            API.dxDrawTexture(this.path, this.contentHolder.Point, new Size(width, headerHeight), 0);
         }
     }
 }

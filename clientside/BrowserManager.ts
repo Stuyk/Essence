@@ -1,6 +1,6 @@
-﻿var resX = API.getScreenResolutionMantainRatio().Width;
-var resY = API.getScreenResolutionMantainRatio().Height;
-var res = API.getScreenResolutionMantainRatio();
+﻿var resX = API.getScreenResolutionMaintainRatio().Width;
+var resY = API.getScreenResolutionMaintainRatio().Height;
+var res = API.getScreenResolutionMaintainRatio();
 var cef = null; // Main CEF Page
 // Main CEFHelper Class.
 class CefHelper {
@@ -17,7 +17,6 @@ class CefHelper {
         if (this.open == false) {
             this.open = true;
             var resolution = API.getScreenResolution();
-            API.setCefDrawState(true);
             this.browser = API.createCefBrowser(resolution.Width, resolution.Height, true);
             API.waitUntilCefBrowserInit(this.browser);
             API.setCefBrowserPosition(this.browser, 0, 0);
@@ -32,7 +31,6 @@ class CefHelper {
         if (this.open == false) {
             this.open = true;
             var resolution = API.getScreenResolution();
-            API.setCefDrawState(true);
             this.browser = API.createCefBrowser(resolution.Width, resolution.Height, false);
             API.waitUntilCefBrowserInit(this.browser);
             API.setCefBrowserPosition(this.browser, 0, 0);

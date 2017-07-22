@@ -1,5 +1,4 @@
-"use strict";
-var screenRes = API.getScreenResolutionMantainRatio();
+var screenRes = API.getScreenResolutionMaintainRatio();
 var widthHalf = Math.round(screenRes.Width / 2);
 var heightHalf = Math.round(screenRes.Height / 2);
 var holdCounter = 0;
@@ -7,7 +6,7 @@ var vehicleMenuButtons = new Array();
 var playerMenuButtons = new Array();
 var playerAnimationMenuButtons = new Array();
 // All of our interaction options go in here.
-API.onResourceStart.connect(() => {
+API.onResourceStart.connect(function () {
     vehicleLeftMenus();
     vehicleCenterMenus();
     vehicleRightMenus();
@@ -55,7 +54,7 @@ function animationCenterMenus() {
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 275), new Size(200, 50), "ANIM_HANDS_UP", "Hands Up"));
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 350), new Size(200, 50), "ANIM_SURRENDER", "Surrender"));
 }
-API.onKeyDown.connect((sender, e) => {
+API.onKeyDown.connect(function (sender, e) {
     if (API.isChatOpen()) {
         return;
     }
@@ -68,7 +67,7 @@ API.onKeyDown.connect((sender, e) => {
         resource.Inventory.toggleInventory();
     }
 });
-API.onUpdate.connect(() => {
+API.onUpdate.connect(function () {
     // Make sure the chat isn't open. This can be replaced with a true or false for 'drawing' a menu.
     if (API.isChatOpen()) {
         return;
@@ -77,12 +76,12 @@ API.onUpdate.connect(() => {
     if (!API.hasEntitySyncedData(API.getLocalPlayer(), "ESS_LoggedIn")) {
         return;
     }
-    API.dxDrawTexture("clientside/images/crosshair/crosshair.png", new Point(widthHalf - 5, heightHalf - 5), new Size(10, 10), 0, 255, 255, 255, 255);
+    API.dxDrawTexture("clientside/images/crosshair/crosshair.png", new Point(widthHalf - 5, heightHalf - 5), new Size(10, 10), 0);
     // We're going to use disabled controls here. So I'm disabling the vehicle horn since it's a control for E.
-    API.disableControlThisFrame(86 /* VehicleHorn */);
-    API.disableControlThisFrame(51 /* Context */);
+    API.disableControlThisFrame(86); // Horn
+    API.disableControlThisFrame(51); // E
     // When you hold E it adds to the counter. Once it's over 200, it turns on isInteracting();
-    if (API.isDisabledControlPressed(51 /* Context */)) {
+    if (API.isDisabledControlPressed(51)) {
         holdCounter += 5;
         if (holdCounter > 200) {
             isInteracting();
@@ -92,7 +91,7 @@ API.onUpdate.connect(() => {
         }
     }
     // When E is released it will put the counter back down to 0.
-    if (API.isDisabledControlJustReleased(51 /* Context */)) {
+    if (API.isDisabledControlJustReleased(51)) {
         holdCounter = 0;
         API.showCursor(false);
     }
@@ -106,7 +105,7 @@ API.onUpdate.connect(() => {
 function rayCastForItems() {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     var aimPos = API.getPlayerAimCoords(API.getLocalPlayer());
-    var rayCast = API.createRaycast(playerPos, aimPos, 16 /* Objects */, null);
+    var rayCast = API.createRaycast(playerPos, aimPos, 16, null);
     // Check if our raycast hits anything.
     if (!rayCast.didHitAnything) {
         return;
@@ -125,12 +124,7 @@ function rayCastForItems() {
     if (playerPos.DistanceTo(API.getEntityPosition(rayCast.hitEntity)) >= 5) {
         return;
     }
-    // Ensure it's a prop and then trigger a server event.
-    switch (API.getEntityType(rayCast.hitEntity)) {
-        case 2 /* Prop */:
-            API.triggerServerEvent("PICKUP_ITEM", rayCast.hitEntity);
-            return;
-    }
+    API.triggerServerEvent("PICKUP_ITEM", rayCast.hitEntity);
 }
 // This handles which menu our player is going to see.
 function isInteracting() {
@@ -139,7 +133,7 @@ function isInteracting() {
         API.showCursor(true);
     }
     if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
-        if (API.isControlPressed(21 /* Sprint */)) {
+        if (API.isControlPressed(21)) {
             showAnimationMenu();
             return;
         }
@@ -165,9 +159,9 @@ function showAnimationMenu() {
     }
 }
 // This is our InteractionButton class.
-class InteractionButton {
+var InteractionButton = (function () {
     // We need a new Point(x, y) which is the starting point of our button. We need a new Size(width, height) of 
-    constructor(pos, size, clientEvent, action) {
+    function InteractionButton(pos, size, clientEvent, action) {
         this.position = pos;
         this.size = size;
         this.clientEvent = clientEvent;
@@ -176,7 +170,7 @@ class InteractionButton {
         this.g = 0;
         this.b = 0;
     }
-    draw() {
+    InteractionButton.prototype.draw = function () {
         if (this.collision()) {
             API.drawRectangle(this.position.X, this.position.Y, this.size.Width, this.size.Height, 255, 255, 255, 100);
             this.drawtext();
@@ -186,20 +180,24 @@ class InteractionButton {
             API.drawRectangle(this.position.X, this.position.Y, this.size.Width, this.size.Height, this.r, this.g, this.b, 100);
             this.drawtext();
         }
-    }
-    set Argument(value) {
-        this.argument = value;
-    }
-    collision() {
-        var mouse = API.getCursorPositionMantainRatio();
+    };
+    Object.defineProperty(InteractionButton.prototype, "Argument", {
+        set: function (value) {
+            this.argument = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    InteractionButton.prototype.collision = function () {
+        var mouse = API.getCursorPositionMaintainRatio();
         API.drawRectangle(mouse.X, mouse.Y, 5, 5, 255, 255, 255, 255);
         if (mouse.X > this.position.X && mouse.X < this.position.X + this.size.Width && mouse.Y > this.position.Y && mouse.Y < this.position.Y + this.size.Height) {
             return true;
         }
         return false;
-    }
-    clicked() {
-        if (API.isControlJustPressed(237 /* CursorAccept */)) {
+    };
+    InteractionButton.prototype.clicked = function () {
+        if (API.isControlJustPressed(237)) {
             API.playSoundFrontEnd("CONTINUE", "HUD_FRONTEND_DEFAULT_SOUNDSET");
             if (this.argument != null) {
                 API.triggerServerEvent(this.clientEvent, this.argument);
@@ -208,13 +206,15 @@ class InteractionButton {
                 API.triggerServerEvent(this.clientEvent);
             }
         }
-    }
-    drawtext() {
+    };
+    InteractionButton.prototype.drawtext = function () {
         API.drawText(this.action, Math.round(this.position.X + (this.size.Width / 2)), Math.round(this.position.Y + (this.size.Height / 2)) - 18, 0.5, 255, 255, 255, 255, 4, 1, false, false, 600);
-    }
-    setRGB(r, g, b) {
+    };
+    InteractionButton.prototype.setRGB = function (r, g, b) {
         this.r = r;
         this.g = g;
         this.b = b;
-    }
-}
+    };
+    return InteractionButton;
+}());
+//# sourceMappingURL=Interaction.js.map

@@ -1,4 +1,3 @@
-"use strict";
 API.onResourceStart.connect(function () {
     var players = API.getStreamedPlayers();
     for (var i = players.Length - 1; i >= 0; i--) {
@@ -91,3 +90,4 @@ function setPedCharacter(ent) {
         }
     }
 }
+//# sourceMappingURL=SkinManager.js.map

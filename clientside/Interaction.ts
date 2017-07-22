@@ -1,4 +1,4 @@
-﻿var screenRes = API.getScreenResolutionMantainRatio();
+﻿var screenRes = API.getScreenResolutionMaintainRatio();
 var widthHalf = Math.round(screenRes.Width / 2);
 var heightHalf = Math.round(screenRes.Height / 2);
 
@@ -94,14 +94,14 @@ API.onUpdate.connect(() => {
         return;
     }
 
-    API.dxDrawTexture("clientside/images/crosshair/crosshair.png", new Point(widthHalf - 5, heightHalf - 5), new Size(10, 10), 0, 255, 255, 255, 255);
+    API.dxDrawTexture("clientside/images/crosshair/crosshair.png", new Point(widthHalf - 5, heightHalf - 5), new Size(10, 10), 0);
 
     // We're going to use disabled controls here. So I'm disabling the vehicle horn since it's a control for E.
-    API.disableControlThisFrame(Enums.Controls.VehicleHorn);
-    API.disableControlThisFrame(Enums.Controls.Context);
+    API.disableControlThisFrame(86); // Horn
+    API.disableControlThisFrame(51); // E
 
     // When you hold E it adds to the counter. Once it's over 200, it turns on isInteracting();
-    if (API.isDisabledControlPressed(Enums.Controls.Context)) {
+    if (API.isDisabledControlPressed(51)) {
         holdCounter += 5;
         if (holdCounter > 200) {
             isInteracting();
@@ -111,7 +111,7 @@ API.onUpdate.connect(() => {
     }
 
     // When E is released it will put the counter back down to 0.
-    if (API.isDisabledControlJustReleased(Enums.Controls.Context)) {
+    if (API.isDisabledControlJustReleased(51)) {
         holdCounter = 0;
         API.showCursor(false);
     }
@@ -127,7 +127,7 @@ API.onUpdate.connect(() => {
 function rayCastForItems() {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     var aimPos = API.getPlayerAimCoords(API.getLocalPlayer());
-    var rayCast = API.createRaycast(playerPos, aimPos, Enums.IntersectOptions.Objects, null);
+    var rayCast = API.createRaycast(playerPos, aimPos, 16, null);
     // Check if our raycast hits anything.
     if (!rayCast.didHitAnything) {
         return;
@@ -151,12 +151,8 @@ function rayCastForItems() {
         return;
     }
 
-    // Ensure it's a prop and then trigger a server event.
-    switch (API.getEntityType(rayCast.hitEntity)) {
-        case Enums.EntityType.Prop:
-            API.triggerServerEvent("PICKUP_ITEM", rayCast.hitEntity);
-            return;
-    }
+    API.triggerServerEvent("PICKUP_ITEM", rayCast.hitEntity);
+    
 }
 
 
@@ -168,7 +164,7 @@ function isInteracting() {
     }
 
     if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
-        if (API.isControlPressed(Enums.Controls.Sprint)) {
+        if (API.isControlPressed(21)) {
             showAnimationMenu();
             return;
         }
@@ -232,7 +228,7 @@ class InteractionButton {
     }
 
     private collision() {
-        var mouse = API.getCursorPositionMantainRatio();
+        var mouse = API.getCursorPositionMaintainRatio();
         API.drawRectangle(mouse.X, mouse.Y, 5, 5, 255, 255, 255, 255);
 
         if (mouse.X > this.position.X && mouse.X < this.position.X + this.size.Width && mouse.Y > this.position.Y && mouse.Y < this.position.Y + this.size.Height) {
@@ -241,7 +237,7 @@ class InteractionButton {
         return false;
     }
     private clicked() {
-        if (API.isControlJustPressed(Enums.Controls.CursorAccept)) {
+        if (API.isControlJustPressed(237)) {
             API.playSoundFrontEnd("CONTINUE", "HUD_FRONTEND_DEFAULT_SOUNDSET");
             if (this.argument != null) {
                 API.triggerServerEvent(this.clientEvent, this.argument);

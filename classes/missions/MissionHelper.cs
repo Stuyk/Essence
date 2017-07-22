@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Essence.classes.missions
 {
-    public static class MissionHelper
+    public class MissionHelper : Script
     {
         /// <summary>
         /// Verify if a player is completing an objective. Used mainly from trigger events.

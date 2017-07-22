@@ -26,7 +26,7 @@ var objectives: Objective[] = new Array <Objective>();
 var objectiveMarkers = [];
 
 // Array of current allied players on team.
-var teammates: Set<Teammate> = new Set();
+var teammates: Array<Teammate> = new Array();
 var team = "";
 
 API.onResourceStop.connect(() => {
@@ -39,9 +39,6 @@ API.onPlayerRespawn.connect(() => {
 
 
 API.onServerEventTrigger.connect(function (event, args) {
-    if (!event.includes("Mission")) {
-        return;
-    }
     switch (event) {
         // Team Removal / Updates
         case "Mission_Add_Player":
@@ -79,7 +76,7 @@ API.onServerEventTrigger.connect(function (event, args) {
             return;
         case "Mission_Head_Notification":
             headNotification = new PlayerHeadNotification(args[0]);
-            if (args.Count <= 1) {
+            if (args.length <= 1) {
                 return;
             }
             switch (args[1]) {
@@ -144,28 +141,28 @@ function setupMarkers() {
         let newMarker = null;
         switch (objectives[i].Type) {
             case "Location":
-                newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "Capture":
-                newMarker = API.createMarker(Enums.MarkerType.VerticalCylinder, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(1, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "Destroy":
-                newMarker = API.createMarker(Enums.MarkerType.DebugSphere, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(0.2, 0.2, 0.2), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(28, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(0.2, 0.2, 0.2), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "VehicleCapture":
-                newMarker = API.createMarker(Enums.MarkerType.VerticalCylinder, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(1, objectives[i].Location, new Vector3(), new Vector3(), new Vector3(5, 5, 5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "VehicleLocation":
-                newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 2)), new Vector3(), new Vector3(), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "PickupObject":
-                newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 1)), new Vector3(), new Vector3(0, 180, 0), new Vector3(0.5, 0.5, 0.5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 1)), new Vector3(), new Vector3(0, 180, 0), new Vector3(0.5, 0.5, 0.5), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "RetrieveVehicle":
-                newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "BreakIntoVehicle":
-                newMarker = API.createMarker(Enums.MarkerType.ChevronUpX1, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
+                newMarker = API.createMarker(3, objectives[i].Location.Add(new Vector3(0, 0, 3)), new Vector3(), new Vector3(0, 180, 0), new Vector3(1, 1, 1), markerRGBA[0], markerRGBA[1], markerRGBA[2], markerRGBA[3]);
                 break;
             case "KillPlayer":
                 return;
@@ -262,13 +259,13 @@ function cleanupBlips() {
 * Cleanup Teammates.
 */
 function cleanupTeammates() {
-    if (teammates.size <= 0) {
+    if (teammates.length <= 0) {
         return;
     }
 
     //teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
 
-    teammates.clear();
+    teammates = new Array<Teammate>();
     team = "";
 
     deathPause = false;
@@ -465,8 +462,8 @@ class Objective {
     run() {
         if (this.objectiveProgress > -1) {
             if (API.getEntityPosition(API.getLocalPlayer()).DistanceTo(this.objectiveLocation) <= 15) {
-                var pointer = Point.Round(API.worldToScreenMantainRatio(this.objectiveLocation));
-                API.drawText(`${this.objectiveProgress}%`, pointer.X, pointer.Y - 100, 0.5, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 600);
+                var pointer = API.worldToScreenMaintainRatio(this.objectiveLocation);
+                API.drawText(`${this.objectiveProgress}%`, Math.round(pointer.X), Math.round(pointer.Y - 100), 0.5, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 600);
             }
         }
     }
@@ -490,8 +487,8 @@ class PlayerHeadNotification {
         }
 
         var location = API.getEntityPosition(API.getLocalPlayer()).Add(new Vector3(0, 0, 1.2));
-        var pointer = Point.Round(API.worldToScreenMantainRatio(location));
-        API.drawText(`${this.headText}`, pointer.X, Math.round(pointer.Y + this.headAddon), 0.5, textRGBA[0], textRGBA[1], textRGBA[2], Math.round(this.headAlpha), 4, 1, false, true, 600);
+        var pointer = API.worldToScreenMaintainRatio(location);
+        API.drawText(`${this.headText}`, Math.round(pointer.X), Math.round(pointer.Y + this.headAddon), 0.5, textRGBA[0], textRGBA[1], textRGBA[2], Math.round(this.headAlpha), 4, 1, false, true, 600);
 
         this.headAddon -= 0.5;
         this.headAlpha -= 3;
@@ -512,7 +509,7 @@ API.onUpdate.connect(function () {
         return;
     }
 
-    if (teammates.size >= 1) {
+    if (teammates.length >= 1) {
         displayCurrentPlayers();
         updateAllyHealth();
     }
@@ -586,7 +583,7 @@ function displayObjectiveProgress() {
 }
 
 function updateAllyHealth() {
-    if (teammates.size <= 0) {
+    if (teammates.length <= 0) {
         return;
     }
 
@@ -602,7 +599,7 @@ function addPlayer(target) {
 
     var exists = false;
 
-    if (teammates.size > 0) {
+    if (teammates.length > 0) {
         for (var member of teammates) {
             let value = member.Name;
             if (value === teammate.Name) {
@@ -613,7 +610,7 @@ function addPlayer(target) {
     }
 
     if (!exists) {
-        teammates.add(teammate);
+        teammates.push(teammate);
     }
 
     updateTeamVariable();
@@ -677,7 +674,7 @@ function objectiveDestroy() {
 }
 
 function objectivePickupObject() {
-    if (API.isControlJustPressed(Enums.Controls.Context)) {
+    if (API.isControlJustPressed(51)) {
         if (confirmPlayerIsNear(3)) {
             API.triggerServerEvent("checkObjective");
         }
@@ -685,7 +682,7 @@ function objectivePickupObject() {
 }
 
 function objectiveBreakIntoVehicle() {
-    if (API.isControlJustPressed(Enums.Controls.Context)) {
+    if (API.isControlJustPressed(51)) {
         if (confirmPlayerIsNear(3)) {
             resource.Lockpick.newLockPickMiniGame();
         }
