@@ -26,3 +26,4 @@ Newtonsoft.Json.xml
 System.Data.SQLite.xml
 System.Diagnostics.DiagnosticSource.xml
 System.Interactive.Async.xml
+/database/*
