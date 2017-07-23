@@ -34,3 +34,8 @@ Microsoft.Threading.Tasks.Extensions.xml
 Microsoft.Threading.Tasks.Extensions.Desktop.xml
 Nito.AsyncEx.xml
 Nito.AsyncEx.Enlightenment.xml
+Nito.AsyncEx.Tasks.xml
+Nito.AsyncEx.Interop.WaitHandles.xml
+Nito.AsyncEx.Coordination.xml
+EntityFramework.xml
+EntityFramework.SqlServer.xml
