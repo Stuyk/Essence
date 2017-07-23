@@ -19,7 +19,7 @@ namespace Essence.classes.doors
         private int coreID;
         private string id;
         private Vector3 doorLocation;
-        private bool Locked { get; set; }
+        public bool Locked { get; set; }
         private string owner;
         public string IPL { get; set; }
         public int Price { get; set; }

@@ -1,4 +1,37 @@
 var lastNotification = null;
+var chatMessages = new Array();
+var HeadChat = (function () {
+    function HeadChat(target, text) {
+        this.text = text;
+        this.alpha = 255;
+        this.modY = 0;
+        this.target = target;
+    }
+    HeadChat.prototype.run = function () {
+        if (this.alpha <= 0) {
+            this.removeSelf();
+            return;
+        }
+        if (!API.doesEntityExist(this.target)) {
+            this.removeSelf();
+            return;
+        }
+        var loc = API.getEntityPosition(this.target).Add(new Vector3(0, 0, 1));
+        var pointer = API.worldToScreenMaintainRatio(loc);
+        API.drawText(this.text, pointer.X, pointer.Y - this.modY, 0.6, 255, 255, 255, this.alpha, 4, 1, false, true, 600);
+        this.alpha -= 1;
+        this.modY += 1;
+    };
+    HeadChat.prototype.removeSelf = function () {
+        for (var i = chatMessages.length; i > 0; i--) {
+            if (chatMessages[i] === this) {
+                chatMessages.splice(i, 1);
+                break;
+            }
+        }
+    };
+    return HeadChat;
+}());
 var HeadNotification = (function () {
     function HeadNotification(whatToSay) {
         this.text = whatToSay;
@@ -19,13 +52,19 @@ var HeadNotification = (function () {
     return HeadNotification;
 }());
 API.onUpdate.connect(function () {
-    if (lastNotification === null) {
-        return;
+    if (lastNotification !== null) {
+        lastNotification.run();
     }
-    lastNotification.run();
 });
 function createHeadNotification(text) {
     lastNotification = new HeadNotification(text);
     API.playSoundFrontEnd("FocusIn", "HintCamSounds");
+}
+function createHeadNoteForTarget(target, text) {
+    if (!API.doesEntityExist(target)) {
+        return;
+    }
+    var newChat = new HeadChat(target, text);
+    chatMessages.push(newChat);
 }
 //# sourceMappingURL=HeadNotifications.js.map

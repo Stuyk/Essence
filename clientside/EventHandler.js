@@ -19,7 +19,10 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             resource.BrowserManager.callCEF("showRegistrationError", false);
             return;
         case "HeadNotification":
-            resource.HeadNotifications.createHeadNotification(args[0]);
+            resource.HeadNotifications.createHeadNotification(args[0]); // Just Message
+            return;
+        case "HeadNotificationForTarget":
+            resource.HeadNotifications.createHeadNotification(args[0], args[1]); // Player Target, Message
             return;
         // Used by Doors.js and Doors.cs
         case "RetrieveDoor":

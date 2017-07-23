@@ -24,7 +24,7 @@ namespace Essence.classes
         }
 
         [Command("forceRegistration")]
-        public void cmdForceReg(Client player, string user, string pass)
+        public void cmdForceReg(Client player, string user, string pass, string playername)
         {
             cmdRegister(player, user, pass);
         }
@@ -39,6 +39,7 @@ namespace Essence.classes
 
             string username = arguments[0].ToString();
             string password = arguments[1].ToString();
+            string playername = arguments[2].ToString();
 
             if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
             {
@@ -57,12 +58,16 @@ namespace Essence.classes
                 return;
             }
 
-            var hash = BCr.BCrypt.HashPassword(password, BCr.BCrypt.GenerateSalt(12));
+            if (username.Length <= 0)
+            {
+                API.triggerClientEvent(player, "FailRegistration");
+                return;
+            }
 
-            string[] varNamesZero = { "Username" };
-            string beforeZero = "SELECT Username FROM Players WHERE";
-            object[] dataZero = { username };
-            DataTable result = db.compileSelectQuery(beforeZero, varNamesZero, dataZero);
+            string[] varNamesOne = { "Name" };
+            string beforeOne = "SELECT Name FROM Players WHERE";
+            object[] dataOne = { playername };
+            DataTable result = db.compileSelectQuery(beforeOne, varNamesOne, dataOne);
 
             if (result.Rows.Count >= 1)
             {
@@ -70,6 +75,18 @@ namespace Essence.classes
                 return;
             }
 
+            string[] varNamesZero = { "Username" };
+            string beforeZero = "SELECT Username FROM Players WHERE";
+            object[] dataZero = { username };
+            result = db.compileSelectQuery(beforeZero, varNamesZero, dataZero);
+
+            if (result.Rows.Count >= 1)
+            {
+                API.triggerClientEvent(player, "FailRegistration");
+                return;
+            }
+
+            var hash = BCr.BCrypt.HashPassword(password, BCr.BCrypt.GenerateSalt(12));
             DateTime date = DateTime.Now;
 
             // Setup registration.

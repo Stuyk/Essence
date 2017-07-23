@@ -149,8 +149,6 @@ namespace Essence.classes
 
         public Player(Client player, DataRow db)
         {
-            // Pass the login to the console.
-            API.consoleOutput(string.Format("{0} has successfully logged in.", player.name));
             // Used for drawing hud items -->
             API.setEntitySyncedData(player, "ESS_LoggedIn", true);
             // Setup Class Data.
@@ -161,6 +159,7 @@ namespace Essence.classes
             money = Convert.ToInt32(db["Money"]);
             player.health = Convert.ToInt32(db["Health"]);
             player.armor = Convert.ToInt32(db["Armor"]);
+            player.name = $"{db["Name"]}";
             IsAdmin = Convert.ToBoolean(db["IsAdmin"]);
             API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
             lastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
@@ -191,6 +190,10 @@ namespace Essence.classes
 
             // Setup our anticheat info.
             anticheatInfo = Anticheat.addPlayer(player);
+
+            // Login Console
+            // Pass the login to the console.
+            API.consoleOutput($"{player.name} has logged in.");
         }
 
         /** Spawn Player Vehicles */
