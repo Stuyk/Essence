@@ -159,11 +159,15 @@ function rayCastForItems() {
 }
 
 function radiusForItems(aimpos) {
+
     var objects = API.getAllObjects();
 
     for (var i = 0; i < objects.Length; i++) {
-        if (API.getEntityPosition(objects[i]).DistanceTo2D(aimpos) <= 2) {
-            if (!API.hasEntitySyncedData(objects[i], "DROPPED_OBJECT")) {
+
+        if (API.getEntityPosition(objects[i]).DistanceTo2D(aimpos) <= 1) {
+
+            if (API.hasEntitySyncedData(objects[i], "DROPPED_OBJECT")) {
+
                 API.triggerServerEvent("PICKUP_ITEM", objects[i]);
                 return;
             }

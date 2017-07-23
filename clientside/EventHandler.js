@@ -1,4 +1,5 @@
-API.onServerEventTrigger.connect(function (eventName, args) {
+"use strict";
+API.onServerEventTrigger.connect((eventName, args) => {
     switch (eventName) {
         case "ShowLogin":
             //resource.BrowserManager.showCEF("clientside/login.html")
@@ -50,8 +51,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             return;
         // Inventory
         case "Add_Inventory_Item":
-            resource.Inventory.addInventoryItem(args[0], args[1], args[2], args[3]);
+            resource.Inventory.addInventoryItem(args[0], args[1], args[2], args[3], args[4]);
             return;
     }
 });
-//# sourceMappingURL=EventHandler.js.map

@@ -102,15 +102,17 @@ class Item {
     private id: number; //DB ID of item
     private type: string;
     private quantity: number;
+    private data: string;
     private selected: boolean;
     private splitTimer: number; // ms
     private consumeable: boolean;
-    constructor(id: number, type: string, quantity: number, consumeable: boolean) {
+    constructor(id: number, type: string, quantity: number, consumeable: boolean, data: string) {
         this.x = Math.round(API.getScreenResolutionMaintainRatio().Width / 2);
         this.y = Math.round(API.getScreenResolutionMaintainRatio().Height / 2);
         this.id = id;
         this.type = type;
         this.quantity = quantity;
+        this.data = data;
         this.consumeable = consumeable;
         this.box = null;
         this.selected = false;
@@ -120,8 +122,17 @@ class Item {
 
     // This is used to draw our items.
     public draw() {
-        API.drawText("" + this.type, this.centerX, this.centerY - 10, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
-        API.drawText("x" + this.quantity.toString(), this.centerX, this.centerY + 30, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+
+        let itemName = this.type.toLowerCase();
+        itemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
+        itemName = itemName.replace('_', ' ');
+
+        API.drawText("" + itemName, this.centerX, this.centerY - 30, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
+        API.drawText("x" + this.quantity.toString(), this.centerX, this.centerY + 20, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+
+        if (this.data.length > 0) {
+            API.drawText(this.data, this.centerX, this.centerY, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+        }
 
         this.mouseCheck();
 
@@ -254,7 +265,7 @@ class Item {
         }
         API.playSoundFrontEnd("Reset_Prop_Position", "DLC_Dmod_Prop_Editor_Sounds");
         this.quantity = possibleNewValue;
-        addInventoryItem(this.id, this.type, splitValue, this.consumeable);
+        addInventoryItem(this.id, this.type, splitValue, this.consumeable, this.data);
     }
 
     // Remove item bind from box.
@@ -394,8 +405,8 @@ function toggleInventory() {
     }
 }
 
-function addInventoryItem(id: number, type: string, quantity: number, consumeable: boolean) {
-    items.push(new Item(id, type, quantity, consumeable));
+function addInventoryItem(id: number, type: string, quantity: number, consumeable: boolean, data: string) {
+    items.push(new Item(id, type, quantity, consumeable, data));
 }
 
 API.onUpdate.connect(() => {

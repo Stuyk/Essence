@@ -5,6 +5,7 @@
 /x64/*
 /x86/*
 /types-gtanetwork/*
+/types-gt-mp/*
 /Properties/*
 obj/Debug/d20rp.dll
 obj/Debug/d20rp.pdb
@@ -27,3 +28,9 @@ System.Data.SQLite.xml
 System.Diagnostics.DiagnosticSource.xml
 System.Interactive.Async.xml
 /database/*
+Nito.AsyncEx.Concurrent.xml
+Microsoft.Threading.Tasks.xml
+Microsoft.Threading.Tasks.Extensions.xml
+Microsoft.Threading.Tasks.Extensions.Desktop.xml
+Nito.AsyncEx.xml
+Nito.AsyncEx.Enlightenment.xml

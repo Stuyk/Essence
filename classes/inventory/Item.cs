@@ -17,7 +17,7 @@ namespace Essence.classes.inventory
     {
         Database db = new Database();
 
-        //Item ID as saved in DB
+        //Item ID thats saved in DB
         private int id;
 
         private Client client;
@@ -27,7 +27,7 @@ namespace Essence.classes.inventory
         private string data;
         private int quantity;
 
-
+        //Create Item without Owner (Overworld Spawning)
         public Item(Items.ItemTypes type, int quantity = 1, string data = "")
         {
             this.type = type;
@@ -35,7 +35,8 @@ namespace Essence.classes.inventory
             this.data = data;
         }
 
-        public Item(Client client, Player player, int id, Items.ItemTypes type, int quantity = 1, string data = "")
+        //Create Item with Owner (Inside Player Inventory)
+        public Item(Client client, Player player, int id, Items.ItemTypes type, int quantity = 1, string data = "", bool save = false)
         {
             this.player = player;
             this.client = client;
@@ -43,13 +44,18 @@ namespace Essence.classes.inventory
             this.type = type;
             this.quantity = quantity;
             this.data = data;
+
+            if (save)
+            {
+                insertItem();
+            }
         }
 
         public void insertItem()
         {
             string[] variables = { "Owner", "ItemType", "Quantity", "Data" };
             string tableName = "Items";
-            string[] data = { this.player.ID.ToString(), this.type.ToString(), this.quantity.ToString(), this.data };
+            object[] data = { this.player.ID, (int)this.type, this.quantity, this.data };
             int primaryKey = db.compileInsertQueryReturnLastId(tableName, variables, data);
 
             this.id = primaryKey;
@@ -57,10 +63,11 @@ namespace Essence.classes.inventory
 
         public void saveItem()
         {
+            API.shared.consoleOutput("Saving Item: " + this.type.ToString() + " [" + this.quantity + "]");
             string target = "UPDATE Items SET";
             string where = string.Format("WHERE Id='{0}'", this.id);
             string[] variables = { "Owner", "ItemType", "Quantity", "Data" };
-            object[] data = { this.player.ID, this.type, this.quantity, this.data };
+            object[] data = { this.player.ID, (int)this.type, this.quantity, this.data };
             Payload.addNewPayload(target, where, variables, data);
         }
 
@@ -142,6 +149,10 @@ namespace Essence.classes.inventory
             set
             {
                 quantity = value;
+                if(quantity <= 0)
+                {
+                    deleteItem();
+                }
             }
         }
 

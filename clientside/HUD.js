@@ -1,3 +1,4 @@
+"use strict";
 var screenX = API.getScreenResolutionMaintainRatio().Width;
 var screenY = API.getScreenResolutionMaintainRatio().Height;
 // Other Stuff
@@ -22,7 +23,7 @@ API.onEntityDataChange.connect(function (entity, key, oldValue) {
             return;
     }
 });
-API.onResourceStop.connect(function () {
+API.onResourceStop.connect(() => {
     API.setHudVisible(true);
     API.setCanOpenChat(true);
     loggedIn = false;
@@ -39,18 +40,18 @@ API.onUpdate.connect(function () {
  *  Display the players on-hand money.
  */
 function drawMoney() {
-    API.drawText("$" + money, 35, screenY - 225, 0.5, 129, 199, 132, 255, 7, 0, false, true, 300);
+    API.drawText(`$${money}`, 35, screenY - 225, 0.5, 129, 199, 132, 255, 7, 0, false, true, 300);
 }
 /**
  * Display the players current zone location.
  */
 function drawZone() {
-    API.drawText("" + zone, 315, screenY - 45, 0.5, 77, 208, 225, 255, 7, 0, false, true, 800);
+    API.drawText(`${zone}`, 315, screenY - 45, 0.5, 77, 208, 225, 255, 7, 0, false, true, 800);
     updateZone();
 }
 function drawTimer() {
     if (timeLeft >= 0) {
-        API.drawText("Mission Time: ~n~" + Math.round(timeLeft), screenX / 2, 30, 0.5, 255, 0, 0, 255, 7, 1, false, true, 800);
+        API.drawText(`Mission Time: ~n~${Math.round(timeLeft)}`, screenX / 2, 30, 0.5, 255, 0, 0, 255, 7, 1, false, true, 800);
     }
 }
 /**
@@ -64,4 +65,3 @@ function updateZone() {
     var location = API.getEntityPosition(API.getLocalPlayer());
     zone = API.getZoneName(location);
 }
-//# sourceMappingURL=HUD.js.map

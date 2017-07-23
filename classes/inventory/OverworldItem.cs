@@ -12,29 +12,33 @@ using System.Threading.Tasks;
 
 namespace Essence.classes.inventory
 {
-    public class OverworldItem : Script
+    public class OverworldItem
     {
         private NetHandle attachedObject;
         private DateTime expirationTime;
         private Item item;
 
-        public OverworldItem() { }
         public OverworldItem(Client player, Item item, Vector3 aimPos)
         {
+            this.item = item;
             expirationTime = DateTime.Now.ToUniversalTime().AddMinutes(2);
 
             switch (item.Type)
             {
                 case Items.ItemTypes.COCAINE:
-                    attachedObject = API.createObject(1049338225, aimPos.Add(new Vector3(0, 0, 0.3)), player.rotation, player.dimension).handle;
-                    API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
+                    attachedObject = API.shared.createObject(1049338225, aimPos.Add(new Vector3(0, 0, 0.3)), player.rotation, player.dimension).handle;
+                    API.shared.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
 
                 case Items.ItemTypes.RADIO:
-                    attachedObject = API.createObject(-1964402432, aimPos, player.rotation, player.dimension).handle;
-                    API.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
+                    attachedObject = API.shared.createObject(-1964402432, aimPos, player.rotation, player.dimension).handle;
+                    API.shared.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
                     return;
 
+                case Items.ItemTypes.HOT_DOG:
+                    attachedObject = API.shared.createObject(-1729226035, aimPos, player.rotation, player.dimension).handle;
+                    API.shared.setEntitySyncedData(attachedObject, "DROPPED_OBJECT", true);
+                    return;
 
 
                     /*

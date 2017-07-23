@@ -1,16 +1,17 @@
+"use strict";
 var resX = API.getScreenResolutionMaintainRatio().Width;
 var resY = API.getScreenResolutionMaintainRatio().Height;
 var res = API.getScreenResolutionMaintainRatio();
 var cef = null; // Main CEF Page
 // Main CEFHelper Class.
-var CefHelper = (function () {
+class CefHelper {
     // Main Constructor - Requires the Path of the CEF File or HTML File or whatever.
-    function CefHelper(resourcePath) {
+    constructor(resourcePath) {
         this.path = resourcePath;
         this.open = false;
     }
     // Displays the HTML File we pushed up.
-    CefHelper.prototype.show = function () {
+    show() {
         if (this.open == false) {
             this.open = true;
             var resolution = API.getScreenResolution();
@@ -23,8 +24,8 @@ var CefHelper = (function () {
             API.setHudVisible(false);
             API.setChatVisible(false);
         }
-    };
-    CefHelper.prototype.showNonLocal = function () {
+    }
+    showNonLocal() {
         if (this.open == false) {
             this.open = true;
             var resolution = API.getScreenResolution();
@@ -37,22 +38,21 @@ var CefHelper = (function () {
             API.setHudVisible(false);
             API.setChatVisible(false);
         }
-    };
+    }
     // Destroys the CEF Browser.
-    CefHelper.prototype.destroy = function () {
+    destroy() {
         this.open = false;
         API.destroyCefBrowser(this.browser);
         API.showCursor(false);
         API.setCanOpenChat(true);
         API.setHudVisible(true);
         API.setChatVisible(true);
-    };
+    }
     // No idea what the fuck this does.
-    CefHelper.prototype.eval = function (string) {
+    eval(string) {
         this.browser.eval(string);
-    };
-    return CefHelper;
-}());
+    }
+}
 // Destroy the CEF Panel if the user disconnects. That way we don't fucking destroy their game and aliens invade and shit.
 API.onResourceStop.connect(function () {
     if (cef !== null) {
@@ -102,4 +102,3 @@ function Login(username, password) {
 function Register(username, password) {
     API.triggerServerEvent("clientRegister", username, password);
 }
-//# sourceMappingURL=BrowserManager.js.map

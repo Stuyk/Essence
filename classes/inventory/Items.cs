@@ -65,7 +65,9 @@ namespace Essence.classes.inventory
             SHOP_KEY,
         }
 
+        //==============================
         // On player Pickup an Item
+        //==============================
         public static void PickupItem(Client player, params object[] arguments)
         {
             if (arguments.Length <= 0)
@@ -95,11 +97,18 @@ namespace Essence.classes.inventory
                         Inventory inventory = instance.PlayerInventory;
                         Item item = i.Item;
 
+                        API.shared.consoleOutput(item.Type.ToString());
+
                         //Delete item in overworld
                         API.shared.deleteEntity(i.AttachedObject);
 
                         //Add Item to player inventory
                         inventory.addItem(item);
+
+                        string itemName = item.Type.ToString().ToLower();
+                        itemName = itemName.First().ToString().ToUpper() + String.Join("", itemName.Skip(1));
+                        itemName = itemName.Replace('_', ' ');
+
                         API.shared.triggerClientEvent(player, "HeadNotification", string.Format("Picked up {0}. Total: {1}", item.Type, item.Quantity));
                         items.Remove(i);
                         break;
@@ -108,71 +117,9 @@ namespace Essence.classes.inventory
             }
         }
 
-        // Add item to the item list
-        public static void AddItem(OverworldItem item)
-        {
-            if (!items.Contains(item))
-            {
-                items.Add(item);
-            }
-        }
-
-        // Remove item from the item list
-        public static void RemoveItem(OverworldItem item)
-        {
-            if (!items.Contains(item))
-            {
-                items.Remove(item);
-            }
-        }
-        
-        // Use item
-        public static void UseItem(Client player, params object[] arguments)
-        {
-            if(arguments.Length <= 0)
-            {
-                return;
-            }
-
-            ItemTypes type = (ItemTypes)Enum.Parse(typeof(ItemTypes), arguments[0].ToString());
-
-            Player instance = player.getData("Instance");
-            Inventory inventory = instance.PlayerInventory;
-
-            //Item Types & Uses
-            switch (type)
-            {
-                case ItemTypes.COCAINE:
-                    player.armor += 10;
-                    break;
-
-                case ItemTypes.RADIO:
-                    API.shared.sendChatMessageToPlayer(player, "This is a radio");
-                    break;
-
-                case ItemTypes.HOT_DOG:
-                    player.health += 10;
-                    break;
-            }
-        }
-
-        // Get All Items (on Clientside)
-        public static void GetItems(Client player, params object[] arguments)
-        {
-            API.shared.consoleOutput("Getting Items for Client");
-            if (!player.hasData("Instance"))
-            {
-                return;
-            }
-            API.shared.consoleOutput("Has Instance");
-            Player instance = player.getData("Instance");
-            API.shared.consoleOutput("Get Instance");
-            instance.PlayerInventory.LoadItemsToLocal();
-            API.shared.consoleOutput("Loading to local Client");
-            return;
-        }
-
+        //==============================
         // Dropping an item from the inventory into the overworld
+        //==============================
         public static void DropItem(Client player, params object[] arguments)
         {
             //[0] = id
@@ -201,8 +148,10 @@ namespace Essence.classes.inventory
             Player instance = player.getData("Instance");
             Inventory inventory = instance.PlayerInventory;
 
-            foreach(Item i in inventory.CurrentItems)
+            foreach (KeyValuePair<int, Item> entry in inventory.CurrentItems)
             {
+                Item i = entry.Value;
+
                 if (i.ID == id && i.Type == type && i.Quantity >= quantity) //Owns item & same Type & Enough to drop
                 {
                     OverworldItem newOverworldItem;
@@ -210,6 +159,11 @@ namespace Essence.classes.inventory
                     if (i.Data.Length <= 0) //Item is stackable, remove from stack and create new Item for overworld item
                     {
                         i.Quantity -= quantity;
+                        if(i.Quantity <= 0)
+                        {
+                            inventory.CurrentItems.Remove(entry.Key);
+                        }
+
                         Item item = new Item(type, quantity);
                         newOverworldItem = new OverworldItem(player, item, coords);
                         items.Add(newOverworldItem);
@@ -217,17 +171,102 @@ namespace Essence.classes.inventory
                     }
                     else //Item isn't stackable, remove item from inventory and attach to new overworld item
                     {
-                        inventory.CurrentItems.Remove(i);
+                        inventory.CurrentItems.Remove(entry.Key);
                         newOverworldItem = new OverworldItem(player, i, coords);
                         items.Add(newOverworldItem);
                         return;
                     }
                 }
-                else
-                {
-                    API.shared.sendChatMessageToPlayer(player, "~r~ERROR: ~w~Item not found.");
-                }
             }
         }
+
+        //==============================
+        // Use item
+        //==============================
+        public static void UseItem(Client player, params object[] arguments)
+        {
+            if(arguments.Length <= 0)
+            {
+                return;
+            }
+
+            Player instance = player.getData("Instance");
+            Inventory inventory = instance.PlayerInventory;
+
+            if (!inventory.CurrentItems.ContainsKey((int)arguments[0]))
+            {
+                return;
+            }
+
+            Item item = inventory.CurrentItems.Get((int)arguments[0]);
+
+            if (item.Quantity <= 0)
+            {
+                return;
+            }
+
+            //Item Types & Uses
+            switch (item.Type)
+            {
+                case ItemTypes.COCAINE:
+                    API.shared.sendChatMessageToPlayer(player,"Using some cocaine!");
+                    player.armor += 10;
+                    break;
+
+                case ItemTypes.RADIO:
+                    API.shared.sendChatMessageToPlayer(player, "This is a radio");
+                    break;
+
+                case ItemTypes.HOT_DOG:
+                    API.shared.sendChatMessageToPlayer(player, "Eating a hot dog!");
+                    player.health += 10;
+                    break;
+            }
+
+            item.Quantity -= 1;
+
+            if(item.Quantity <= 0)
+            {
+                inventory.CurrentItems.Remove(item.ID);
+            }
+        }
+
+        //==============================
+        // Add item to the item list
+        //==============================
+        public static void AddItem(OverworldItem item)
+        {
+            if (!items.Contains(item))
+            {
+                items.Add(item);
+            }
+        }
+
+        //==============================
+        // Remove item from the item list
+        //==============================
+        public static void RemoveItem(OverworldItem item)
+        {
+            if (!items.Contains(item))
+            {
+                items.Remove(item);
+            }
+        }
+
+        //==============================
+        // Get All Items (on Clientside)
+        //==============================
+        public static void GetItems(Client player, params object[] arguments)
+        {
+            if (!player.hasData("Instance"))
+            {
+                return;
+            }
+            Player instance = player.getData("Instance");
+            instance.PlayerInventory.LoadItemsToLocal();
+            return;
+        }
+
+        
     }
 }

@@ -80,5 +80,13 @@ namespace Essence.classes.doors
                 return interiorLocation;
             }
         }
+
+        public bool isLocked
+        {
+            get
+            {
+                return Locked;
+            }
+        }
     }
 }

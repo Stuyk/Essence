@@ -1,3 +1,4 @@
+"use strict";
 var grid = null;
 var debugMode = false;
 var opened = false;
@@ -5,8 +6,8 @@ var items = new Array();
 // Used by our items.
 var currentSelection = null;
 var itemSize = 0;
-var Grid = (function () {
-    function Grid(rows, columns, boxSize, startingXPos, startingYPos, gutter) {
+class Grid {
+    constructor(rows, columns, boxSize, startingXPos, startingYPos, gutter) {
         var currentYGutter = gutter;
         var currentXGutter = gutter;
         var gutterValue = gutter;
@@ -28,75 +29,58 @@ var Grid = (function () {
             currentYGutter += gutterValue;
         }
     }
-    Object.defineProperty(Grid.prototype, "GetBoxes", {
-        // Returns a list of our box elements when we defined our grid.
-        get: function () {
-            return this.boxes;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Grid;
-}());
+    // Returns a list of our box elements when we defined our grid.
+    get GetBoxes() {
+        return this.boxes;
+    }
+}
 // A box element inside of our grid, determines whether or not it holds an 'item';
-var Box = (function () {
-    function Box(x, y, size) {
+class Box {
+    constructor(x, y, size) {
         this.size = size;
         this.x = x;
         this.y = y;
         this.item = null;
         itemSize = this.size;
     }
-    Object.defineProperty(Box.prototype, "Size", {
-        // Return the size of our block element. Inherited by the grid usually.
-        get: function () {
-            return this.size;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Box.prototype, "Position", {
-        // Return the position of our box element in a Pointer format.
-        get: function () {
-            return new Point(this.x, this.y);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Box.prototype, "BoxItem", {
-        get: function () {
-            return this.item;
-        },
-        // Set / Get the Item that is currently attached to this object.
-        set: function (value) {
-            this.item = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    // Return the size of our block element. Inherited by the grid usually.
+    get Size() {
+        return this.size;
+    }
+    // Return the position of our box element in a Pointer format.
+    get Position() {
+        return new Point(this.x, this.y);
+    }
+    // Set / Get the Item that is currently attached to this object.
+    set BoxItem(value) {
+        this.item = value;
+    }
+    get BoxItem() {
+        return this.item;
+    }
     // Check if our mouse is within this box.
-    Box.prototype.mouseCheck = function () {
+    mouseCheck() {
         var mouse = API.getCursorPositionMaintainRatio();
         // Check if your mouse is greater than X but less than X + Size, same thing with Y values.
         if (mouse.X > this.x && mouse.X < this.x + this.size && mouse.Y > this.y && mouse.Y < this.y + this.size) {
             return true;
         }
         return false;
-    };
+    }
     // Draw our grids as a debug option.
-    Box.prototype.drawBox = function () {
+    drawBox() {
         API.drawRectangle(this.x, this.y, this.size, this.size, 255, 255, 255, 100);
-    };
-    return Box;
-}());
+    }
+}
 // An item element will represent a 'phsyical item' that can be split up or dropped.
-var Item = (function () {
-    function Item(id, type, quantity, consumeable) {
+class Item {
+    constructor(id, type, quantity, consumeable, data) {
         this.x = Math.round(API.getScreenResolutionMaintainRatio().Width / 2);
         this.y = Math.round(API.getScreenResolutionMaintainRatio().Height / 2);
         this.id = id;
         this.type = type;
         this.quantity = quantity;
+        this.data = data;
         this.consumeable = consumeable;
         this.box = null;
         this.selected = false;
@@ -104,9 +88,15 @@ var Item = (function () {
         this.findOpenPosition();
     }
     // This is used to draw our items.
-    Item.prototype.draw = function () {
-        API.drawText("" + this.type, this.centerX, this.centerY - 10, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
-        API.drawText("x" + this.quantity.toString(), this.centerX, this.centerY + 30, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+    draw() {
+        let itemName = this.type.toLowerCase();
+        itemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
+        itemName = itemName.replace('_', ' ');
+        API.drawText("" + itemName, this.centerX, this.centerY - 30, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
+        API.drawText("x" + this.quantity.toString(), this.centerX, this.centerY + 20, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+        if (this.data.length > 0) {
+            API.drawText(this.data, this.centerX, this.centerY, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+        }
         this.mouseCheck();
         // If this is selected. Move it, else let's get the selection.
         if (this.selected) {
@@ -121,9 +111,9 @@ var Item = (function () {
                 this.consumeSelection();
             }
         }
-    };
+    }
     // When the item is first created, it will look for an open spot.
-    Item.prototype.findOpenPosition = function () {
+    findOpenPosition() {
         var boxes = grid.GetBoxes;
         if (boxes.length <= 0) {
             return;
@@ -142,14 +132,14 @@ var Item = (function () {
             }
         }
         // Add the code to automatically drop items on full-inventory.
-    };
+    }
     // Used to re-calculate center points.
-    Item.prototype.calculateCenterPoints = function () {
+    calculateCenterPoints() {
         this.centerX = Math.round(this.x + (itemSize / 2));
         this.centerY = Math.round(this.y + (itemSize / 2));
-    };
+    }
     // Consume Selection
-    Item.prototype.consumeSelection = function () {
+    consumeSelection() {
         if (!API.isControlJustReleased(238)) {
             return;
         }
@@ -166,9 +156,9 @@ var Item = (function () {
         // Consumeable shit -->
         API.triggerServerEvent("USE_ITEM", this.id);
         API.playSoundFrontEnd("Load_Scene", "DLC_Dmod_Prop_Editor_Sounds");
-    };
+    }
     // Get our current selection.
-    Item.prototype.getSelection = function () {
+    getSelection() {
         // If our current selection is not open, don't bother.'
         if (currentSelection !== null) {
             return;
@@ -189,9 +179,9 @@ var Item = (function () {
         if (debugMode) {
             API.sendChatMessage("Selected");
         }
-    };
+    }
     // Split your selection into two.
-    Item.prototype.splitSelection = function () {
+    splitSelection() {
         if (currentSelection !== null) {
             return;
         }
@@ -217,24 +207,24 @@ var Item = (function () {
         }
         API.playSoundFrontEnd("Reset_Prop_Position", "DLC_Dmod_Prop_Editor_Sounds");
         this.quantity = possibleNewValue;
-        addInventoryItem(this.id, this.type, splitValue, this.consumeable);
-    };
+        addInventoryItem(this.id, this.type, splitValue, this.consumeable, this.data);
+    }
     // Remove item bind from box.
-    Item.prototype.removeBinding = function () {
+    removeBinding() {
         this.box.BoxItem = null;
         this.box = null;
-    };
+    }
     // This function will check if the mouse is inside of this specific item.
-    Item.prototype.mouseCheck = function () {
+    mouseCheck() {
         var mouse = API.getCursorPositionMaintainRatio();
         // Check if your mouse is greater than X but less than X + Size, same thing with Y values.
         if (mouse.X > this.x && mouse.X < this.x + itemSize && mouse.Y > this.y && mouse.Y < this.y + itemSize) {
             return true;
         }
         return false;
-    };
+    }
     // Find closest grid to position.
-    Item.prototype.findClosestBoxToPointer = function () {
+    findClosestBoxToPointer() {
         var boxes = grid.GetBoxes;
         for (var i = 0; i < boxes.length; i++) {
             if (boxes[i].mouseCheck()) {
@@ -242,9 +232,9 @@ var Item = (function () {
             }
         }
         return null;
-    };
+    }
     // Used to move our item around.
-    Item.prototype.move = function () {
+    move() {
         // Check if our current selection is this, and our object is selected.
         if (currentSelection !== this) {
             this.selected = false;
@@ -293,9 +283,9 @@ var Item = (function () {
                 this.findOpenPosition();
             }
         }
-    };
+    }
     // Remove Item
-    Item.prototype.removeItem = function () {
+    removeItem() {
         var index = 0;
         for (index = 0; index < items.length; index++) {
             if (items[index] === this) {
@@ -306,9 +296,9 @@ var Item = (function () {
             return;
         }
         items.splice(index, 1);
-    };
+    }
     // Used to drop the item. General idea of how it works. We loop through our array, find the index that matches this. Then we take that index splice it out of our array, and then we drop our item.
-    Item.prototype.dropItem = function () {
+    dropItem() {
         this.removeItem();
         var playerPos = API.getEntityPosition(API.getLocalPlayer());
         var aimCoords = API.getPlayerAimCoords(API.getLocalPlayer());
@@ -322,10 +312,9 @@ var Item = (function () {
             var newPos = new Vector3(playerPos.X, playerPos.Y, groundHeight);
             API.triggerServerEvent("DROP_ITEM", this.id, this.type, newPos, this.quantity);
         }
-    };
-    return Item;
-}());
-API.onResourceStart.connect(function () {
+    }
+}
+API.onResourceStart.connect(() => {
     grid = new Grid(5, 8, 150, 300, 50, 10);
     //grid = new Grid(5, 5, 50, new Point(Math.round(API.getScreenResolutionMaintainRatio().Width / 2) - 125, 25));
 });
@@ -345,10 +334,10 @@ function toggleInventory() {
         API.triggerServerEvent("GET_ITEMS");
     }
 }
-function addInventoryItem(id, type, quantity, consumeable) {
-    items.push(new Item(id, type, quantity, consumeable));
+function addInventoryItem(id, type, quantity, consumeable, data) {
+    items.push(new Item(id, type, quantity, consumeable, data));
 }
-API.onUpdate.connect(function () {
+API.onUpdate.connect(() => {
     if (!opened) {
         return;
     }
@@ -360,4 +349,3 @@ API.onUpdate.connect(function () {
         gridBoxes[i].drawBox();
     }
 });
-//# sourceMappingURL=Inventory.js.map
