@@ -30,7 +30,7 @@ namespace Essence.classes.administration
                 return;
             }
 
-            API.sendChatMessageToPlayer(player, string.Format("/atp, /akick, /aban, /acar, /adoor, /agun, /apos, /aheal, /aarmor, /saveCustom, /savePOS, /aHurt, /aKill, /adoor"));
+            API.sendChatMessageToPlayer(player, string.Format("/atp, /akick, /aban, /acar, /adoor, /agun, /apos, /aheal, /aarmor, /saveCustom, /savePOS, /aHurt, /aKill, /adoor, /atph"));
         }
 
         [Command("atp")]
@@ -46,6 +46,25 @@ namespace Essence.classes.administration
                 if (p.name.ToLower().Contains(target.ToLower()))
                 {
                     API.setEntityPosition(player, p.position);
+                    return;
+                }
+            }
+            API.sendChatMessageToPlayer(player, $"{target} does not exist.");
+        }
+
+        [Command("atph")]
+        public void aCMD_TeleportToMe(Client player, string target)
+        {
+            if (!Utility.isPlayerAdmin(player))
+            {
+                return;
+            }
+
+            foreach (Client p in API.getAllPlayers())
+            {
+                if (p.name.ToLower().Contains(target.ToLower()))
+                {
+                    API.setEntityPosition(p, player.position);
                     return;
                 }
             }
