@@ -87,7 +87,7 @@ namespace Essence.classes.doors
                 return;
             }
 
-            if (targetDoor.isLocked)
+            if (targetDoor.Locked)
             {
                 API.shared.sendChatMessageToPlayer(player, "~r~This door is locked.");
                 return;
