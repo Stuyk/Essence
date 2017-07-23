@@ -73,7 +73,7 @@ namespace Essence.classes
             }
 
             string[] varNames = { "Username" };
-            string before = "SELECT ID, Password, X, Y, Z, Money, Bank, LoggedIn, Health, Armor FROM Players WHERE";
+            string before = "SELECT ID, Password, X, Y, Z, Money, Bank, LoggedIn, Health, IsAdmin, Armor FROM Players WHERE";
             object[] data = { username };
             DataTable result = db.compileSelectQuery(before, varNames, data);
 

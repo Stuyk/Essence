@@ -55,5 +55,23 @@ namespace Essence.classes.utility
             }
             return null;
         }
+
+        public static bool isPlayerAdmin(Client player)
+        {
+            if (!player.hasData("Instance"))
+            {
+                return false;
+            }
+
+            Player instance = player.getData("Instance");
+
+            if (instance.IsAdmin)
+            {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
     }
 }

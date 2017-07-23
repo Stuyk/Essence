@@ -48,6 +48,20 @@ namespace Essence.classes.doors
             Console.WriteLine("[Doors] TOTAL COUNT: " + count.ToString());
         }
 
+        /// <summary>
+        /// Create a door from the Admin Commands.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="price"></param>
+        public static void CreateDoor(Client player, int price)
+        {
+            // Setup registration.
+            string[] varNamesTwo = { "X", "Y", "Z", "Locked", "Price"};
+            string tableName = "Doors";
+            string[] dataTwo = { player.position.X.ToString(), player.position.Y.ToString(), player.position.Z.ToString(), true.ToString(), price.ToString() };
+            db.compileInsertQuery(tableName, varNamesTwo, dataTwo);
+        }
+
         public static void EnterDoor(Client player, params object[] arguments)
         {
             if (arguments.Length <= 0)

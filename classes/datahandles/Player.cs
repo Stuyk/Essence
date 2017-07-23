@@ -30,8 +30,8 @@ namespace Essence.classes
         private Skin playerSkin;
         private Inventory playerInventory;
         private AnticheatInfo anticheatInfo;
-
         private List<Vehicle> vehicles;
+        public bool IsAdmin { get; set; }
 
         // Return Player Vehicles
         public List<Vehicle> PlayerVehicles
@@ -161,6 +161,7 @@ namespace Essence.classes
             money = Convert.ToInt32(db["Money"]);
             player.health = Convert.ToInt32(db["Health"]);
             player.armor = Convert.ToInt32(db["Armor"]);
+            IsAdmin = Convert.ToBoolean(db["IsAdmin"]);
             API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
             lastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             // Don't move on until the players dimension is ready.
