@@ -108,16 +108,20 @@ function rayCastForItems() {
     var rayCast = API.createRaycast(playerPos, aimPos, 16, null);
     // Check if our raycast hits anything.
     if (!rayCast.didHitAnything) {
+        radiusForItems(aimPos);
         return;
     }
     if (!rayCast.didHitEntity) {
+        radiusForItems(aimPos);
         return;
     }
     if (!API.doesEntityExist(rayCast.hitEntity)) {
+        radiusForItems(aimPos);
         return;
     }
     // Check if it's a dropped object.
     if (!API.hasEntitySyncedData(rayCast.hitEntity, "DROPPED_OBJECT")) {
+        radiusForItems(aimPos);
         return;
     }
     // Check if they're close enough.
@@ -125,6 +129,17 @@ function rayCastForItems() {
         return;
     }
     API.triggerServerEvent("PICKUP_ITEM", rayCast.hitEntity);
+}
+function radiusForItems(aimpos) {
+    var objects = API.getAllObjects();
+    for (var i = 0; i < objects.Length; i++) {
+        if (API.getEntityPosition(objects[i]).DistanceTo2D(aimpos) <= 2) {
+            if (!API.hasEntitySyncedData(objects[i], "DROPPED_OBJECT")) {
+                API.triggerServerEvent("PICKUP_ITEM", objects[i]);
+                return;
+            }
+        }
+    }
 }
 // This handles which menu our player is going to see.
 function isInteracting() {

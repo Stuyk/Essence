@@ -19,9 +19,11 @@ namespace Essence.classes.doors
         private int coreID;
         private string id;
         private Vector3 doorLocation;
-        private bool locked;
+        private bool Locked { get; set; }
         private string owner;
         public string IPL { get; set; }
+        public int Price { get; set; }
+        public bool isForSale { get; set; }
         private Vector3 interiorLocation;
 
         public DoorInfo(DataRow db)
@@ -34,7 +36,7 @@ namespace Essence.classes.doors
 
             interiorLocation = Interiors.getInteriorByType(IPL);
 
-            locked = Convert.ToBoolean(db["Locked"]);
+            Locked = Convert.ToBoolean(db["Locked"]);
 
             PointInfo info = PointHelper.addNewPoint();
             info.Position = doorLocation;
@@ -45,18 +47,6 @@ namespace Essence.classes.doors
             info.ID = id;
             info.InteractionEnabled = true;
             info.DrawLabel = true;
-        }
-
-        public bool isLocked
-        {
-            set
-            {
-                locked = value;
-            }
-            get
-            {
-                return locked;
-            }
         }
 
         public string ID
