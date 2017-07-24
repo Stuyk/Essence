@@ -19,130 +19,29 @@ namespace Essence.classes
 {
     public class Player : Script
     {
-        Database db = new Database();
+        private Database db = new Database();
 
-        private int id;
-        private int money;
-        private int bank;
-        private Vector3 lastPosition;
-        private Client player;
-        private Clothing playerClothing;
-        private Skin playerSkin;
-        private Inventory playerInventory;
-        private AnticheatInfo anticheatInfo;
-        private List<Vehicle> vehicles;
+        public int Id { get; set; }
+        public int Bank { get; set; }
+        public Vector3 LastPosition { get; set; }
+        public Client PlayerClient { get; set; }
+        public Clothing PlayerClothing { get; set; }
+        public Skin PlayerSkin { get; set; }
+        public Inventory PlayerInventory { get; set; }
+        public AnticheatInfo AnticheatInfo { get; set; }
+        public List<Vehicle> Vehicles { get; set; }
         public bool IsAdmin { get; set; }
 
-        // Return Player Vehicles
-        public List<Vehicle> PlayerVehicles
-        {
-            get
-            {
-                return vehicles;
-            }
-        }
-
-        public Inventory PlayerInventory
-        {
-            get
-            {
-                return playerInventory;
-            }
-        }
-
-        public AnticheatInfo CheatInfo
-        {
-            get
-            {
-                return anticheatInfo;
-            }
-            set
-            {
-                anticheatInfo = value;
-            }
-        }
-
-        // Active player client.
-        public Client PlayerClient
-        {
-            set
-            {
-                player = value;
-            }
-            get
-            {
-                return player;
-            }
-        }
-
-        //Player ID Number from Database
-        public int ID
-        {
-            set
-            {
-                id = value;
-            }
-            get
-            {
-                return id;
-            }
-        }
-
-        //Player Money Number from Database
+        private int money;
         public int Money
         {
             set
             {
-                money = value;
-                API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
+                this.money = value;
+                API.setEntitySyncedData(PlayerClient, "ESS_Money", Money);
                 updatePlayerMoney();
             }
-            get
-            {
-                return money;
-            }
-        }
-
-        //Player Bank Number from Database
-        public int Bank
-        {
-            set
-            {
-                bank = value;
-            }
-            get
-            {
-                return bank;
-            }
-        }
-
-        //Player Last Position from Database
-        public Vector3 LastPosition
-        {
-            set
-            {
-                lastPosition = value;
-            }
-            get
-            {
-                return lastPosition;
-            }
-        }
-
-        public Clothing PlayerClothing
-        {
-            get
-            {
-                return playerClothing;
-            }
-        }
-
-        public Skin PlayerSkin
-        {
-            get
-            {
-                return playerSkin;
-            }
+            get { return this.money; }
         }
 
         public Player() { }
@@ -154,15 +53,15 @@ namespace Essence.classes
             // Setup Class Data.
             API.setEntityData(player, "Instance", this);
             PlayerClient = player;
-            ID = Convert.ToInt32(db["ID"]);
-            bank = Convert.ToInt32(db["Bank"]);
-            money = Convert.ToInt32(db["Money"]);
+            Id = Convert.ToInt32(db["ID"]);
+            Bank = Convert.ToInt32(db["Bank"]);
+            Money = Convert.ToInt32(db["Money"]);
             player.health = Convert.ToInt32(db["Health"]);
             player.armor = Convert.ToInt32(db["Armor"]);
             player.name = $"{db["Name"]}";
             IsAdmin = Convert.ToBoolean(db["IsAdmin"]);
-            API.setEntitySyncedData(PlayerClient, "ESS_Money", money);
-            lastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
+            API.setEntitySyncedData(PlayerClient, "ESS_Money", Money);
+            LastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             // Don't move on until the players dimension is ready.
 
             // Make our player controllable again.
@@ -173,23 +72,23 @@ namespace Essence.classes
             createPlayerVehicles();
 
             // Setup Player Skin
-            playerSkin = new Skin(player, this);
-            playerSkin.loadPlayerFace();
+            PlayerSkin = new Skin(player, this);
+            PlayerSkin.loadPlayerFace();
 
             // Setup Player Clothing
-            playerClothing = new Clothing(player, this);
-            playerClothing.loadPlayerClothes();
-            playerClothing.updatePlayerClothes();
+            PlayerClothing = new Clothing(player, this);
+            PlayerClothing.loadPlayerClothes();
+            PlayerClothing.updatePlayerClothes();
 
             // Setup Player Inventory
-            playerInventory = new Inventory(player, this);
-            playerInventory.LoadInventory();
+            PlayerInventory = new Inventory(player, this);
+            PlayerInventory.LoadInventory();
 
             // Set our entity dimension.
             API.setEntityDimension(player, 0);
 
             // Setup our anticheat info.
-            anticheatInfo = Anticheat.addPlayer(player);
+            AnticheatInfo = Anticheat.addPlayer(player);
 
             // Login Console
             // Pass the login to the console.
@@ -199,34 +98,30 @@ namespace Essence.classes
         /** Spawn Player Vehicles */
         public void createPlayerVehicles()
         {
-            vehicles = new List<Vehicle>();
+            Vehicles = new List<Vehicle>();
 
             string[] varNames = { "Owner" };
             string before = "SELECT * FROM Vehicles WHERE";
-            object[] data = { ID };
+            object[] data = { Id };
             DataTable result = db.compileSelectQuery(before, varNames, data);
 
             if (result.Rows.Count < 1)
-            {
                 return;
-            }
 
             foreach (DataRow row in result.Rows)
             {
                 Vehicle vehInfo = new Vehicle(row);
-                vehicles.Add(vehInfo);
+                Vehicles.Add(vehInfo);
             }
         }
 
         /** Remove Player Vehicles **/
         public void removePlayerVehicles()
         {
-            if (vehicles.Count <= 0)
-            {
+            if (Vehicles.Count <= 0)
                 return;
-            }
 
-            foreach (Vehicle vehInfo in vehicles)
+            foreach (Vehicle vehInfo in Vehicles)
             {
                 // Update vehicle position before deleting.
                 vehInfo.LastPosition = API.getEntityPosition(vehInfo.Handle);
@@ -257,7 +152,7 @@ namespace Essence.classes
         private void updatePlayerMoney()
         {
             string target = "UPDATE Players SET";
-            string where = string.Format("WHERE Id='{0}'", ID);
+            string where = string.Format("WHERE Id='{0}'", Id);
             string[] variables = { "Money", "Bank" };
             object[] data = { Money, Bank };
             Payload.addNewPayload(target, where, variables, data);
@@ -266,9 +161,9 @@ namespace Essence.classes
         public void updatePlayerPosition()
         {
             string target = "UPDATE Players SET";
-            string where = string.Format("WHERE Id='{0}'", id);
+            string where = string.Format("WHERE Id='{0}'", Id);
             string[] variables = { "LoggedIn", "X", "Y", "Z" };
-            object[] data = { "0", player.position.X, player.position.Y, player.position.Z };
+            object[] data = { "0", PlayerClient.position.X, PlayerClient.position.Y, PlayerClient.position.Z };
             Payload.addNewPayload(target, where, variables, data);
         }
 

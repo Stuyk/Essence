@@ -64,7 +64,7 @@ namespace Essence.classes.datahandles
         {
             string before = "UPDATE Clothing SET";
             string[] varNames = { "Mask", "MaskVariant", "Torso", "TorsoVariant", "Legs", "LegsVariant", "Bag", "Feet", "FeetVariant", "Accessories", "Undershirt", "UndershirtVariant", "BodyArmor", "BodyArmorVariant", "Top", "TopVariant" };
-            string after = string.Format("WHERE Owner='{0}'", player.ID);
+            string after = string.Format("WHERE Owner='{0}'", player.Id);
             object[] args = { mask, maskVariant, torso, torsoVariant, legs, legsVariant, bags, feet, feetVariant, accessories, undershirt, undershirtVariant, bodyArmor, bodyArmorVariant, top, topVariant };
             db.compileQuery(before, after, varNames, args);
         }
@@ -74,7 +74,7 @@ namespace Essence.classes.datahandles
             /** Pull from the database. */
             string[] varNames = { "Owner" };
             string before = "SELECT * FROM Clothing WHERE";
-            object[] data = { player.ID };
+            object[] data = { player.Id };
             DataTable result = db.compileSelectQuery(before, varNames, data);
             DataRow clothing = result.Rows[0];
 

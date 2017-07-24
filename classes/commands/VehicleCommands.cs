@@ -28,7 +28,7 @@ namespace Essence.classes.commands
 
             int count = 0;
 
-            foreach (Vehicle vehInfo in instance.PlayerVehicles)
+            foreach (Vehicle vehInfo in instance.Vehicles)
             {
                 API.triggerClientEvent(player, "Temp_Blip", API.getEntityPosition(vehInfo.Handle));
                 count++;

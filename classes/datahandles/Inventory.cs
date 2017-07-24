@@ -43,7 +43,7 @@ namespace Essence.classes.datahandles
         {
             string[] varNames = { "Owner" };
             string before = "SELECT * FROM Items WHERE";
-            object[] data = { player.ID };
+            object[] data = { player.Id };
             DataTable result = db.compileSelectQuery(before, varNames, data);
 
             foreach(DataRow row in result.Rows)

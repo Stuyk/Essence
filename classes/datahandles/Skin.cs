@@ -514,7 +514,7 @@ namespace Essence.classes.datahandles
         {
             string before = "UPDATE Skin SET";
             string[] varNames = { "Mother", "Father", "MotherSkin", "FatherSkin", "FaceBlend", "SkinBlend", "Hair", "HairColor", "HairHighlight", "Blemishes", "FacialHair", "FacialHairColor", "FacialHairOpacity", "Eyebrows", "EyebrowsColor", "EyebrowsOpacity", "Ageing", "Makeup", "MakeupOpacity", "Complexion", "SunDamage", "Lipstick", "Moles", "ChestHair", "ChestHairColor", "ChestHairOpacity", "BodyBlemishes", "EyeColor", "LipstickColor", "LipstickOpacity", "Makeup", "MakeupOpacity", "Facepaint", "FacepaintOpacity", "Face0", "Face1", "Face2", "Face3", "Face4", "Face5", "Face6", "Face7", "Face8", "Face9", "Face10", "Face11", "Face12", "Face13", "Face14", "Face15", "Face16", "Face17", "Face18", "Face19", "Face20" };
-            string after = string.Format("WHERE Owner='{0}'", player.ID);
+            string after = string.Format("WHERE Owner='{0}'", player.Id);
             object[] args = { mother, father, motherSkin, fatherSkin, faceBlend, skinBlend, hair, hairColor, hairHighlight, blemishes, facialHair, facialHairColor, facialHairOpacity, eyebrows, eyebrowsColor, eyebrowsOpacity, ageing, makeup, makeupOpacity, complexion, sunDamage, lipstick, moles, chestHair, chestHairColor, chestHairOpacity, bodyBlemishes, eyeColor, lipstickColor, lipstickOpacity, makeup, makeupOpacity, facepaint, facepaintOpacity, faceList[0], faceList[1], faceList[2], faceList[3], faceList[4], faceList[5], faceList[6], faceList[7], faceList[8], faceList[9], faceList[10], faceList[11], faceList[12], faceList[13], faceList[14], faceList[15], faceList[16], faceList[17], faceList[18], faceList[19], faceList[20] };
             db.compileQuery(before, after, varNames, args);
         }
@@ -524,7 +524,7 @@ namespace Essence.classes.datahandles
             /** Pull from the database. */
             string[] varNames = { "Owner" };
             string before = "SELECT * FROM Skin WHERE";
-            object[] data = { player.ID };
+            object[] data = { player.Id };
             DataTable result = db.compileSelectQuery(before, varNames, data);
             DataRow face = result.Rows[0];
 

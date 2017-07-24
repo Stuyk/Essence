@@ -55,7 +55,7 @@ namespace Essence.classes.inventory
         {
             string[] variables = { "Owner", "ItemType", "Quantity", "Data" };
             string tableName = "Items";
-            object[] data = { this.player.ID, (int)this.type, this.quantity, this.data };
+            object[] data = { this.player.Id, (int)this.type, this.quantity, this.data };
             int primaryKey = db.compileInsertQueryReturnLastId(tableName, variables, data);
 
             this.id = primaryKey;
@@ -67,7 +67,7 @@ namespace Essence.classes.inventory
             string target = "UPDATE Items SET";
             string where = string.Format("WHERE Id='{0}'", this.id);
             string[] variables = { "Owner", "ItemType", "Quantity", "Data" };
-            object[] data = { this.player.ID, (int)this.type, this.quantity, this.data };
+            object[] data = { this.player.Id, (int)this.type, this.quantity, this.data };
             Payload.addNewPayload(target, where, variables, data);
         }
 
