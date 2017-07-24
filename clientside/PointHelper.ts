@@ -12,7 +12,8 @@ class BlipTextPoint {
     private id: any;
     private interactable: boolean;
     private blipEnabled: boolean;
-    constructor(position, type, color, text, draw, id, interactable, blipEnabled) {
+    private dimension: number;
+    constructor(position, type, color, text, draw, id, interactable, blipEnabled, dimension) {
         this.position = position;
         this.type = type;
         this.color = color;
@@ -21,6 +22,7 @@ class BlipTextPoint {
         this.id = id;
         this.interactable = interactable;
         this.enabled = true;
+        this.dimension = dimension;
         if (blipEnabled) {
             this.blip = API.createBlip(this.position);
             API.setBlipSprite(this.blip, this.type);
@@ -39,7 +41,9 @@ class BlipTextPoint {
             return;
         }
 
-        
+        if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
+            return;
+        }
 
         var point = API.worldToScreenMaintainRatio(this.position.Add(new Vector3(0, 0, 2)));
         if (point.X <= 0 && point.Y <= 0) {
@@ -82,6 +86,10 @@ class BlipTextPoint {
 
     // Used to interact with pretty much everything ever.
     triggerServerEvent() {
+        if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
+            return;
+        }
+
         API.triggerServerEvent(this.id, this.id);
     }
 }
@@ -106,8 +114,8 @@ function drawText() {
 }
 
 // Adds a new point to the list.
-function addNewPoint(position, type, color, text, draw, id, interactable, blipEnabled) {
-    var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled);
+function addNewPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension) {
+    var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension);
     list.push(newPoint);
 }
 

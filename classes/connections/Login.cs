@@ -77,7 +77,7 @@ namespace Essence.classes
             object[] data = { username };
             DataTable result = db.compileSelectQuery(before, varNames, data);
 
-            if (result.Rows.Count < 1)
+            if (result.Rows.Count <= 0)
             {
                 API.triggerClientEvent(player, "FailLogin");
                 return;

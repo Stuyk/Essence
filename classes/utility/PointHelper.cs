@@ -22,6 +22,7 @@ namespace Essence.classes.utility
         private bool interactionEnabled;
         private bool blipEnabled;
         private bool stashType;
+        public int Dimension { get; set; }
 
         /// <summary>
         /// Generate an interactive location for a player.
@@ -37,6 +38,7 @@ namespace Essence.classes.utility
             interactionEnabled = true;
             blipEnabled = true;
             stashType = false;
+            Dimension = 0;
         }
 
         public bool StashType

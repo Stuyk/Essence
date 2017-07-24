@@ -30,8 +30,8 @@ namespace Essence.classes.doors
         {
             DoorLocation = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             IPL = Convert.ToString(db["IPL"]);
-            CoreId = Convert.ToInt32(db["ID"]);
-            Id = $"Door-{db["ID"]}";
+            CoreId = Convert.ToInt32(db["Id"]);
+            Id = $"Door-{db["Id"].ToString()}";
             Owner = $"{db["Owner"]}";
             InteriorLocation = Interiors.getInteriorByType(IPL);
             Locked = Convert.ToBoolean(db["Locked"]);
@@ -45,10 +45,25 @@ namespace Essence.classes.doors
             info.BlipEnabled = false;
             info.BlipColor = 1;
             info.BlipType = 1;
-            info.Text = $"House - {Owner}";
+            info.Text = $"House - {Id} - {Owner}";
             info.ID = Id;
             info.InteractionEnabled = true;
             info.DrawLabel = true;
+            setupExitPointInfo();
+        }
+
+        private void setupExitPointInfo()
+        {
+            PointInfo info = PointHelper.addNewPoint();
+            info.Position = InteriorLocation;
+            info.BlipEnabled = false;
+            info.BlipColor = 1;
+            info.BlipType = 1;
+            info.Text = $"~r~Exit";
+            info.ID = "Exit_Dynamic_Door";
+            info.InteractionEnabled = true;
+            info.DrawLabel = true;
+            info.Dimension = CoreId;
         }
     }
 }

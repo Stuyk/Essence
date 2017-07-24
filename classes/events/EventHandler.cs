@@ -30,10 +30,14 @@ namespace Essence.classes.events
 
         private void API_onClientEventTrigger(Client player, string eventName, params object[] arguments)
         {
+            API.shared.consoleOutput($"Attempting Event: {eventName}");
             EventInfo eventInfo = EventManager.GetEvent(eventName.ToLower());
             if (eventInfo != null)
             {
                 API.call(eventInfo.ClassName, eventInfo.ClassFunction, player, arguments);
+                API.shared.consoleOutput($"Fired Event: {eventInfo.ClassName} - {eventInfo.ClassFunction} - {arguments}");
+            } else {
+                API.shared.consoleOutput($"Event Did Not Fire: {eventName}");
             }
 
             /*

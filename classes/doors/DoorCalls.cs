@@ -29,5 +29,10 @@ namespace Essence.classes.doors
         {
             DoorManager.EnterDoor(player, arguments);
         }
+
+        public void ExitInterior(Client player, params object[] arguments)
+        {
+            DoorManager.ExitDoor(player, arguments);
+        }
     }
 }

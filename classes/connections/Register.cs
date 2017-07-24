@@ -26,7 +26,7 @@ namespace Essence.classes
         [Command("forceRegistration")]
         public void cmdForceReg(Client player, string user, string pass, string playername)
         {
-            cmdRegister(player, user, pass);
+            cmdRegister(player, user, pass, playername);
         }
 
         public void cmdRegister(Client player, params object[] arguments)
@@ -90,9 +90,9 @@ namespace Essence.classes
             DateTime date = DateTime.Now;
 
             // Setup registration.
-            string[] varNamesTwo = { "Username", "Password", "IP", "Health", "Armor", "RegistrationDate" };
+            string[] varNamesTwo = { "Username", "Password", "IP", "Health", "Armor", "RegistrationDate", "Name" };
             string tableName = "Players";
-            string[] dataTwo = { username, hash, player.address, "100", "0", date.ToString("yyyy-MM-dd HH:mm:ss") };
+            string[] dataTwo = { username, hash, player.address, "100", "0", date.ToString("yyyy-MM-dd HH:mm:ss"), playername };
             db.compileInsertQuery(tableName, varNamesTwo, dataTwo);
 
             // Get the ID that belongs to the player. (THIS IS NOT SECURE, COULD BE WRONG IF TWO PEOPLE REGISTER AT THE SAME TIME)

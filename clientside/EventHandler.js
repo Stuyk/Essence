@@ -30,7 +30,7 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             return;
         // Used by PointHelper / PointHelper Manager
         case "Add_New_Point":
-            resource.PointHelper.addNewPoint(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+            resource.PointHelper.addNewPoint(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
             return;
         case "Update_Stash_Info":
             resource.PointHelper.updateStashPoint(args[0], args[1]);

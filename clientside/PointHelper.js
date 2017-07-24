@@ -2,7 +2,7 @@ var list = new Array();
 var keyboardPath = "clientside/images/keyboard_e.png";
 var actionCooldown = Date.now() + 3000;
 var BlipTextPoint = (function () {
-    function BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled) {
+    function BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension) {
         this.position = position;
         this.type = type;
         this.color = color;
@@ -11,6 +11,7 @@ var BlipTextPoint = (function () {
         this.id = id;
         this.interactable = interactable;
         this.enabled = true;
+        this.dimension = dimension;
         if (blipEnabled) {
             this.blip = API.createBlip(this.position);
             API.setBlipSprite(this.blip, this.type);
@@ -24,6 +25,9 @@ var BlipTextPoint = (function () {
             return;
         }
         if (!this.draw) {
+            return;
+        }
+        if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
             return;
         }
         var point = API.worldToScreenMaintainRatio(this.position.Add(new Vector3(0, 0, 2)));
@@ -82,6 +86,9 @@ var BlipTextPoint = (function () {
     });
     // Used to interact with pretty much everything ever.
     BlipTextPoint.prototype.triggerServerEvent = function () {
+        if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
+            return;
+        }
         API.triggerServerEvent(this.id, this.id);
     };
     return BlipTextPoint;
@@ -103,8 +110,8 @@ function drawText() {
     }
 }
 // Adds a new point to the list.
-function addNewPoint(position, type, color, text, draw, id, interactable, blipEnabled) {
-    var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled);
+function addNewPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension) {
+    var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension);
     list.push(newPoint);
 }
 function updateStashPoint(id, newText) {

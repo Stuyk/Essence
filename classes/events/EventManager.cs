@@ -15,7 +15,7 @@ namespace Essence.classes.events
 {
     public static class EventManager
     {
-        private static List<EventInfo> events = new List<EventInfo>();
+        public static List<EventInfo> events = new List<EventInfo>();
 
         public static void SetupEvents()
         {
@@ -50,18 +50,8 @@ namespace Essence.classes.events
             events.Add(new EventInfo("GET_ITEMS", "ItemCalls", "GetItems"));
             events.Add(new EventInfo("USE_ITEM", "ItemCalls", "UseItem"));
 
-
             // Doors
-            API.shared.delay(10000, true, () =>
-            {
-                foreach (DoorInfo door in DoorManager.Doors)
-                {
-                    events.Add(new EventInfo(door.Id, "DoorCalls", "EnterInterior"));
-                }
-            });
-
-
-
+            events.Add(new EventInfo("Exit_Dynamic_Door", "DoorCalls", "ExitInterior"));
             Console.WriteLine("Events setup with {0} events.", events.Count);
         }
 

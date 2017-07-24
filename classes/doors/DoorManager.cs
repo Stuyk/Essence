@@ -1,4 +1,5 @@
 ﻿using Essence.classes.anticheat;
+using Essence.classes.events;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
@@ -42,6 +43,8 @@ namespace Essence.classes.doors
             {
                 DoorInfo door = new DoorInfo(row);
                 doors.Add(door);
+                EventManager.events.Add(new EventInfo($"{door.Id}", "DoorCalls", "EnterInterior"));
+                API.shared.consoleOutput($"Door Loaded: {door.Id}");
                 count++;
             }
 
@@ -68,10 +71,10 @@ namespace Essence.classes.doors
             {
                 return;
             }
-
+            // Setup to find our target door.
             DoorInfo targetDoor = null;
             string doorID = arguments[0].ToString().Replace("Door-", string.Empty);
-
+            // Find our target door.
             for (int i = 0; i < doors.Count; i++)
             {
                 if (doors[i].Id.Replace("Door-", string.Empty) == doorID)
@@ -80,24 +83,25 @@ namespace Essence.classes.doors
                     break;
                 }
             }
-
+            // If our target door does not exist. Stop.
             if (targetDoor == null)
             {
                 Console.WriteLine("[Door] Not a valid door. " + arguments[0].ToString());
                 return;
             }
-
+            // If our target door is locked, don't let the player in.
             if (targetDoor.Locked)
             {
                 API.shared.sendChatMessageToPlayer(player, "~r~This door is locked.");
                 return;
             }
-
+            // Load the IPL if it hasn't been loaded today, then teleport them into the interior.
             loadIPL(targetDoor.IPL);
             AnticheatInfo info = player.getData("Anticheat");
             info.LastPosition = targetDoor.InteriorLocation;
             player.setData("LastPosition", player.position);
             player.position = targetDoor.InteriorLocation;
+            player.dimension = targetDoor.CoreId;
 
 
             API.shared.delay(10000, true, () =>
@@ -105,6 +109,23 @@ namespace Essence.classes.doors
                 info.LastPosition = player.getData("LastPosition");
                 player.position = player.getData("LastPosition");
             });
+        }
+
+        public static void ExitDoor(Client player, params object[] arguments)
+        {
+            if (!player.hasData("LastPosition"))
+            {
+                // Something went wrong, figure out what to do.
+                return;
+            }
+
+            AnticheatInfo info = player.getData("Anticheat");
+            Vector3 lastPos = player.getData("LastPosition");
+            info.LastPosition = lastPos;
+            player.position = lastPos;
+            player.dimension = 0;
+
+            player.resetData("LastPosition");
         }
 
         private static void loadIPL(string ipl)
