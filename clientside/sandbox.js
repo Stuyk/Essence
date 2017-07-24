@@ -57,7 +57,7 @@ function setupFatherFaceFunction(subitem, id) {
     subitem.HoverFunction = hoverHolder;
 }
 function updateFatherFace(args) {
-    API.callNative("SET_PED_HEAD_BLEND_DATA", API.getLocalPlayer(), mother, Number(args[0]), 0, motherSkin, fatherSkin, 0, faceBlend, skinBlend, 0, false);
+    API.callNative("SET_PED_HEAD_BLEND_DATA", API.getLocalPlayer(), mother, Number(args[0]), 0, motherSkin, fatherSkin, 0, faceBlend, skinBlend, 0);
 }
 function setFatherFace(args) {
     updateFatherFace(args);
@@ -97,7 +97,7 @@ function setupMotherFaceFunction(subitem, id) {
     subitem.HoverFunction = hoverHolder;
 }
 function updateMotherFace(args) {
-    API.returnNative("SET_PED_HEAD_BLEND_DATA", 1 /* UInt */, API.getLocalPlayer(), args[0], father, 0, motherSkin, fatherSkin, 0, parseFloat(faceBlend), parseFloat(skinBlend), 0, false);
+    API.callNative("SET_PED_HEAD_BLEND_DATA", API.getLocalPlayer(), args[0], father, 0, motherSkin, fatherSkin, 0, parseFloat(faceBlend), parseFloat(skinBlend), 0);
 }
 function setMotherFace(args) {
     updateMotherFace(args);

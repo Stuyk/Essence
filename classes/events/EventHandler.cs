@@ -30,8 +30,6 @@ namespace Essence.classes.events
 
         private void API_onClientEventTrigger(Client player, string eventName, params object[] arguments)
         {
-            API.consoleOutput("CLIENTEVENT: " + eventName);
-
             EventInfo eventInfo = EventManager.GetEvent(eventName.ToLower());
             if (eventInfo != null)
             {

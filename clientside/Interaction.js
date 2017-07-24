@@ -1,5 +1,5 @@
 "use strict";
-var screenRes = API.getScreenResolutionMantainRatio();
+var screenRes = API.getScreenResolutionMaintainRatio();
 var widthHalf = Math.round(screenRes.Width / 2);
 var heightHalf = Math.round(screenRes.Height / 2);
 var holdCounter = 0;
@@ -77,12 +77,12 @@ API.onUpdate.connect(() => {
     if (!API.hasEntitySyncedData(API.getLocalPlayer(), "ESS_LoggedIn")) {
         return;
     }
-    API.dxDrawTexture("clientside/images/crosshair/crosshair.png", new Point(widthHalf - 5, heightHalf - 5), new Size(10, 10), 0, 255, 255, 255, 255);
+    API.dxDrawTexture("clientside/images/crosshair/crosshair.png", new Point(widthHalf - 5, heightHalf - 5), new Size(10, 10), 0);
     // We're going to use disabled controls here. So I'm disabling the vehicle horn since it's a control for E.
-    API.disableControlThisFrame(86 /* VehicleHorn */);
-    API.disableControlThisFrame(51 /* Context */);
+    API.disableControlThisFrame(86); // Horn
+    API.disableControlThisFrame(51); // E
     // When you hold E it adds to the counter. Once it's over 200, it turns on isInteracting();
-    if (API.isDisabledControlPressed(51 /* Context */)) {
+    if (API.isDisabledControlPressed(51)) {
         holdCounter += 5;
         if (holdCounter > 200) {
             isInteracting();
@@ -92,7 +92,7 @@ API.onUpdate.connect(() => {
         }
     }
     // When E is released it will put the counter back down to 0.
-    if (API.isDisabledControlJustReleased(51 /* Context */)) {
+    if (API.isDisabledControlJustReleased(51)) {
         holdCounter = 0;
         API.showCursor(false);
     }
@@ -106,30 +106,40 @@ API.onUpdate.connect(() => {
 function rayCastForItems() {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     var aimPos = API.getPlayerAimCoords(API.getLocalPlayer());
-    var rayCast = API.createRaycast(playerPos, aimPos, 16 /* Objects */, null);
+    var rayCast = API.createRaycast(playerPos, aimPos, 16, null);
     // Check if our raycast hits anything.
     if (!rayCast.didHitAnything) {
+        radiusForItems(aimPos);
         return;
     }
     if (!rayCast.didHitEntity) {
+        radiusForItems(aimPos);
         return;
     }
     if (!API.doesEntityExist(rayCast.hitEntity)) {
+        radiusForItems(aimPos);
         return;
     }
     // Check if it's a dropped object.
     if (!API.hasEntitySyncedData(rayCast.hitEntity, "DROPPED_OBJECT")) {
+        radiusForItems(aimPos);
         return;
     }
     // Check if they're close enough.
     if (playerPos.DistanceTo(API.getEntityPosition(rayCast.hitEntity)) >= 5) {
         return;
     }
-    // Ensure it's a prop and then trigger a server event.
-    switch (API.getEntityType(rayCast.hitEntity)) {
-        case 2 /* Prop */:
-            API.triggerServerEvent("PICKUP_ITEM", rayCast.hitEntity);
-            return;
+    API.triggerServerEvent("PICKUP_ITEM", rayCast.hitEntity);
+}
+function radiusForItems(aimpos) {
+    var objects = API.getAllObjects();
+    for (var i = 0; i < objects.Length; i++) {
+        if (API.getEntityPosition(objects[i]).DistanceTo2D(aimpos) <= 1) {
+            if (API.hasEntitySyncedData(objects[i], "DROPPED_OBJECT")) {
+                API.triggerServerEvent("PICKUP_ITEM", objects[i]);
+                return;
+            }
+        }
     }
 }
 // This handles which menu our player is going to see.
@@ -139,7 +149,7 @@ function isInteracting() {
         API.showCursor(true);
     }
     if (!API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
-        if (API.isControlPressed(21 /* Sprint */)) {
+        if (API.isControlPressed(21)) {
             showAnimationMenu();
             return;
         }
@@ -191,7 +201,7 @@ class InteractionButton {
         this.argument = value;
     }
     collision() {
-        var mouse = API.getCursorPositionMantainRatio();
+        var mouse = API.getCursorPositionMaintainRatio();
         API.drawRectangle(mouse.X, mouse.Y, 5, 5, 255, 255, 255, 255);
         if (mouse.X > this.position.X && mouse.X < this.position.X + this.size.Width && mouse.Y > this.position.Y && mouse.Y < this.position.Y + this.size.Height) {
             return true;
@@ -199,7 +209,7 @@ class InteractionButton {
         return false;
     }
     clicked() {
-        if (API.isControlJustPressed(237 /* CursorAccept */)) {
+        if (API.isControlJustPressed(237)) {
             API.playSoundFrontEnd("CONTINUE", "HUD_FRONTEND_DEFAULT_SOUNDSET");
             if (this.argument != null) {
                 API.triggerServerEvent(this.clientEvent, this.argument);

@@ -1,5 +1,5 @@
-﻿var screenX = API.getScreenResolutionMantainRatio().Width;
-var screenY = API.getScreenResolutionMantainRatio().Height;
+﻿var screenX = API.getScreenResolutionMaintainRatio().Width;
+var screenY = API.getScreenResolutionMaintainRatio().Height;
 var halfScreenWidth = Math.round(screenX / 2);
 var halfScreenHeight = Math.round(screenY / 2);
 
@@ -31,9 +31,9 @@ class LockPick {
         this.controls();
         this.check();
 
-        API.dxDrawTexture("clientside/images/lockpick/lockpick_0.png", new Point(halfScreenWidth - 290, halfScreenHeight - 290), new Size(580, 580), this.outside, 255, 255, 255, 255);
-        API.dxDrawTexture("clientside/images/lockpick/lockpick_1.png", new Point(halfScreenWidth - 237, halfScreenHeight - 237), new Size(474, 474), this.inside, 255, 255, 255, 255);
-        API.dxDrawTexture("clientside/images/lockpick/lockpick_2.png", new Point(halfScreenWidth - 143, halfScreenHeight - 143), new Size(286, 286), this.score, 255, 255, 255, 255);
+        API.dxDrawTexture("clientside/images/lockpick/lockpick_0.png", new Point(halfScreenWidth - 290, halfScreenHeight - 290), new Size(580, 580), this.outside);
+        API.dxDrawTexture("clientside/images/lockpick/lockpick_1.png", new Point(halfScreenWidth - 237, halfScreenHeight - 237), new Size(474, 474), this.inside);
+        API.dxDrawTexture("clientside/images/lockpick/lockpick_2.png", new Point(halfScreenWidth - 143, halfScreenHeight - 143), new Size(286, 286), this.score);
 
         //API.drawText("Outside: " + this.outside, 50, 50, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
         //API.drawText("Inside: " + this.inside, 50, 100, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
@@ -66,7 +66,7 @@ class LockPick {
 
     private controls() {
         //API.disableAllControlsThisFrame();
-        var mouse = API.getCursorPositionMantainRatio();
+        var mouse = API.getCursorPositionMaintainRatio();
         var newPos = Math.atan2(mouse.Y - halfScreenHeight, mouse.X - halfScreenWidth);
         newPos = newPos * (180 / Math.PI);
 

@@ -77,7 +77,7 @@ class Box {
 
     // Check if our mouse is within this box.
     public mouseCheck() {
-        var mouse = API.getCursorPositionMantainRatio();
+        var mouse = API.getCursorPositionMaintainRatio();
 
         // Check if your mouse is greater than X but less than X + Size, same thing with Y values.
         if (mouse.X > this.x && mouse.X < this.x + this.size && mouse.Y > this.y && mouse.Y < this.y + this.size) {
@@ -102,15 +102,17 @@ class Item {
     private id: number; //DB ID of item
     private type: string;
     private quantity: number;
+    private data: string;
     private selected: boolean;
     private splitTimer: number; // ms
     private consumeable: boolean;
-    constructor(id: number, type: string, quantity: number, consumeable: boolean) {
-        this.x = Math.round(API.getScreenResolutionMantainRatio().Width / 2);
-        this.y = Math.round(API.getScreenResolutionMantainRatio().Height / 2);
+    constructor(id: number, type: string, quantity: number, consumeable: boolean, data: string) {
+        this.x = Math.round(API.getScreenResolutionMaintainRatio().Width / 2);
+        this.y = Math.round(API.getScreenResolutionMaintainRatio().Height / 2);
         this.id = id;
         this.type = type;
         this.quantity = quantity;
+        this.data = data;
         this.consumeable = consumeable;
         this.box = null;
         this.selected = false;
@@ -120,8 +122,17 @@ class Item {
 
     // This is used to draw our items.
     public draw() {
-        API.drawText("" + this.type, this.centerX, this.centerY - 10, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
-        API.drawText("x" + this.quantity.toString(), this.centerX, this.centerY + 30, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+
+        let itemName = this.type.toLowerCase();
+        itemName = itemName.charAt(0).toUpperCase() + itemName.slice(1);
+        itemName = itemName.replace('_', ' ');
+
+        API.drawText("" + itemName, this.centerX, this.centerY - 30, 0.5, 255, 255, 255, 255, 4, 1, false, true, 500);
+        API.drawText("x" + this.quantity.toString(), this.centerX, this.centerY + 20, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+
+        if (this.data.length > 0) {
+            API.drawText(this.data, this.centerX, this.centerY, 0.3, 255, 255, 255, 255, 4, 1, false, true, 500);
+        }
 
         this.mouseCheck();
 
@@ -129,7 +140,7 @@ class Item {
        if (this.selected) {
            this.move();
        } else {
-           if (API.isControlPressed(Enums.Controls.Sprint)) {
+           if (API.isControlPressed(21)) {
                this.splitSelection();
            } else {
                this.getSelection();
@@ -170,7 +181,7 @@ class Item {
 
     // Consume Selection
     private consumeSelection() {
-        if (!API.isControlJustReleased(Enums.Controls.CursorCancel)) {
+        if (!API.isControlJustReleased(238)) {
             return;
         }
 
@@ -202,7 +213,7 @@ class Item {
         }
 
         // Check if left click is pressed.
-        if (!API.isControlPressed(Enums.Controls.CursorAccept)) {
+        if (!API.isControlPressed(237)) {
             return;
         }
 
@@ -229,7 +240,7 @@ class Item {
         }
 
         // Check if the mouse down is applied.
-        if (!API.isControlJustPressed(Enums.Controls.CursorAccept)) {
+        if (!API.isControlJustPressed(237)) {
             return;
         }
 
@@ -254,7 +265,7 @@ class Item {
         }
         API.playSoundFrontEnd("Reset_Prop_Position", "DLC_Dmod_Prop_Editor_Sounds");
         this.quantity = possibleNewValue;
-        addInventoryItem(this.id, this.type, splitValue, this.consumeable);
+        addInventoryItem(this.id, this.type, splitValue, this.consumeable, this.data);
     }
 
     // Remove item bind from box.
@@ -265,7 +276,7 @@ class Item {
 
     // This function will check if the mouse is inside of this specific item.
     private mouseCheck() {
-        var mouse = API.getCursorPositionMantainRatio();
+        var mouse = API.getCursorPositionMaintainRatio();
         // Check if your mouse is greater than X but less than X + Size, same thing with Y values.
         if (mouse.X > this.x && mouse.X < this.x + itemSize && mouse.Y > this.y && mouse.Y < this.y + itemSize) {
             return true;
@@ -294,8 +305,8 @@ class Item {
         }
 
         // Ensure our mouse is pressed down.
-        if (API.isControlPressed(Enums.Controls.CursorAccept)) {
-            var mouse = API.getCursorPositionMantainRatio();
+        if (API.isControlPressed(237)) {
+            var mouse = API.getCursorPositionMaintainRatio();
             this.x = mouse.X - Math.round(itemSize / 2);
             this.y = mouse.Y - Math.round(itemSize / 2);
             this.calculateCenterPoints();
@@ -375,7 +386,7 @@ class Item {
 
 API.onResourceStart.connect(() => {
     grid = new Grid(5, 8, 150, 300, 50, 10);
-    //grid = new Grid(5, 5, 50, new Point(Math.round(API.getScreenResolutionMantainRatio().Width / 2) - 125, 25));
+    //grid = new Grid(5, 5, 50, new Point(Math.round(API.getScreenResolutionMaintainRatio().Width / 2) - 125, 25));
 })
 
 function toggleInventory() {
@@ -394,8 +405,8 @@ function toggleInventory() {
     }
 }
 
-function addInventoryItem(id: number, type: string, quantity: number, consumeable: boolean) {
-    items.push(new Item(id, type, quantity, consumeable));
+function addInventoryItem(id: number, type: string, quantity: number, consumeable: boolean, data: string) {
+    items.push(new Item(id, type, quantity, consumeable, data));
 }
 
 API.onUpdate.connect(() => {

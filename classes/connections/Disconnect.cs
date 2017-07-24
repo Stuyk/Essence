@@ -39,6 +39,7 @@ namespace Essence.classes
             Player instance = (Player)API.getEntityData(player, "Instance");
             instance.updatePlayerPosition();
             instance.PlayerClothing.savePlayerClothes();
+            instance.PlayerInventory.saveInventory();
             instance.removePlayerVehicles();
         }
 

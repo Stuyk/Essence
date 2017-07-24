@@ -31,7 +31,6 @@ namespace Essence.classes.inventory
 
         public void GetItems(Client player, params object[] arguments)
         {
-            API.consoleOutput("ITEM CALL GET ITEMS");
             Items.GetItems(player, arguments);
         }
 

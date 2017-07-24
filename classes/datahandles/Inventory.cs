@@ -23,8 +23,8 @@ namespace Essence.classes.datahandles
         private Player player;
 
         //List of all the players items
-        private List<Item> items = new List<Item>();
-        public List<Item> CurrentItems
+        private Dictionary<int, Item> items = new Dictionary<int, Item>();
+        public Dictionary<int, Item> CurrentItems
         {
             get
             {
@@ -58,8 +58,10 @@ namespace Essence.classes.datahandles
                 API.shared.consoleOutput("Loading Item for " + API.shared.getPlayerName(client) + ": " + ItemType.ToString() + " [" + ItemQuantity.ToString() + "]");
 
                 //Check if item already in inventory and stackable (if empty data string item is stackable)
-                foreach(Item i in this.items)
+                foreach(KeyValuePair<int,Item> entry in this.items)
                 {
+                    Item i = entry.Value;
+
                     if(i.Type == ItemType)
                     {
                         if (i.Data.Length <= 0)
@@ -72,7 +74,7 @@ namespace Essence.classes.datahandles
                         else
                         {
                             Item item = new Item(this.client, this.player, itemId, ItemType, ItemQuantity, ItemData);
-                            items.Add(item);
+                            items.Add(item.ID,item);
                             addedToInventory = true;
                             break;
                         }
@@ -80,7 +82,7 @@ namespace Essence.classes.datahandles
                     else
                     {
                         Item item = new Item(this.client, this.player, itemId, ItemType, ItemQuantity, ItemData);
-                        items.Add(item);
+                        items.Add(item.ID,item);
                         addedToInventory = true;
                         break;
                     } 
@@ -90,7 +92,7 @@ namespace Essence.classes.datahandles
                 if (!addedToInventory)
                 {
                     Item item = new Item(this.client, this.player, itemId, ItemType, ItemQuantity, ItemData);
-                    items.Add(item);
+                    items.Add(item.ID,item);
                     addedToInventory = true;
                 }
             }
@@ -98,28 +100,39 @@ namespace Essence.classes.datahandles
 
         public void LoadItemsToLocal()
         {
-            API.shared.consoleOutput("Loading items to client. " + this.items.Count.ToString());
 
-            foreach(Item i in this.items)
+            foreach (KeyValuePair<int, Item> entry in this.items)
             {
+                Item i = entry.Value;
                 //If item is consumable (index 400 or below in ItemTypes Enum)
                 bool consumable = false;
+                
                 if((int)i.Type <= 400)
                 {
                     consumable = true;
                 }
 
-                API.shared.consoleOutput("Item added clientside: " + i.Type.ToString());
+                //Data for in item box
+                string data = "";
 
+                switch (i.Type)
+                {
+                    case Items.ItemTypes.RADIO:
+                        dynamic radio = API.shared.fromJson(i.Data);
+                        data = "Frequency: " + radio.frequency.ToString();
+                        break;
+                }
+                API.shared.consoleOutput(data);
                 // Type of Item, Amount of Item, is It Consumeable?
-                API.shared.triggerClientEvent(client, "Add_Inventory_Item", i.ID, i.Type.ToString("g"), i.Quantity, consumable);
+                API.shared.triggerClientEvent(client, "Add_Inventory_Item", i.ID, i.Type.ToString("g"), i.Quantity, consumable, data);
             }
         }
 
-        private void saveInventory(string item, int amount)
+        public void saveInventory()
         {
-            foreach(Item i in items)
+            foreach (KeyValuePair<int, Item> entry in this.items)
             {
+                Item i = entry.Value;
                 i.saveItem();
             }
         }
@@ -127,12 +140,23 @@ namespace Essence.classes.datahandles
         public void addItem(Item item)
         {
             //Check if item already in inventory and stackable (if empty data string item is stackable)
-            foreach (Item i in this.items)
+            if(this.items.Count <= 0)
             {
+                this.items.Add(item.ID, item);
+                API.shared.consoleOutput("0 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
+                return;
+            }
+
+            foreach (KeyValuePair<int, Item> entry in this.items)
+            {
+                Item i = entry.Value;
+                API.shared.consoleOutput("1 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
                 if (i.Type == item.Type)
                 {
+                    API.shared.consoleOutput("2 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
                     if (i.Data.Length <= 0)
                     {
+                        API.shared.consoleOutput("3 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
                         //Stack the item
                         i.Quantity += item.Quantity;
 
@@ -142,13 +166,15 @@ namespace Essence.classes.datahandles
                     }
                     else
                     {
-                        items.Add(item);
+                        API.shared.consoleOutput("4 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
+                        this.items.Add(item.ID, item);
                         break;
                     }
                 }
                 else
                 {
-                    items.Add(item);
+                    API.shared.consoleOutput("5 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
+                    this.items.Add(item.ID, item);
                     break;
                 }
             }

@@ -1,5 +1,5 @@
-﻿var screenX = API.getScreenResolutionMantainRatio().Width;
-var screenY = API.getScreenResolutionMantainRatio().Height;
+﻿var screenX = API.getScreenResolutionMaintainRatio().Width;
+var screenY = API.getScreenResolutionMaintainRatio().Height;
 
 // Other Stuff
 var loggedIn = false;

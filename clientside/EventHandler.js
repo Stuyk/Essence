@@ -20,7 +20,10 @@ API.onServerEventTrigger.connect((eventName, args) => {
             resource.BrowserManager.callCEF("showRegistrationError", false);
             return;
         case "HeadNotification":
-            resource.HeadNotifications.createHeadNotification(args[0]);
+            resource.HeadNotifications.createHeadNotification(args[0]); // Just Message
+            return;
+        case "HeadNotificationForTarget":
+            resource.HeadNotifications.createHeadNoteForTarget(args[0], args[1]); // Player Target, Message
             return;
         // Used by Doors.js and Doors.cs
         case "RetrieveDoor":
@@ -48,7 +51,7 @@ API.onServerEventTrigger.connect((eventName, args) => {
             return;
         // Inventory
         case "Add_Inventory_Item":
-            resource.Inventory.addInventoryItem(args[0], args[1], args[2], args[3]);
+            resource.Inventory.addInventoryItem(args[0], args[1], args[2], args[3], args[4]);
             return;
     }
 });
