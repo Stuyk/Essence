@@ -267,7 +267,7 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Facial_Hair_Color", value);
             }
         }
-        public int FacialHairOpacity
+        public float FacialHairOpacity
         {
             get
             {
@@ -303,7 +303,7 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Eyebrows_Color", value);
             }
         }
-        public int EyebrowsOpacity
+        public float EyebrowsOpacity
         {
             get
             {
@@ -339,7 +339,7 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Lipstick_Color", value);
             }
         }
-        public int LipstickOpacity
+        public float LipstickOpacity
         {
             get
             {
@@ -375,7 +375,7 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Chest_Hair_Color", value);
             }
         }
-        public int ChestHairOpacity
+        public float ChestHairOpacity
         {
             get
             {
@@ -411,7 +411,7 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Makeup", value);
             }
         }
-        public int MakeupOpacity
+        public float MakeupOpacity
         {
             get
             {
@@ -435,7 +435,7 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Facepaint", value);
             }
         }
-        public int FacepaintOpacity
+        public float FacepaintOpacity
         {
             get
             {

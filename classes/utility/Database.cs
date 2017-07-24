@@ -38,8 +38,7 @@ namespace Essence.classes
                             [Armor] INTEGER DEFAULT 0,
                             [Ip] INTEGER,
                             [RegistrationDate],
-                            [Faction] INTEGER DEFAULT -1,
-                            [IsAdmin] INTEGER DEFAULT 0)";
+                            [Faction] INTEGER DEFAULT -1)";
 
         static string stashTable = @"CREATE TABLE IF NOT EXISTS
                             [Stash] (
@@ -66,8 +65,7 @@ namespace Essence.classes
                             [Y] INTEGER DEFAULT 0,
                             [Z] INTEGER DEFAULT 0,
                             [Locked] INTEGER DEFAULT 0,
-                            [IPL] NVARCHAR(2048) DEFAULT apa_v_mp_h_01_a,
-                            [Price] INTEGER DEFAULT 50000)";
+                            [IPL] NVARCHAR(2048) DEFAULT apa_v_mp_h_01_a)";
 
         // Contains Vehicle Information - Owner is the owner's Player Table ID.
         static string vehicleTable = @"CREATE TABLE IF NOT EXISTS
