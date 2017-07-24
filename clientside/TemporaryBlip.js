@@ -1,3 +1,4 @@
+"use strict";
 var lastUpdate = Date.now();
 var blips = [];
 // Check if they need to be deleted through onUpdate.
@@ -27,4 +28,3 @@ function deleteTemporaryBlips() {
     }
     blips = [];
 }
-//# sourceMappingURL=TemporaryBlip.js.map

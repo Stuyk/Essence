@@ -1,4 +1,5 @@
-API.onChatMessage.connect(function (msg) {
+"use strict";
+API.onChatMessage.connect((msg) => {
     if (msg == "help") {
         mainMenu();
     }
@@ -102,4 +103,3 @@ function setMotherFace(args) {
     updateMotherFace(args);
     father = args[0];
 }
-//# sourceMappingURL=sandbox.js.map

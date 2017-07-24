@@ -1,31 +1,23 @@
+"use strict";
 var doors = new Array();
 var lastUpdate = Date.now();
-var Door = (function () {
-    function Door(model, position) {
+class Door {
+    constructor(model, position) {
         this.model = model;
         this.position = position;
     }
-    Object.defineProperty(Door.prototype, "Model", {
-        get: function () {
-            return this.model;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Door.prototype, "Position", {
-        get: function () {
-            return this.position;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return Door;
-}());
+    get Model() {
+        return this.model;
+    }
+    get Position() {
+        return this.position;
+    }
+}
 function retrieveDoor(id, position) {
     var door = new Door(id, position);
     doors.push(door);
 }
-API.onUpdate.connect(function () {
+API.onUpdate.connect(() => {
     if (Date.now() > lastUpdate + 5000) {
         lastUpdate = Date.now();
         checkAllDoors();
@@ -42,4 +34,3 @@ function checkAllDoors() {
         }
     }
 }
-//# sourceMappingURL=Doors.js.map

@@ -16,117 +16,26 @@ namespace Essence.classes.anticheat
 {
     public class AnticheatInfo
     {
-        private Client client;
-        private int model;
-        private Vector3 lastPosition;
-        private bool diedRecently;
-        private int currentStrikes;
-        private bool leftCarRecently;
-        private bool healthChangedRecently;
-        private bool armorChangedRecently;
-        
+        public Client PlayerClient { get; set; }
+        public int Model { get; set; }
+        public Vector3 LastPosition { get; set; }
+        public bool DiedRecently { get; set; }
+        public int CurrentStrikes { get; set; }
+        public bool LeftCarRecently { get; set; }
+        public bool HealthChangedRecently { get; set; }
+        public bool ArmorChangedRecently { get; set; }
+
         public AnticheatInfo(Client client)
         {
-            this.client = client;
-            this.model = client.model;
-            this.lastPosition = client.position;
-            this.diedRecently = false;
-            this.currentStrikes = 0;
-            this.healthChangedRecently = false;
-            this.armorChangedRecently = false;
+            this.PlayerClient = client;
+            this.Model = client.model;
+            this.LastPosition = client.position;
+            this.DiedRecently = false;
+            this.CurrentStrikes = 0;
+            this.HealthChangedRecently = false;
+            this.ArmorChangedRecently = false;
             client.setData("Anticheat", this);
-        }
-
-        public int CurrentStrikes
-        {
-            get
-            {
-                return currentStrikes;
-            }
-            set
-            {
-                currentStrikes = value;
-            }
-        }
-
-        public Client GetClient
-        {
-            get
-            {
-                return client;
-            }
-        }
-
-        public int Model
-        {
-            set
-            {
-                model = value;
-            }
-            get
-            {
-                return model;
-            }
-        }
-
-        public Vector3 LastPosition
-        {
-            set
-            {
-                lastPosition = value;
-            }
-            get
-            {
-                return lastPosition;
-            }
-        }
-
-        public bool DiedRecently
-        {
-            get
-            {
-                return diedRecently;
-            }
-            set
-            {
-                diedRecently = value;
-            }
-        }
-
-        public bool LeftCarRecently
-        {
-            get
-            {
-                return leftCarRecently;
-            }
-            set
-            {
-                leftCarRecently = value;
-            }
-        }
-
-        public bool HealthChangedRecently
-        {
-            get
-            {
-                return healthChangedRecently;
-            }
-            set
-            {
-                healthChangedRecently = value;
-            }
-        }
-
-        public bool ArmorChangedRecently
-        {
-            get
-            {
-                return armorChangedRecently;
-            }
-            set
-            {
-                armorChangedRecently = value;
-            }
+            API.shared.consoleOutput($"Anticheat Model: {this.Model}");
         }
     }
 
@@ -141,7 +50,7 @@ namespace Essence.classes.anticheat
         {
             foreach (AnticheatInfo info in AntiCheatPlayers)
             {
-                if (info.GetClient == player)
+                if (info.PlayerClient == player)
                 {
                     info.CurrentStrikes = 0;
                     return info;
@@ -174,7 +83,7 @@ namespace Essence.classes.anticheat
             if (player.CurrentStrikes >= 5)
             {
                 player.CurrentStrikes = 0;
-                player.GetClient.kick("Anticheat");
+                player.PlayerClient.kick("Anticheat");
             }
         }
 
@@ -250,10 +159,10 @@ namespace Essence.classes.anticheat
 
         private static void isModelHacking(AnticheatInfo player)
         {
-            if (player.GetClient.model != player.Model)
+            if (player.PlayerClient.model != player.Model)
             {
                 player.CurrentStrikes += 5;
-                DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, 5 strikes added for model change.", player.GetClient.name));
+                DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, 5 strikes added for model change.", player.PlayerClient.name));
             }
         }
 
@@ -262,32 +171,32 @@ namespace Essence.classes.anticheat
             if (player.LeftCarRecently)
             {
                 player.LeftCarRecently = false;
-                player.LastPosition = player.GetClient.position;
+                player.LastPosition = player.PlayerClient.position;
                 return;
             }
             // Player on foot can cover about 21 feet per 3 seconds.
-            if (!player.GetClient.isInVehicle)
+            if (!player.PlayerClient.isInVehicle)
             {
-                if (player.GetClient.position.DistanceTo2D(player.LastPosition) > 28)
+                if (player.PlayerClient.position.DistanceTo2D(player.LastPosition) > 28)
                 {
                     player.CurrentStrikes += 1;
-                    DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, strike added for Teleporting.", player.GetClient.name));
+                    DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, strike added for Teleporting.", player.PlayerClient.name));
                 }
             } else {
-                if (player.GetClient.position.DistanceTo2D(player.LastPosition) > 180)
+                if (player.PlayerClient.position.DistanceTo2D(player.LastPosition) > 180)
                 {
                     player.CurrentStrikes += 1;
-                    DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, strike added for Teleporting.", player.GetClient.name));
+                    DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, strike added for Teleporting.", player.PlayerClient.name));
                 }
             }
-            player.LastPosition = player.GetClient.position;
+            player.LastPosition = player.PlayerClient.position;
         }
 
         public static void playerLeftVehicle(Client player)
         {
             foreach (AnticheatInfo info in AntiCheatPlayers)
             {
-                if (info.GetClient == player)
+                if (info.PlayerClient == player)
                 {
                     info.LeftCarRecently = true;
                 }

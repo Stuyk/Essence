@@ -8,8 +8,8 @@ API.onResourceStart.connect(() => {
 });
 API.onUpdate.connect(() => {
     if (cam !== null) {
-        var rot = API.getCameraRotation(cam);
-        API.setCameraRotation(cam, rot.Add(new Vector3(0, 0, 0.05)));
+        //var rot = API.getCameraRotation(cam);
+        //API.setCameraRotation(cam, rot.Add(new Vector3(0, 0, 0.05)));
     }
 });
 API.onResourceStop.connect(() => {

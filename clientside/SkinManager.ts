@@ -22,10 +22,6 @@ API.onEntityStreamIn.connect(function (ent, entType) {
     }
 });
 
-function setLocalPlayer() {
-
-}
-
 function setPedCharacter(ent: LocalHandle) {
     if (API.getEntityModel(ent) === 1885233650 || API.getEntityModel(ent) === -1667301416) {
         var Mother = API.getEntitySyncedData(ent, "ESS_Mother");
@@ -40,41 +36,37 @@ function setPedCharacter(ent: LocalHandle) {
         var SunDamage = API.getEntitySyncedData(ent, "ESS_SunDamage");
         var Moles = API.getEntitySyncedData(ent, "ESS_Moles");
         var BodyBlemishes = API.getEntitySyncedData(ent, "ESS_BodyBlemishes");
-
-
-        //barber shit        
+        //Hair      
         var Hair = API.getEntitySyncedData(ent, "ESS_Hair");
         var HairColor = API.getEntitySyncedData(ent, "ESS_HairColor");
         var HairHighlight = API.getEntitySyncedData(ent, "ESS_HairHighlight");
-        
+        // Facial Hair
         var FacialHair = API.getEntitySyncedData(ent, "ESS_Facial_Hair");
         var FacialHairColor = API.getEntitySyncedData(ent, "ESS_Facial_Hair_Color");
         var FacialHairOpacity = API.getEntitySyncedData(ent, "ESS_Facial_Hair_Opacity");
-
+        // Eyebrows
         var Eyebrows = API.getEntitySyncedData(ent, "ESS_Eyebrows");
         var EyebrowsColor = API.getEntitySyncedData(ent, "ESS_Eyebrows_Color");
         var EyebrowsOpacity = API.getEntitySyncedData(ent, "ESS_Eyebrows_Opacity");
-        
+        // Chest Hair
         var ChestHair = API.getEntitySyncedData(ent, "ESS_Chest_Hair");
         var ChestHairColor = API.getEntitySyncedData(ent, "ESS_Chest_Hair_Color");
         var ChestHairOpacity = API.getEntitySyncedData(ent, "ESS_Chest_Hair_Opacity");
-
+        // Face Paint
         var Facepaint = API.getEntitySyncedData(ent, "ESS_Facepaint");
         var FacepaintOpacity = API.getEntitySyncedData(ent, "ESS_Facepaint_Opacity");
-        
+        // Makeup
         var Makeup = API.getEntitySyncedData(ent, "ESS_Makeup");
         var MakeupOpacity = API.getEntitySyncedData(ent, "ESS_MakeupOpacity");
-        
+        // Lipstick
         var Lipstick = API.getEntitySyncedData(ent, "ESS_Lipstick");
         var LipstickColor = API.getEntitySyncedData(ent, "ESS_Lipstick_Color");
         var LipstickOpacity = API.getEntitySyncedData(ent, "ESS_Lipstick_Opacity");
-             
+        // EyeColor
         var EyeColor = API.getEntitySyncedData(ent, "ESS_EyeColor");
 
-        //endbarber
-        
+        // Face List
         var FaceList = API.getEntitySyncedData(ent, "ESS_FaceList");
-
 
         // Face
         API.callNative("SET_PED_HEAD_BLEND_DATA", ent, Mother, Father, 0, MotherSkin, FatherSkin, 0, parseFloat(FaceBlend), parseFloat(SkinBlend), 0, false);
