@@ -14,24 +14,25 @@ var MakeupMenuItems = ["Eyes", "Lips"];
 
 // Current Setup Variables
 var curr_hair = 0;
-var curr_hairColor = 0;
-var curr_hairHighlight = 0;
+var curr_haircolor = 0;
+var curr_hairhighlight = 0;
 var curr_beard = 0;
 var curr_beardcolor = 0;
+var curr_beardopacity = 0;
 var curr_chest = 0;
 var curr_chestcolor = 0;
+var curr_chestopacity = 0;
 var curr_eyebrows = 0;
-var curr_eyebrowsColor = 0;
-var curr_eyebrowsColor2 = 0;
+var curr_eyebrowscolor = 0;
+var curr_eyebrowsopacity = 0;
 var curr_contacts = 0;
-var curr_facePaint = 0;
-var curr_facePaintopacity = 1;
-var curr_makeUp = 0;
-var curr_makeUpColor = 0;
-var curr_makeUpColor2 = 0;
+var curr_facepaint = 0;
+var curr_facepaintopacity = 1;
+var curr_eyemakeup = 0;
+var curr_eyemakeupopacity = 0;
 var curr_lipstick = 0;
-var curr_lipstickColor = 0;
-var curr_lipstickColor2 = 0;
+var curr_lipstickcolor = 0;
+var curr_lipstickopacity = 0;
 
 //not changed here. just to removed so you can see
 var curr_shirt = 0;
@@ -326,24 +327,25 @@ function get_curr_Vars()
 {
 	//Create the main menu
 	curr_hair = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIR");
-	curr_hairColor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIRCOLOR");
-	curr_hairHighlight = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIRHIGHLIGHT");
+	curr_haircolor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIRCOLOR");
+	curr_hairhighlight = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIRHIGHLIGHT");
 	curr_beard = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR");
-	curr_beardColor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_COLOR");	
+	curr_beardcolor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_COLOR");	
+	curr_beardopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_OPACITY");	
 	curr_chest = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_CHEST_HAIR");	
 	curr_chestcolor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_CHEST_HAIR_COLOR");	
+	curr_chestopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_CHEST_HAIR_OPACITY");	
 	curr_eyebrows = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS");
-	curr_eyebrowsColor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_COLOR");
-	curr_eyebrowsColor2 = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_COLOR2");
+	curr_eyebrowscolor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_COLOR");
+	curr_eyebrowsopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_OPACITY");
 	curr_contacts = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_EYE_COLOR");
-	curr_facePaint = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACEPAINT");
-	curr_facePaintopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACEPAINT_O");
-	curr_makeUp = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP");
-	curr_makeUpColor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP_COLOR");
-	curr_makeUpColor2 = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP_COLOR2");	
+	curr_facepaint = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACEPAINT");
+	curr_facepaintopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACEPAINT_OPACITY");
+	curr_eyemakeup = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP");
+	curr_eyemakeupopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP_OPACITY");
 	curr_lipstick = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK");	
-	curr_lipstickColor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK_COLOR");
-	curr_lipstickColor2 = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK_COLOR2");
+	curr_lipstickcolor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK_COLOR");
+	curr_lipstickopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK_OPACITY");
 
 	
 }
@@ -352,24 +354,25 @@ function reset_curr_Vars()
 {
 	//Create the main menu
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_Hair", curr_hair);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_HairColor", curr_hairColor);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_HairHighlight", curr_hairHighlight);
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_HairColor", curr_haircolor);
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_HairHighlight", curr_hairhighlight);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR", curr_beard);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_COLOR", curr_beardcolor);	
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_OPACITY", curr_beardopacity);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_CHEST_HAIR", curr_chest);	
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_CHEST_HAIR_COLOR", curr_chestcolor);	
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_CHEST_HAIR_OPACITY", curr_chestopacity);	
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS", curr_eyebrows);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_COLOR", curr_eyebrowsColor);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_COLOR2", curr_eyebrowsColor2);
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_COLOR", curr_eyebrowscolor);
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_EYEBROWS_OPACITY", curr_eyebrowsopacity);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_EYE_COLOR", curr_contacts);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACEPAINT", curr_facepaint);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACEPAINT_O", curr_facepaintopacity);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP", curr_makeUp);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP_COLOR", curr_makeUpColor);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP_COLOR2", curr_makeUpColor2);	
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACEPAINT_OPACITY", curr_facepaintopacity);
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP", curr_eyemakeup);
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_MAKEUP_OPACITY", curr_eyemakeupopacity);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK", curr_lipstick);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK_COLOR", curr_lipstickColor);
-	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK_COLOR2", curr_lipstickColor2);
+	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_LIPSTICK_OPACITY", curr_lipstickopacity);
 }
 
 //################# Creating Menus #################
@@ -397,7 +400,7 @@ function createBarberMenu()
 		switch (index) 
 		{
 			case 0:
-			//get_curr_Vars();
+			get_curr_Vars();
 			openHairstylesMenu();
 			var TheDude = API.getLocalPlayer();
 			HairId = HairStylesItems[0][2];
@@ -405,32 +408,30 @@ function createBarberMenu()
 			API.setPlayerClothes(TheDude, 2, HairId, 0);
 			API.clearPlayerAccessory(TheDude, 0);
 			SetPlayerScalp(HairStylesItems[0][3],HairStylesItems[0][4]);
-			// PUT ME BACK API.callNative("_SET_PED_HAIR_COLOR", API.getLocalPlayer(), curr_hairColor, curr_hairHighlight);
-			API.callNative("_SET_PED_HAIR_COLOR", API.getLocalPlayer(), 1, 1);
+			API.callNative("_SET_PED_HAIR_COLOR", API.getLocalPlayer(), curr_haircolor, curr_hairhighlight);
+
 			break;	
 
 			case 1:
-			//get_curr_Vars();
+			get_curr_Vars();
 			openBeardsMenu();
 			var TheDude = API.getLocalPlayer();
 			BeardId = BeardsItems[0][2];
 			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 1, BeardId, API.f(1));
-            API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, 1, 1);
-			// PUT ME BACK API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_hairColor, curr_hairHighlight);
+			API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_beardcolor, API.f(curr_beardopacity));
 			break;		
 
 			case 2:
-			//get_curr_Vars();
+			get_curr_Vars();
 			openEyebrowsMenu();
 			var TheDude = API.getLocalPlayer();
 			EyebrowId = EyebrowsItems[0][2];
 			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 2, EyebrowId, API.f(1));
-            API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 2, 1, 1, 1);
-			// PUT ME BACK API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_hairColor, curr_hairHighlight);
+			API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_eyebrowscolor, API.f(curr_eyebrowsopacity));
 			break;		
 
 			case 3:
-			//get_curr_Vars();
+			get_curr_Vars();
 			openChestMenu();
 			var TheDude = API.getLocalPlayer();
 			ChestId = ChestItems[0][2];
@@ -439,21 +440,19 @@ function createBarberMenu()
 			break;		
 			
 			case 4:
-			//get_curr_Vars();
+			get_curr_Vars();
 			openContactsMenu();
 			var TheDude = API.getLocalPlayer();
 			ContactsId = ContactsItems[0][2];
 			API.callNative("_SET_PED_EYE_COLOR", TheDude, ContactsId);
-			//PUT ME BACK API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_hairColor, curr_hairHighlight);
 			break;	
 
 			case 5:
-			//get_curr_Vars();
+			get_curr_Vars();
 			openFacePaintMenu();
 			var TheDude = API.getLocalPlayer();
 			FacePaintId = FacePaintItems[0][2];
-			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 4, FacePaintId, API.f(curr_facePaintopacity));
-			//PUT ME BACK API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_hairColor, curr_hairHighlight);
+			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 4, FacePaintId, API.f(curr_facepaintopacity));
 			break;				
 
 		}
@@ -510,7 +509,7 @@ function create_Hairstyles()
 				//send buy command here
 				//get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BARBER_BUY", vCost, HairStylesItems[index][2], curr_hairColor, curr_hairHighlight);
+				API.triggerServerEvent("BARBER_BUY", vCost, HairStylesItems[index][2], curr_hairColor, curr_hairhighlight);
 				CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
@@ -565,7 +564,7 @@ function create_Beards()
 				//send buy command here
 				//get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BEARD_BUY", vCost, BeardsItems[index][2], curr_hairColor, curr_hairHighlight);
+				API.triggerServerEvent("BEARD_BUY", vCost, BeardsItems[index][2], curr_beardcolor, API.f(curr_beardopacity));
 				CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
@@ -618,7 +617,7 @@ function create_Eyebrows()
 				//send buy command here
 				//get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BROW_BUY", vCost, EyebrowsItems[index][2], curr_hairColor, curr_hairHighlight);
+				API.triggerServerEvent("BROW_BUY", vCost, EyebrowsItems[index][2], curr_eyebrowscolor, API.f(curr_eyebrowsopacity));
 				CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
@@ -652,9 +651,8 @@ function create_Chest()
 		var TheDude = API.getLocalPlayer();
 		var ChestId = ChestItems[index][2];
 		var ChestColorID = curr_chestcolor;
-		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 10, ChestId, API.f(1));
-        API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 10, 1, 1, 1);
-		//API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 10, 1, ChestColorID, ChestColorID);
+		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 10, ChestId, API.f(curr_chestopacity));
+		API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 10, 1, curr_chestcolor, API.f(curr_chestopacity));
 	});
 
 	ChestMenu.OnItemSelect.connect(function(sender, item, index)

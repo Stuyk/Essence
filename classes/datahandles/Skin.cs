@@ -17,6 +17,7 @@ namespace Essence.classes.datahandles
     {
         Database db = new Database();
 
+        //surgeonshit
         private Client client;
         private Player player;
         private int father;
@@ -25,26 +26,37 @@ namespace Essence.classes.datahandles
         private int motherSkin;
         private float faceBlend;
         private float skinBlend;
+        private int blemishes;
+        private int ageing;
+        private int complexion;
+        private int sunDamage;
+        private int moles;
+        private int bodyBlemishes;
+        //end surgeon
+
+        //barber shit
         private int hair;
         private int hairColor;
         private int hairHighlight;
-        private int blemishes;
         private int facialHair;
+        private int facialHairColor;
+        private float facialHairOpacity;
         private int eyebrows;
-        private int ageing;
+        private int eyebrowsColor;
+        private float eyebrowsOpacity;
         private int makeup;
-        private int blush;
-        private int complexion;
-        private int sunDamage;
+        private float makeupOpacity;
+        private int facepaint;
+        private float facepaintOpacity;
         private int lipstick;
-        private int moles;
-        private int chestHair;
-        private int bodyBlemishes;
-        private int eyeColor;
         private int lipstickColor;
-        private int lipstickColor2;
-        private int makeupColor;
-        private int makeupColor2;
+        private float lipstickOpacity;
+        private int chestHair;
+        private int chestHairColor;
+        private float chestHairOpacity;
+        private int eyeColor;
+        //end barber
+
         private float[] faceList;
 
         public int Father
@@ -120,6 +132,81 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_SkinBlend", value);
             }
         }
+        public int BodyBlemishes
+        {
+            get
+            {
+                return bodyBlemishes;
+            }
+            set
+            {
+                bodyBlemishes = value;
+                API.setEntitySyncedData(client, "ESS_BodyBlemishes", value);
+            }
+        }
+        public int Blemishes
+        {
+            get
+            {
+                return blemishes;
+            }
+            set
+            {
+                blemishes = value;
+                API.setEntitySyncedData(client, "ESS_Blemishes", value);
+            }
+        }
+        public int Ageing
+        {
+            get
+            {
+                return ageing;
+            }
+            set
+            {
+                ageing = value;
+                API.setEntitySyncedData(client, "ESS_Ageing", value);
+            }
+        }
+        public int Complexion
+        {
+            get
+            {
+                return complexion;
+            }
+            set
+            {
+                complexion = value;
+                API.setEntitySyncedData(client, "ESS_Complexion", value);
+            }
+        }
+        public int SunDamage
+        {
+            get
+            {
+                return sunDamage;
+            }
+            set
+            {
+                sunDamage = value;
+                API.setEntitySyncedData(client, "ESS_SunDamage", value);
+            }
+        }
+        public int Moles
+        {
+            get
+            {
+                return moles;
+            }
+            set
+            {
+                moles = value;
+                API.setEntitySyncedData(client, "ESS_Moles", value);
+            }
+        }
+
+
+        //barber shit
         public int Hair
         {
             get
@@ -156,18 +243,6 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_HairHighlight", value);
             }
         }
-        public int Blemishes
-        {
-            get
-            {
-                return blemishes;
-            }
-            set
-            {
-                blemishes = value;
-                API.setEntitySyncedData(client, "ESS_Blemishes", value);
-            }
-        }
         public int FacialHair
         {
             get
@@ -177,7 +252,31 @@ namespace Essence.classes.datahandles
             set
             {
                 facialHair = value;
-                API.setEntitySyncedData(client, "ESS_FacialHair", value);
+                API.setEntitySyncedData(client, "ESS_Facial_Hair", value);
+            }
+        }
+        public int FacialHairColor
+        {
+            get
+            {
+                return facialHairColor;
+            }
+            set
+            {
+                facialHairColor = value;
+                API.setEntitySyncedData(client, "ESS_Facial_Hair_Color", value);
+            }
+        }
+        public int FacialHairOpacity
+        {
+            get
+            {
+                return facialHairOpacity;
+            }
+            set
+            {
+                facialHairOpacity = value;
+                API.setEntitySyncedData(client, "ESS_Facial_Hair_Opacity", value);
             }
         }
         public int Eyebrows
@@ -192,64 +291,28 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Eyebrows", value);
             }
         }
-        public int Ageing
+        public int EyebrowsColor
         {
             get
             {
-                return ageing;
+                return eyebrowsColor;
             }
             set
             {
-                ageing = value;
-                API.setEntitySyncedData(client, "ESS_Ageing", value);
+                eyebrowsColor = value;
+                API.setEntitySyncedData(client, "ESS_Eyebrows_Color", value);
             }
         }
-        public int Makeup
+        public int EyebrowsOpacity
         {
             get
             {
-                return makeup;
+                return eyebrowsOpacity;
             }
             set
             {
-                makeup = value;
-                API.setEntitySyncedData(client, "ESS_Makeup", value);
-            }
-        }
-        public int Blush
-        {
-            get
-            {
-                return blush;
-            }
-            set
-            {
-                blush = value;
-                API.setEntitySyncedData(client, "ESS_Blush", value);
-            }
-        }
-        public int Complexion
-        {
-            get
-            {
-                return complexion;
-            }
-            set
-            {
-                complexion = value;
-                API.setEntitySyncedData(client, "ESS_Complexion", value);
-            }
-        }
-        public int SunDamage
-        {
-            get
-            {
-                return sunDamage;
-            }
-            set
-            {
-                sunDamage = value;
-                API.setEntitySyncedData(client, "ESS_SunDamage", value);
+                eyebrowsOpacity = value;
+                API.setEntitySyncedData(client, "ESS_Eyebrows_Opacity", value);
             }
         }
         public int Lipstick
@@ -264,16 +327,28 @@ namespace Essence.classes.datahandles
                 API.setEntitySyncedData(client, "ESS_Lipstick", value);
             }
         }
-        public int Moles
+        public int LipstickColor
         {
             get
             {
-                return moles;
+                return lipstickColor;
             }
             set
             {
-                moles = value;
-                API.setEntitySyncedData(client, "ESS_Moles", value);
+                lipstickColor = value;
+                API.setEntitySyncedData(client, "ESS_Lipstick_Color", value);
+            }
+        }
+        public int LipstickOpacity
+        {
+            get
+            {
+                return lipstickOpacity;
+            }
+            set
+            {
+                lipstickOpacity = value;
+                API.setEntitySyncedData(client, "ESS_Lipstick_Opacity", value);
             }
         }
         public int ChestHair
@@ -285,19 +360,31 @@ namespace Essence.classes.datahandles
             set
             {
                 chestHair = value;
-                API.setEntitySyncedData(client, "ESS_ChestHair", value);
+                API.setEntitySyncedData(client, "ESS_Chest_Hair", value);
             }
         }
-        public int BodyBlemishes
+        public int ChestHairColor
         {
             get
             {
-                return bodyBlemishes;
+                return chestHairColor;
             }
             set
             {
-                bodyBlemishes = value;
-                API.setEntitySyncedData(client, "ESS_BodyBlemishes", value);
+                chestHairColor = value;
+                API.setEntitySyncedData(client, "ESS_Chest_Hair_Color", value);
+            }
+        }
+        public int ChestHairOpacity
+        {
+            get
+            {
+                return chestHairOpacity;
+            }
+            set
+            {
+                chestHairOpacity = value;
+                API.setEntitySyncedData(client, "ESS_Chest_Hair_Opacity", value);
             }
         }
         public int EyeColor
@@ -309,57 +396,62 @@ namespace Essence.classes.datahandles
             set
             {
                 eyeColor = value;
-                API.setEntitySyncedData(client, "ESS_EyeColor", value);
+                API.setEntitySyncedData(client, "ESS_Eye_Color", value);
             }
         }
-        public int LipstickColor
+        public int Makeup
         {
             get
             {
-                return lipstickColor;
+                return makeup;
             }
             set
             {
-                lipstickColor = value;
-                API.setEntitySyncedData(client, "ESS_LipstickColor", value);
+                makeup = value;
+                API.setEntitySyncedData(client, "ESS_Makeup", value);
             }
         }
-        public int LipstickColor2
+        public int MakeupOpacity
         {
             get
             {
-                return lipstickColor2;
+                return makeupOpacity;
             }
             set
             {
-                lipstickColor2 = value;
-                API.setEntitySyncedData(client, "ESS_LipstickColor2", value);
+                makeupOpacity = value;
+                API.setEntitySyncedData(client, "ESS_Makeup_Opacity", value);
             }
         }
-        public int MakeupColor
+        public int Facepaint
         {
             get
             {
-                return lipstickColor;
+                return facepaint;
             }
             set
             {
-                lipstickColor = value;
-                API.setEntitySyncedData(client, "ESS_MakeupColor", value);
+                facepaint = value;
+                API.setEntitySyncedData(client, "ESS_Facepaint", value);
             }
         }
-        public int MakeupColor2
+        public int FacepaintOpacity
         {
             get
             {
-                return lipstickColor2;
+                return facepaintOpacity;
             }
             set
             {
-                lipstickColor2 = value;
-                API.setEntitySyncedData(client, "ESS_MakeupColor2", lipstickColor2);
+                facepaintOpacity = value;
+                API.setEntitySyncedData(client, "ESS_Facepaint_Opacity", value);
             }
         }
+
+
+        //end barber shit
+
+
         public float[] FaceList
         {
             get
@@ -373,6 +465,8 @@ namespace Essence.classes.datahandles
             }
         }
 
+
+
         public Skin() { }
 
         public Skin(Client p, Player pClass)
@@ -385,35 +479,43 @@ namespace Essence.classes.datahandles
             fatherSkin = 0;
             faceBlend = 0;
             skinBlend = 0;
+            moles = 0;
+            blemishes = 0;
+            complexion = 0;
+            sunDamage = 0;
+            bodyBlemishes = 0;
+            ageing = 0;
+
+            //barber shit
             hair = 0;
             hairColor = 0;
             hairHighlight = 0;
-            blemishes = 0;
             facialHair = 0;
+            facialHairColor = 0;
+            facialHairOpacity = 0;
             eyebrows = 0;
-            ageing = 0;
-            makeup = 0;
-            blush = 0;
-            complexion = 0;
-            sunDamage = 0;
+            eyebrowsColor = 0;
+            eyebrowsOpacity = 0;           
             lipstick = 0;
-            moles = 0;
-            chestHair = 0;
-            bodyBlemishes = 0;
-            eyeColor = 0;
             lipstickColor = 0;
-            lipstickColor2 = 0;
-            makeupColor = 0;
-            makeupColor2 = 0;
+            lipstickOpacity = 0;
+            chestHair = 0;
+            chestHairColor = 0;
+            chestHairOpacity = 0;
+            eyeColor = 0;
+            makeup = 0;
+            makeupOpacity = 0;
+            //end barber
+
             faceList = new float[21];
         }
 
         public void savePlayerFace()
         {
             string before = "UPDATE Skin SET";
-            string[] varNames = { "Mother", "Father", "MotherSkin", "FatherSkin", "FaceBlend", "SkinBlend", "Hair", "HairColor", "HairHighlight", "Blemishes", "FacialHair", "Eyebrows", "Ageing", "Makeup", "Blush", "Complexion", "SunDamage", "Lipstick", "Moles", "ChestHair", "BodyBlemishes", "EyeColor", "LipstickColor", "LipstickColor2", "MakeupColor", "MakeupColor2", "Face0", "Face1", "Face2", "Face3", "Face4", "Face5", "Face6", "Face7", "Face8", "Face9", "Face10", "Face11", "Face12", "Face13", "Face14", "Face15", "Face16", "Face17", "Face18", "Face19", "Face20" };
+            string[] varNames = { "Mother", "Father", "MotherSkin", "FatherSkin", "FaceBlend", "SkinBlend", "Hair", "HairColor", "HairHighlight", "Blemishes", "FacialHair", "FacialHairColor", "FacialHairOpacity", "Eyebrows", "EyebrowsColor", "EyebrowsOpacity", "Ageing", "Makeup", "MakeupOpacity", "Complexion", "SunDamage", "Lipstick", "Moles", "ChestHair", "ChestHairColor", "ChestHairOpacity", "BodyBlemishes", "EyeColor", "LipstickColor", "LipstickOpacity", "Makeup", "MakeupOpacity", "Facepaint", "FacepaintOpacity", "Face0", "Face1", "Face2", "Face3", "Face4", "Face5", "Face6", "Face7", "Face8", "Face9", "Face10", "Face11", "Face12", "Face13", "Face14", "Face15", "Face16", "Face17", "Face18", "Face19", "Face20" };
             string after = string.Format("WHERE Owner='{0}'", player.ID);
-            object[] args = { mother, father, motherSkin, fatherSkin, faceBlend, skinBlend, hair, hairColor, hairHighlight, blemishes, facialHair, eyebrows, ageing, makeup, blush, complexion, sunDamage, lipstick, moles, chestHair, bodyBlemishes, eyeColor, lipstickColor, lipstickColor2, makeupColor, makeupColor2, faceList[0], faceList[1], faceList[2], faceList[3], faceList[4], faceList[5], faceList[6], faceList[7], faceList[8], faceList[9], faceList[10], faceList[11], faceList[12], faceList[13], faceList[14], faceList[15], faceList[16], faceList[17], faceList[18], faceList[19], faceList[20] };
+            object[] args = { mother, father, motherSkin, fatherSkin, faceBlend, skinBlend, hair, hairColor, hairHighlight, blemishes, facialHair, facialHairColor, facialHairOpacity, eyebrows, eyebrowsColor, eyebrowsOpacity, ageing, makeup, makeupOpacity, complexion, sunDamage, lipstick, moles, chestHair, chestHairColor, chestHairOpacity, bodyBlemishes, eyeColor, lipstickColor, lipstickOpacity, makeup, makeupOpacity, facepaint, facepaintOpacity, faceList[0], faceList[1], faceList[2], faceList[3], faceList[4], faceList[5], faceList[6], faceList[7], faceList[8], faceList[9], faceList[10], faceList[11], faceList[12], faceList[13], faceList[14], faceList[15], faceList[16], faceList[17], faceList[18], faceList[19], faceList[20] };
             db.compileQuery(before, after, varNames, args);
         }
 
@@ -446,26 +548,43 @@ namespace Essence.classes.datahandles
             FatherSkin = Convert.ToInt32(face["FatherSkin"]);
             FaceBlend = Convert.ToSingle(face["FaceBlend"]);
             SkinBlend = Convert.ToSingle(face["SkinBlend"]);
+            Ageing = Convert.ToInt32(face["Ageing"]);
+            Blemishes = Convert.ToInt32(face["Blemishes"]);
+            BodyBlemishes = Convert.ToInt32(face["BodyBlemishes"]);
+            Complexion = Convert.ToInt32(face["Complexion"]);
+            SunDamage = Convert.ToInt32(face["SunDamage"]);
+            Moles = Convert.ToInt32(face["Moles"]);
+
+            //barber shit
             Hair = Convert.ToInt32(face["Hair"]);
             HairColor = Convert.ToInt32(face["HairColor"]);
             HairHighlight = Convert.ToInt32(face["HairHighlight"]);
-            Blemishes = Convert.ToInt32(face["Blemishes"]);
+
             FacialHair = Convert.ToInt32(face["FacialHair"]);
+            FacialHairColor = Convert.ToInt32(face["FacialHairColor"]);
+            FacialHairOpacity = Convert.ToInt32(face["FacialHairOpacity"]);
+
             Eyebrows = Convert.ToInt32(face["Eyebrows"]);
-            Ageing = Convert.ToInt32(face["Ageing"]);
+            EyebrowsColor = Convert.ToInt32(face["EyebrowsColor"]);
+            EyebrowsOpacity = Convert.ToInt32(face["EyebrowsOpacity"]);
+
             Makeup = Convert.ToInt32(face["Makeup"]);
-            Blush = Convert.ToInt32(face["Blush"]);
-            Complexion = Convert.ToInt32(face["Complexion"]);
-            SunDamage = Convert.ToInt32(face["SunDamage"]);
-            Lipstick = Convert.ToInt32(face["Lipstick"]);
-            Moles = Convert.ToInt32(face["Moles"]);
+            MakeupOpacity = Convert.ToInt32(face["MakeupOpacity"]);
+          
             ChestHair = Convert.ToInt32(face["ChestHair"]);
-            BodyBlemishes = Convert.ToInt32(face["BodyBlemishes"]);
+            ChestHairColor = Convert.ToInt32(face["ChestHairColor"]);
+            ChestHairOpacity = Convert.ToInt32(face["ChestHairOpacity"]);
+
             EyeColor = Convert.ToInt32(face["EyeColor"]);
+
+            Lipstick = Convert.ToInt32(face["Lipstick"]);
             LipstickColor = Convert.ToInt32(face["LipstickColor"]);
-            LipstickColor2 = Convert.ToInt32(face["LipstickColor2"]);
-            MakeupColor = Convert.ToInt32(face["MakeupColor"]);
-            MakeupColor2 = Convert.ToInt32(face["MakeupColor2"]);
+            LipstickOpacity = Convert.ToInt32(face["LipstickOpacity"]);
+
+            Facepaint = Convert.ToInt32(face["Facepaint"]);
+            FacepaintOpacity = Convert.ToInt32(face["FacepaintOpacity"]);
+            //end barber
+
             faceList[0] = Convert.ToSingle(face["Face0"]);
             faceList[1] = Convert.ToSingle(face["Face1"]);
             faceList[2] = Convert.ToSingle(face["Face2"]);
@@ -507,19 +626,20 @@ namespace Essence.classes.datahandles
             // Eye Color
             API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_EYE_COLOR, client.handle, EyeColor);
             // Eyebrows
-            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 2, Eyebrows, 0.9);
-            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 2, 1, HairColor, HairHighlight);
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 2, Eyebrows, EyebrowsOpacity);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 2, 1, EyebrowsColor, EyebrowsOpacity);
             // Lipstick
-            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 8, Lipstick, 0.9);
-            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 8, 2, LipstickColor, LipstickColor2);
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 8, Lipstick, LipstickOpacity);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 8, 2, LipstickColor, LipstickOpacity);
             // Makeup
-            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 4, Makeup, 0.9);
-            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 4, 0, MakeupColor, MakeupColor2);
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 4, Makeup, MakeupOpacity);
             // Blemishes
             API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 0, Blemishes, 0.9);
             // FacialHair
-            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 1, FacialHair, 0.9);
-            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 1, 1, HairColor, HairHighlight);
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 1, FacialHair, FacialHairOpacity);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 1, 1, FacialHairColor, FacialHairOpacity);
+            // Face Paint
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 1, Facepaint, FacepaintOpacity);
             // Ageing
             API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 3, Ageing, 0.9);
             // Complexion
@@ -529,7 +649,8 @@ namespace Essence.classes.datahandles
             // SunDamage
             API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 7, SunDamage, 0.9);
             // ChestHair
-            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 10, ChestHair, 0.9);
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 10, ChestHair, ChestHairOpacity);
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 10, 1, ChestHairColor, ChestHairOpacity);
             // BodyBlemishes
             API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 7, BodyBlemishes, 0.9);
             // Hair Color
