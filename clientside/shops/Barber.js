@@ -27,7 +27,7 @@ var curr_eyebrowscolor = 0;
 var curr_eyebrowsopacity = 0;
 var curr_contacts = 0;
 var curr_facepaint = 0;
-var curr_facepaintopacity = 1;
+var curr_facepaintopacity = 0;
 var curr_eyemakeup = 0;
 var curr_eyemakeupopacity = 0;
 var curr_lipstick = 0;
@@ -37,7 +37,7 @@ var curr_lipstickopacity = 0;
 //not changed here. just to removed so you can see
 var curr_shirt = 0;
 var curr_shirt_tex = 0;
-var curr_hat = 0;
+var curr_hat = -1;
 var curr_hat_tex = 0;
 
 
@@ -296,7 +296,7 @@ API.onResourceStart.connect(function(s, e)
 	player = API.getLocalPlayer();
 	
 		//mens
-		//get_curr_Vars();
+		get_curr_Vars();
 		createBarberMenu();
 		create_Hairstyles();
 		create_Beards();
@@ -382,8 +382,6 @@ function createBarberMenu()
 	barberMenu = API.createMenu(" ", "Main Menu", 0, 0, 3);
 	API.setMenuTitle(barberMenu, "");
 	API.setMenuBannerSprite(barberMenu, "shopui_title_barber", "shopui_title_barber");
-	API.callNative("SET_PED_HEAD_BLEND_DATA", API.getLocalPlayer(), 1, 0, 0, 1, 21, 0, API.f(75), API.f(25), 0, false);
-
 	
 	for (var i = 0; i < barberMenuItems.length; i++) 
 	{
@@ -404,11 +402,12 @@ function createBarberMenu()
 			openHairstylesMenu();
 			var TheDude = API.getLocalPlayer();
 			HairId = HairStylesItems[0][2];
-			HairColorID = curr_hairColor;
+			HairColorID = curr_haircolor;
+			HairColor2ID = curr_hairhighlight;
 			API.setPlayerClothes(TheDude, 2, HairId, 0);
 			API.clearPlayerAccessory(TheDude, 0);
 			SetPlayerScalp(HairStylesItems[0][3],HairStylesItems[0][4]);
-			API.callNative("_SET_PED_HAIR_COLOR", API.getLocalPlayer(), curr_haircolor, curr_hairhighlight);
+			API.callNative("_SET_PED_HAIR_COLOR", API.getLocalPlayer(), HairColorID, HairColor2ID);
 
 			break;	
 
@@ -418,7 +417,7 @@ function createBarberMenu()
 			var TheDude = API.getLocalPlayer();
 			BeardId = BeardsItems[0][2];
 			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 1, BeardId, API.f(1));
-			API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_beardcolor, API.f(curr_beardopacity));
+			API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_beardcolor, curr_beardopacity);
 			break;		
 
 			case 2:
@@ -427,7 +426,7 @@ function createBarberMenu()
 			var TheDude = API.getLocalPlayer();
 			EyebrowId = EyebrowsItems[0][2];
 			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 2, EyebrowId, API.f(1));
-			API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_eyebrowscolor, API.f(curr_eyebrowsopacity));
+			API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_eyebrowscolor, curr_eyebrowsopacity);
 			break;		
 
 			case 3:
@@ -436,7 +435,10 @@ function createBarberMenu()
 			var TheDude = API.getLocalPlayer();
 			ChestId = ChestItems[0][2];
 			API.setPlayerClothes(TheDude, 11, 15, 0);
-			//PUT ME BACK API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, curr_hairColor, curr_hairHighlight);
+			var ChestColorID = curr_chestcolor;
+			var ChestOpacityID = curr_chestopacity;
+			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 10, ChestId, API.f(1));
+			API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 10, 1, curr_chestcolor, curr_chestopacity);
 			break;		
 			
 			case 4:
@@ -452,7 +454,7 @@ function createBarberMenu()
 			openFacePaintMenu();
 			var TheDude = API.getLocalPlayer();
 			FacePaintId = FacePaintItems[0][2];
-			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 4, FacePaintId, API.f(curr_facepaintopacity));
+			API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 4, FacePaintId, curr_facepaintopacity);
 			break;				
 
 		}
@@ -478,21 +480,17 @@ function create_Hairstyles()
 	menuPool.Add(HairstylesMenu);
 	HairstylesMenu.Visible = false;
 	
-	//temp
-	if (curr_hat == 0)
-	{
-		curr_hat = -1;
-	}
-	
+
 	HairstylesMenu.OnIndexChange.connect(function(sender, index)
 	{
-		//get_curr_Vars();
+		get_curr_Vars();
 		var TheDude = API.getLocalPlayer();
 		HairId = HairStylesItems[index][2];
-		HairColorID = curr_hairColor;
+		HairColorID = curr_haircolor;
+		HairColor2ID = curr_hairhighlight;
 		API.setPlayerClothes(TheDude, 2, HairId, 0);	
 		SetPlayerScalp(HairStylesItems[index][3],HairStylesItems[index][4]);
-		API.callNative("_SET_PED_HAIR_COLOR", TheDude, curr_hairColor, curr_hairHighlight);
+		API.callNative("_SET_PED_HAIR_COLOR", TheDude, HairColorID, HairColor2ID);
 	});
 
 	HairstylesMenu.OnItemSelect.connect(function(sender, item, index)
@@ -544,10 +542,10 @@ function create_Beards()
 		//get_curr_Vars();
 		var TheDude = API.getLocalPlayer();
 		BeardId = BeardsItems[index][2];
-		BeardColorID = curr_hairColor;
+		BeardColorID = curr_beardcolor;
+		BeardOpacity = curr_beardopacity;
 		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 1, BeardId, API.f(1));
-        API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, 1, 1);
-		//API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, BeardColorID, BeardColorID);
+		API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 1, 1, BeardColorID, BeardOpacity);
 	});
 
 	BeardsMenu.OnItemSelect.connect(function(sender, item, index)
@@ -564,7 +562,7 @@ function create_Beards()
 				//send buy command here
 				//get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BEARD_BUY", vCost, BeardsItems[index][2], curr_beardcolor, API.f(curr_beardopacity));
+				API.triggerServerEvent("BEARD_BUY", vCost, BeardsItems[index][2], curr_beardcolor, curr_beardopacity);
 				CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
@@ -597,10 +595,10 @@ function create_Eyebrows()
 		//get_curr_Vars();
 		var TheDude = API.getLocalPlayer();
 		BrowId = EyebrowsItems[index][2];
-		BrowColorID = curr_hairColor;
+		BrowColorID = curr_eyebrowscolor;
+		BrowOpacityID = curr_eyebrowsopacity;
 		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 2, BrowId, API.f(1));
-        API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 2, 1, 1, 1);
-		//API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 2, 1, BrowColorID, BrowColorID);
+		API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 2, 1, BrowColorID, BrowOpacityID);
 	});
 
 	EyebrowsMenu.OnItemSelect.connect(function(sender, item, index)
@@ -617,7 +615,7 @@ function create_Eyebrows()
 				//send buy command here
 				//get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BROW_BUY", vCost, EyebrowsItems[index][2], curr_eyebrowscolor, API.f(curr_eyebrowsopacity));
+				API.triggerServerEvent("BROW_BUY", vCost, EyebrowsItems[index][2], curr_eyebrowscolor, curr_eyebrowsopacity);
 				CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
@@ -651,8 +649,9 @@ function create_Chest()
 		var TheDude = API.getLocalPlayer();
 		var ChestId = ChestItems[index][2];
 		var ChestColorID = curr_chestcolor;
-		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 10, ChestId, API.f(curr_chestopacity));
-		API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 10, 1, curr_chestcolor, API.f(curr_chestopacity));
+		var ChestOpacityID = curr_chestopacity;
+		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 10, ChestId, API.f(1));
+		API.callNative("_SET_PED_HEAD_OVERLAY_COLOR", TheDude, 10, 1, curr_chestcolor, curr_chestopacity);
 	});
 
 	ChestMenu.OnItemSelect.connect(function(sender, item, index)
@@ -669,7 +668,7 @@ function create_Chest()
 				//send buy command here
 				//get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BROW_BUY", vCost, ChestItems[index][2], curr_hairColor, curr_hairHighlight);
+				API.triggerServerEvent("BROW_BUY", vCost, ChestItems[index][2], curr_hairColor, curr_hairhighlight);
 				CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
@@ -753,10 +752,12 @@ function create_FacePaint()
 	
 	FacePaintMenu.OnIndexChange.connect(function(sender, index)
 	{
-		//get_curr_Vars();
+		get_curr_Vars();
 		var TheDude = API.getLocalPlayer();
 		var FacePaintId = FacePaintItems[index][2];
-		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 4, FacePaintId, API.f(curr_facePaintopacity));
+		var FacePaintOpacityID = API.f(1);
+		API.callNative("SET_PED_HEAD_OVERLAY", TheDude, 4, FacePaintId, FacePaintOpacityID);
+		API.sendChatMessage("Facepaint: " + FacePaintId + ", Opacity:" + FacePaintOpacityID);		
 	});
 
 	FacePaintMenu.OnItemSelect.connect(function(sender, item, index)
@@ -767,13 +768,13 @@ function create_FacePaint()
 		
 		if (FacePaintMenu.MenuItems[index].RightLabel == ""){
 			API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
-			API.sendChatMessage("You already have these contacts in!");
+			API.sendChatMessage("You already have this Face Paint!");
 		} else {
 			if ( vCost <= Pmoney){
 				//send buy command here
 				//get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BROW_BUY", vCost, FacePaintItems[index][2]);
+				API.triggerServerEvent("BROW_BUY", vCost, FacePaintItems[index][2], curr_facepaintopacity);
 				CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
@@ -1054,9 +1055,9 @@ function CamOn()
 	BarberCamera = API.createCamera(CameraPos, new Vector3());
 	API.pointCameraAtPosition(BarberCamera, API.getEntityPosition(API.getLocalPlayer()).Add(new Vector3(0, 0, .75)));
 	API.setActiveCamera(BarberCamera);
-	//API.setHudVisible(false);	
-	//API.setChatVisible(false);
-	//resource.PointHelper.togglePointHelpers();
+	API.setHudVisible(false);	
+	API.setChatVisible(false);
+	resource.PointHelper.togglePointHelpers();
 }
 
 function CloseMenu() 
@@ -1064,9 +1065,9 @@ function CloseMenu()
 	var TheDude = API.getLocalPlayer();
 	API.setPlayerClothes(TheDude, 11, curr_shirt, curr_shirt_tex);
 	API.setPlayerAccessory(TheDude, 0, curr_hat, curr_hat_tex);
-	//API.setHudVisible(true);
-	//API.setChatVisible(true);
-	//resource.PointHelper.togglePointHelpers();
+	API.setHudVisible(true);
+	API.setChatVisible(true);
+	resource.PointHelper.togglePointHelpers();
 	barberMenu.Visible = false;
 	HairstylesMenu.Visible = false;
 	BeardsMenu.Visible = false;

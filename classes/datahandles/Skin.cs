@@ -562,27 +562,27 @@ namespace Essence.classes.datahandles
 
             FacialHair = Convert.ToInt32(face["FacialHair"]);
             FacialHairColor = Convert.ToInt32(face["FacialHairColor"]);
-            FacialHairOpacity = Convert.ToInt32(face["FacialHairOpacity"]);
+            FacialHairOpacity = Convert.ToSingle(face["FacialHairOpacity"]);
 
             Eyebrows = Convert.ToInt32(face["Eyebrows"]);
             EyebrowsColor = Convert.ToInt32(face["EyebrowsColor"]);
-            EyebrowsOpacity = Convert.ToInt32(face["EyebrowsOpacity"]);
+            EyebrowsOpacity = Convert.ToSingle(face["EyebrowsOpacity"]);
 
             Makeup = Convert.ToInt32(face["Makeup"]);
-            MakeupOpacity = Convert.ToInt32(face["MakeupOpacity"]);
+            MakeupOpacity = Convert.ToSingle(face["MakeupOpacity"]);
           
             ChestHair = Convert.ToInt32(face["ChestHair"]);
             ChestHairColor = Convert.ToInt32(face["ChestHairColor"]);
-            ChestHairOpacity = Convert.ToInt32(face["ChestHairOpacity"]);
+            ChestHairOpacity = Convert.ToSingle(face["ChestHairOpacity"]);
 
             EyeColor = Convert.ToInt32(face["EyeColor"]);
 
             Lipstick = Convert.ToInt32(face["Lipstick"]);
             LipstickColor = Convert.ToInt32(face["LipstickColor"]);
-            LipstickOpacity = Convert.ToInt32(face["LipstickOpacity"]);
+            LipstickOpacity = Convert.ToSingle(face["LipstickOpacity"]);
 
             Facepaint = Convert.ToInt32(face["Facepaint"]);
-            FacepaintOpacity = Convert.ToInt32(face["FacepaintOpacity"]);
+            FacepaintOpacity = Convert.ToSingle(face["FacepaintOpacity"]);
             //end barber
 
             faceList[0] = Convert.ToSingle(face["Face0"]);
@@ -639,7 +639,7 @@ namespace Essence.classes.datahandles
             API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 1, FacialHair, FacialHairOpacity);
             API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HEAD_OVERLAY_COLOR, client.handle, 1, 1, FacialHairColor, FacialHairOpacity);
             // Face Paint
-            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 1, Facepaint, FacepaintOpacity);
+            API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 4, Facepaint, FacepaintOpacity);
             // Ageing
             API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 3, Ageing, 0.9);
             // Complexion

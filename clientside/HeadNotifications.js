@@ -1,14 +1,13 @@
-"use strict";
 var lastNotification = null;
 var chatMessages = new Array();
-class HeadChat {
-    constructor(target, text) {
+var HeadChat = (function () {
+    function HeadChat(target, text) {
         this.text = text;
         this.alpha = 255;
         this.modY = 0;
         this.target = target;
     }
-    run() {
+    HeadChat.prototype.run = function () {
         if (this.alpha <= 0) {
             this.removeSelf();
             return;
@@ -22,23 +21,24 @@ class HeadChat {
         API.drawText(this.text, pointer.X, pointer.Y - this.modY, 0.6, 255, 255, 255, this.alpha, 4, 1, false, true, 600);
         this.alpha -= 1;
         this.modY += 1;
-    }
-    removeSelf() {
+    };
+    HeadChat.prototype.removeSelf = function () {
         for (var i = chatMessages.length; i > 0; i--) {
             if (chatMessages[i] === this) {
                 chatMessages.splice(i, 1);
                 break;
             }
         }
-    }
-}
-class HeadNotification {
-    constructor(whatToSay) {
+    };
+    return HeadChat;
+}());
+var HeadNotification = (function () {
+    function HeadNotification(whatToSay) {
         this.text = whatToSay;
         this.alpha = 255;
         this.modY = 0;
     }
-    run() {
+    HeadNotification.prototype.run = function () {
         if (this.alpha <= 0) {
             lastNotification = null;
             return;
@@ -48,9 +48,10 @@ class HeadNotification {
         API.drawText(this.text, pointer.X, pointer.Y - this.modY, 0.6, 255, 255, 255, this.alpha, 4, 1, false, true, 600);
         this.alpha -= 2;
         this.modY += 1;
-    }
-}
-API.onUpdate.connect(() => {
+    };
+    return HeadNotification;
+}());
+API.onUpdate.connect(function () {
     if (lastNotification !== null) {
         lastNotification.run();
     }
@@ -66,3 +67,4 @@ function createHeadNoteForTarget(target, text) {
     var newChat = new HeadChat(target, text);
     chatMessages.push(newChat);
 }
+//# sourceMappingURL=HeadNotifications.js.map
