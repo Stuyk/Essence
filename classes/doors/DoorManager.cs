@@ -74,7 +74,7 @@ namespace Essence.classes.doors
 
             for (int i = 0; i < doors.Count; i++)
             {
-                if (doors[i].ID.Replace("Door-", string.Empty) == doorID)
+                if (doors[i].Id.Replace("Door-", string.Empty) == doorID)
                 {
                     targetDoor = doors[i];
                     break;

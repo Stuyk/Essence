@@ -16,77 +16,39 @@ namespace Essence.classes.doors
 {
     public class DoorInfo
     {
-        private int coreID;
-        private string id;
-        private Vector3 doorLocation;
+        public int CoreId { get; set; }
+        public string Id { get; set; }
         public bool Locked { get; set; }
-        private string owner;
+        public string Owner { get; set; }
         public string IPL { get; set; }
         public int Price { get; set; }
         public bool isForSale { get; set; }
-        private Vector3 interiorLocation;
+        public Vector3 DoorLocation { get; set; }
+        public Vector3 InteriorLocation { get; set; }
 
         public DoorInfo(DataRow db)
         {
-            doorLocation = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
+            DoorLocation = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             IPL = Convert.ToString(db["IPL"]);
-            coreID = Convert.ToInt32(db["ID"]);
-            id = "Door-" + Convert.ToString(db["ID"]);
-            owner = "Some Dude";
-
-            interiorLocation = Interiors.getInteriorByType(IPL);
-
+            CoreId = Convert.ToInt32(db["ID"]);
+            Id = $"Door-{db["ID"]}";
+            Owner = $"{db["Owner"]}";
+            InteriorLocation = Interiors.getInteriorByType(IPL);
             Locked = Convert.ToBoolean(db["Locked"]);
+            setupPointInfo();
+        }
 
+        private void setupPointInfo()
+        {
             PointInfo info = PointHelper.addNewPoint();
-            info.Position = doorLocation;
+            info.Position = DoorLocation;
             info.BlipEnabled = false;
             info.BlipColor = 1;
             info.BlipType = 1;
-            info.Text = string.Format("House [{0}]", owner);
-            info.ID = id;
+            info.Text = $"House - {Owner}";
+            info.ID = Id;
             info.InteractionEnabled = true;
             info.DrawLabel = true;
-        }
-
-        public string ID
-        {
-            set
-            {
-                id = value;
-            }
-            get
-            {
-                return id;
-            }
-        }
-
-        public Vector3 DoorLocation
-        {
-            set
-            {
-                doorLocation = value;
-            }
-            get
-            {
-                return doorLocation;
-            }
-        }
-
-        public Vector3 InteriorLocation
-        {
-            get
-            {
-                return interiorLocation;
-            }
-        }
-
-        public bool isLocked
-        {
-            get
-            {
-                return Locked;
-            }
         }
     }
 }

@@ -214,6 +214,7 @@ namespace Essence.classes
         private void API_onResourceStart()
         {
             API.consoleOutput("[SQLITE] Starting...");
+            Directory.CreateDirectory("resources/Essence/database");
 
             bool exists = File.Exists(path);
             if (!exists)
@@ -243,6 +244,7 @@ namespace Essence.classes
                 }
             }
 
+            
             executeQuery(playerTable);
             executeQuery(vehicleTable);
             executeQuery(clothingTable);

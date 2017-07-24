@@ -56,7 +56,7 @@ namespace Essence.classes.events
             {
                 foreach (DoorInfo door in DoorManager.Doors)
                 {
-                    events.Add(new EventInfo(door.ID, "DoorCalls", "EnterInterior"));
+                    events.Add(new EventInfo(door.Id, "DoorCalls", "EnterInterior"));
                 }
             });
 
