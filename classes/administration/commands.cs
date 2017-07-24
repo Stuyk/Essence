@@ -19,7 +19,7 @@ namespace Essence.classes.administration
     {
         public Commands()
         {
-            // Nothing
+            // Some Bullshit
         }
 
         [Command("ahelp")]
