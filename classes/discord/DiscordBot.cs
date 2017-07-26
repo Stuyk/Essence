@@ -24,6 +24,7 @@ namespace Essence.classes.discord
         private static IServiceProvider services = new ServiceCollection().BuildServiceProvider();
 
         private static ulong channelToken = 331237092623515660; // In-Game Channel
+        private static ulong testerChannelToken = 338812869481332739; // Tester Channel
 
         public async static void startBot()
         {
@@ -92,6 +93,12 @@ namespace Essence.classes.discord
         public static void sendMessageToServer(string message)
         {
             SocketTextChannel channel = client.GetChannel(channelToken) as SocketTextChannel;
+            channel.SendMessageAsync(message);
+        }
+
+        public static void sendMessageToTesters(string message)
+        {
+            SocketTextChannel channel = client.GetChannel(testerChannelToken) as SocketTextChannel;
             channel.SendMessageAsync(message);
         }
     }

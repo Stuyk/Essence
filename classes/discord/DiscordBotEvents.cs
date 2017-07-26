@@ -14,6 +14,8 @@ namespace Essence.classes.discord
 {
     public class DiscordBotEvents : Script
     {
+        private static string serverIP = new ImpatientWebClient().DownloadString("http://icanhazip.com");
+
         public DiscordBotEvents()
         {
             API.onPlayerConnected += API_onPlayerConnected;
@@ -29,14 +31,15 @@ namespace Essence.classes.discord
             DiscordBot.startBot();
             API.delay(2000, true, () =>
             {
-                DiscordBot.sendMessageToServer(string.Format("Started the server at: {0}", DateTime.Now));
-                DiscordBot.sendMessageToServer(string.Format("Current Address: {0}", new ImpatientWebClient().DownloadString("http://icanhazip.com")));
+                DiscordBot.sendMessageToServer($"[{Environment.MachineName}] Started Server: {serverIP}");
+                DiscordBot.sendMessageToTesters($"[{Environment.MachineName}] Started Server: {serverIP}");
             });
         }
 
         private void API_onResourceStop()
         {
-            DiscordBot.sendMessageToServer(string.Format("Stopped the server at: {0}", DateTime.Now));
+            DiscordBot.sendMessageToServer($"[{Environment.MachineName}] Stopped Server: {serverIP}");
+            DiscordBot.sendMessageToTesters($"[{Environment.MachineName}] Stopped Server: {serverIP}");
         }
 
         private void API_onPlayerDeath(Client player, NetHandle entityKiller, int weapon)
