@@ -1,25 +1,17 @@
 "use strict";
-// Screen Stuff
 var screenX = API.getScreenResolution().Width;
 var screenY = API.getScreenResolution().Height;
-// Mission PauseState
 var missionPauseState = true;
 var deathPause = false;
-// Stylesheet Properties
 var backgroundRGBA = [0, 0, 0, 100];
 var textRGBA = [255, 255, 255, 255];
 var overlayRGBA = [1, 87, 155, 255];
 var markerRGBA = [175, 228, 238, 150];
 var blipColor = 77;
-// Time Check
 var timeSinceLastCheck = new Date().getTime();
-// Used for over-head notifications.
 var headNotification = null;
-// Array of mission objectives / locations.
 var objectives = new Array();
-// Array of mission blips / markers.
 var objectiveMarkers = [];
-// Array of current allied players on team.
 var teammates = new Array();
 var team = "";
 API.onResourceStop.connect(() => {
@@ -30,28 +22,23 @@ API.onPlayerRespawn.connect(() => {
 });
 API.onServerEventTrigger.connect(function (event, args) {
     switch (event) {
-        // Team Removal / Updates
         case "Mission_Add_Player":
             addPlayer(args[0]);
             return;
         case "Mission_Cleanup_Players":
             cleanupTeammates();
             return;
-        // Mission Instance - Objectives
         case "Mission_New_Objective":
             var objective = new Objective(args[0], args[1], args[2]);
             objectives.push(objective);
             return;
-        // Mission Instance - Setup Objective Markers
         case "Mission_Setup_Objectives":
             setupMarkers();
             setupBlips();
             return;
-        // Mission Instance - Remove Objective
         case "Mission_Remove_Objective":
             removeObjective(args[0]);
             return;
-        // Mission Instance
         case "Mission_New_Instance":
             fullCleanup();
             return;
@@ -100,30 +87,19 @@ API.onServerEventTrigger.connect(function (event, args) {
             return;
     }
 });
-/**
- * Cleans up anything / everything but ALLIES.
- */
 function partialCleanup() {
     cleanupMarkers();
     cleanupBlips();
     objectives = [];
 }
-/**
- * Cleans up anything / everything.
- */
 function fullCleanup() {
     cleanupMarkers();
     cleanupBlips();
     cleanupTeammates();
     objectives = [];
 }
-/**
- *  Called when we need to setup all the markers for our objectives.
- */
 function setupMarkers() {
-    // Deletes any existing markers and then creates a clean array.
     cleanupMarkers();
-    // Get all of our objective locations, loop through and determine the type of marker we need.
     for (var i = 0; i < objectives.length; i++) {
         let newMarker = null;
         switch (objectives[i].Type) {
@@ -161,11 +137,7 @@ function setupMarkers() {
         }
     }
 }
-/**
- *  Called when we need to setup all the blips for our objectives.
- */
 function setupBlips() {
-    // Get all of our objective locations, loop through and determine the type of blip we need.
     for (var i = 0; i < objectives.length; i++) {
         objectives[i].ObjectiveBlip = API.createBlip(objectives[i].Location);
         switch (objectives[i].Type) {
@@ -216,9 +188,6 @@ function setupBlips() {
         }
     }
 }
-/**
- * Cleanup Markers.
- */
 function cleanupMarkers() {
     if (objectiveMarkers.length <= 0) {
         return;
@@ -228,9 +197,6 @@ function cleanupMarkers() {
     }
     objectiveMarkers = [];
 }
-/**
-*
-*/
 function cleanupBlips() {
     for (var i = 0; i < objectives.length; i++) {
         if (objectives[i].ObjectiveBlip != null) {
@@ -238,21 +204,14 @@ function cleanupBlips() {
         }
     }
 }
-/**
-* Cleanup Teammates.
-*/
 function cleanupTeammates() {
     if (teammates.length <= 0) {
         return;
     }
-    //teammates.forEach(({ Blip }) => API.deleteEntity(Blip));
     teammates = new Array();
     team = "";
     deathPause = false;
 }
-/**
- * Remove an objective based on location.
- */
 function removeObjective(id) {
     var index = -1;
     for (var i = 0; i < objectives.length; i++) {
@@ -273,13 +232,7 @@ function removeObjective(id) {
 class Teammate {
     constructor(id) {
         this.teammateID = id;
-        //this.teammateBlip = API.createBlip(API.getEntityPosition(id));
         this.teammateName = API.getPlayerName(id);
-        //this.teammateOldHealth = API.getPlayerHealth(this.teammateID);
-        //API.setBlipSprite(this.teammateBlip, 1);
-        //API.setBlipColor(this.teammateBlip, blipColor);
-        //API.setBlipShortRange(this.teammateBlip, true);
-        //this.adjustColor();
     }
     removeBlip() {
         if (API.doesEntityExist(this.teammateBlip)) {
@@ -291,61 +244,28 @@ class Teammate {
         if (!API.doesEntityExist(this.teammateID)) {
             return;
         }
-        /*
-        if (!API.doesEntityExist(this.teammateBlip)) {
-            return;
-        }
-        */
         this.updatePosition();
-        /*
-        if (this.teammateOldHealth === API.getPlayerHealth(this.teammateID)) {
-            return;
-        }
-
-        this.teammateOldHealth = API.getPlayerHealth(this.teammateID)
-
-        //this.adjustColor();
-
-        updateTeamVariable();
-        */
     }
     updatePosition() {
-        /*
-        if (API.hasEntitySyncedData(this.teammateID, "Current_Position")) {
-            API.setBlipPosition(this.Blip, API.getEntitySyncedData(this.teammateID, "Current_Position"));
-        }
-        */
     }
     adjustColor() {
         let playerHealth = API.getPlayerHealth(this.teammateID);
-        // Set Green
         if (playerHealth >= 80) {
-            //API.setBlipColor(this.teammateBlip, 69);
             this.teammateName = `~g~${API.getPlayerName(this.teammateID)}`;
         }
-        // Set Orange / Green
         if (playerHealth <= 79 && playerHealth >= 56) {
-            //API.setBlipColor(this.teammateBlip, 24);
             this.teammateName = `~g~${API.getPlayerName(this.teammateID)}`;
         }
-        // Set Orange
         if (playerHealth <= 55 && playerHealth >= 30) {
-            //API.setBlipColor(this.teammateBlip, 81);
             this.teammateName = `~o~${API.getPlayerName(this.teammateID)}`;
         }
-        // Set Red
         if (playerHealth <= 29 && playerHealth >= 16) {
-            //API.setBlipColor(this.teammateBlip, 49);
             this.teammateName = `~r~${API.getPlayerName(this.teammateID)}`;
         }
-        // Set Deep Red
         if (playerHealth <= 15 && playerHealth >= 1) {
-            //API.setBlipColor(this.teammateBlip, 76);
             this.teammateName = `~r~${API.getPlayerName(this.teammateID)}`;
         }
-        // Dead
         if (playerHealth <= 0) {
-            //API.setBlipColor(this.teammateBlip, 85);
             this.teammateName = `~h~~u~${API.getPlayerName(this.teammateID)}`;
         }
     }
@@ -422,7 +342,6 @@ class PlayerHeadNotification {
         this.headAlpha -= 3;
     }
 }
-/** OnUpdate Event */
 API.onUpdate.connect(function () {
     if (deathPause) {
         return;
@@ -445,7 +364,6 @@ API.onUpdate.connect(function () {
     }
     displayObjectiveProgress();
 });
-// Check all objective types.
 function missionObjectives() {
     var pos = API.getEntityPosition(API.getLocalPlayer());
     var obj = null;
@@ -488,11 +406,9 @@ function missionObjectives() {
             break;
     }
 }
-// Display player list.
 function displayCurrentPlayers() {
     API.drawText(`~b~Current Team ~w~~n~${team}`, screenX - 100, 20, 0.4, textRGBA[0], textRGBA[1], textRGBA[2], textRGBA[3], 4, 1, false, true, 150);
 }
-// Display current objectives progress.
 function displayObjectiveProgress() {
     for (var i = 0; i < objectives.length; i++) {
         objectives[i].run();
@@ -506,7 +422,6 @@ function updateAllyHealth() {
         value.updateBlip();
     });
 }
-/** Used to add a player to the array stack. **/
 function addPlayer(target) {
     var teammate = new Teammate(target);
     var exists = false;
@@ -530,8 +445,6 @@ function updateTeamVariable() {
         team = team.concat(value.Name + "~n~");
     });
 }
-//// OBJECTIVE TYPES
-/** This is a point to point location objective type. */
 function objectiveLocation() {
     if (confirmPlayerIsNear(5)) {
         API.triggerServerEvent("checkObjective");
@@ -593,7 +506,6 @@ function objectiveRetrieveVehicle() {
         API.triggerServerEvent("checkObjective");
     }
 }
-// Utility Functions used by objectives.
 function confirmPlayerIsNear(distanceToCheck) {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     for (var i = 0; i < objectives.length; i++) {

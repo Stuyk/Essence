@@ -89,7 +89,7 @@ namespace Essence.classes.doors
             // If our target door is locked, don't let the player in.
             if (targetDoor.Locked)
             {
-                API.shared.sendChatMessageToPlayer(player, "~r~This door is locked.");
+                API.shared.triggerClientEvent(player, "HeadNotification", "~r~This door is locked.");
                 return;
             }
             // Load the IPL if it hasn't been loaded today, then teleport them into the interior.
@@ -99,22 +99,12 @@ namespace Essence.classes.doors
             player.setData("LastPosition", player.position);
             player.position = targetDoor.InteriorLocation;
             player.dimension = targetDoor.CoreId;
-
-
-            API.shared.delay(10000, true, () =>
-            {
-                info.LastPosition = player.getData("LastPosition");
-                player.position = player.getData("LastPosition");
-            });
         }
 
         public static void ExitDoor(Client player, params object[] arguments)
         {
             if (!player.hasData("LastPosition"))
-            {
-                // Something went wrong, figure out what to do. Probably teleport the player somewhere.
                 return;
-            }
 
             AnticheatInfo info = player.getData("Anticheat");
             Vector3 lastPos = player.getData("LastPosition");
@@ -123,6 +113,41 @@ namespace Essence.classes.doors
             player.dimension = 0;
 
             player.resetData("LastPosition");
+        }
+
+        public static void ToggleDoor(Client player, params object[] arguments)
+        {
+            // Setup to find our target door.
+            DoorInfo targetDoor = null;
+            for (int i = 0; i < doors.Count; i++)
+            {
+                if (doors[i].DoorLocation.DistanceTo2D(player.position) > 5)
+                    continue;
+
+                targetDoor = doors[i];
+                break;
+            }
+            // If our target door does not exist. Stop.
+            if (targetDoor == null)
+                return;
+
+            if (!player.hasData("Instance"))
+                return;
+
+            Player instance = player.getData("Instance");
+
+            if (instance.Id != targetDoor.OwnerId)
+                return;
+
+            if (targetDoor.Locked)
+            {
+                targetDoor.Locked = false;
+                API.shared.triggerClientEvent(player, "HeadNotification", "~g~Door unlocked.");
+            } else
+            {
+                targetDoor.Locked = true;
+                API.shared.triggerClientEvent(player, "HeadNotification", "~r~Door locked.");
+            }
         }
 
         private static void loadIPL(string ipl)

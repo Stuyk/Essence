@@ -89,4 +89,3 @@ function Login(username, password) {
 function Register(username, password) {
     API.triggerServerEvent("clientRegister", username, password);
 }
-//# sourceMappingURL=BrowserManager.js.map

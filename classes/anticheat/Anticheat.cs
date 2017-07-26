@@ -24,6 +24,7 @@ namespace Essence.classes.anticheat
         public bool LeftCarRecently { get; set; }
         public bool HealthChangedRecently { get; set; }
         public bool ArmorChangedRecently { get; set; }
+        public bool isOnline { get; set; }
 
         public AnticheatInfo(Client client)
         {
@@ -34,6 +35,7 @@ namespace Essence.classes.anticheat
             this.CurrentStrikes = 0;
             this.HealthChangedRecently = false;
             this.ArmorChangedRecently = false;
+            this.isOnline = true;
             client.setData("Anticheat", this);
             API.shared.consoleOutput($"Anticheat Model: {this.Model}");
         }
@@ -53,7 +55,14 @@ namespace Essence.classes.anticheat
                 if (info.PlayerClient != player)
                     continue;
 
+                Player instance = player.getData("Instance");
+                info.PlayerClient = player;
+                info.LastPosition = instance.LastPosition;
                 info.CurrentStrikes = 0;
+                info.Model = player.model;
+                info.HealthChangedRecently = true;
+                info.ArmorChangedRecently = true;
+                info.isOnline = true;
                 return info;
             }
 
@@ -68,10 +77,22 @@ namespace Essence.classes.anticheat
             timer.Elapsed += Timer_Elapsed;
         }
 
+        public static void setPlayerOffline(Client player)
+        {
+            if (!player.hasData("Anticheat"))
+                return;
+
+            AnticheatInfo antiInfo = player.getData("Anticheat");
+            antiInfo.isOnline = false;
+        }
+
         private static void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             for (int i = 0; i < AntiCheatPlayers.Count; i++)
             {
+                if (!AntiCheatPlayers[i].isOnline)
+                    continue;
+
                 isPlayerTeleportHacking(AntiCheatPlayers[i]);
                 isModelHacking(AntiCheatPlayers[i]);
                 strikeCheck(AntiCheatPlayers[i]);

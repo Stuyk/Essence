@@ -1,9 +1,7 @@
 "use strict";
-// Default sizes.
 var height = 50;
 var width = 500;
 var headerHeight = 100;
-// Current Menu Draw
 var contentHolder = null;
 API.onKeyDown.connect((sender, e) => {
     if (contentHolder === null) {
@@ -34,16 +32,13 @@ API.onUpdate.connect(() => {
         contentHolder.draw();
     }
 });
-// Return a ContentHolder for a menu.
 function setupContent() {
     contentHolder = new ContentHolder();
     return contentHolder;
 }
-// Get the current content holder as a return.
 function getContentHolder() {
     return contentHolder;
 }
-// Clear Menu
 function clearContent() {
     contentHolder = null;
 }
@@ -160,11 +155,9 @@ class ContentHeader {
         this.dict = null;
         this.texture = null;
     }
-    // Set the header a png or jpg.
     setLocalImage(path) {
         this.path = path;
     }
-    // Set the header to a game texture.
     setGameTexture(dict, texture) {
         this.dict = dict;
         this.texture = texture;
@@ -194,11 +187,9 @@ class ContentItem {
         this.variedContents = new Array();
         this.currentSelection = 0;
     }
-    // Get the ID of this item.
     getID() {
         this.id = this.contentHolder.ContentItems.length + 1;
     }
-    // Used to turn on left and right scrolling, and add new items. Returns the item you just added.
     addVariedContentItem(contentHolder, itemName) {
         if (!this.isVariedContent) {
             this.itemName = `< ${this.itemName} >`;
@@ -208,7 +199,6 @@ class ContentItem {
         this.variedContents.push(item);
         return item;
     }
-    // Next content display.
     nextContent() {
         if (!this.isVariedContent) {
             return;
@@ -223,7 +213,6 @@ class ContentItem {
         this.setTextToCurrentContent();
         this.runVariedHoverFunction();
     }
-    // Previous content display.
     previousContent() {
         if (!this.isVariedContent) {
             return;
@@ -238,34 +227,27 @@ class ContentItem {
         this.setTextToCurrentContent();
         this.runVariedHoverFunction();
     }
-    //
     runVariedHoverFunction() {
         this.variedContents[this.currentSelection].runHoverFunction();
     }
-    // Set the text from other content.
     setTextToCurrentContent() {
         this.itemName = `< ${this.variedContents[this.currentSelection].Text} >`;
     }
-    // Is this item currently selected?
     set IsSelected(value) {
         this.isSelected = value;
     }
-    // Set the item price of this item.
     set ItemPrice(value) {
         this.itemPrice = value;
     }
-    // Used to draw the text, images, etc.
     draw(currentOffset) {
         this.drawText(currentOffset);
         this.drawBackground(currentOffset);
     }
-    // Used for hovering.
     runHoverFunction() {
         if (this.hoverFunction != null) {
             this.hoverFunction.run();
         }
     }
-    // Used when the F or Enter key is pressed.
     runSelectFunction() {
         if (this.selectFunction != null) {
             this.selectFunction.run();
@@ -276,35 +258,27 @@ class ContentItem {
             }
         }
     }
-    // Current Selection
     set CurrentSelection(value) {
         this.currentSelection = value;
     }
-    // Used to set the text color.
     setTextColor(r, g, b) {
         this.color = [r, g, b];
     }
-    // Attach a FunctionHolder to this Item. Fires when it gets hovered.
     set HoverFunction(value) {
         this.hoverFunction = value;
     }
-    // Attach a description to this Item
     set Description(value) {
         this.description = value;
     }
-    // Attach a selective FunctionHolder to this item. Fires when the action key is pressed.
     set SelectFunction(value) {
         this.selectFunction = value;
     }
-    // Get Text
     get Text() {
         return this.itemName;
     }
-    // Get Price
     get Price() {
         return this.itemPrice;
     }
-    // Draw the background.
     drawBackground(currentOffset) {
         if (this.isSelected) {
             API.drawRectangle(this.contentHolder.Point.X, headerHeight + (height * currentOffset) - height, width, height, 255, 255, 255, 150);
@@ -313,7 +287,6 @@ class ContentItem {
             API.drawRectangle(this.contentHolder.Point.X, headerHeight + (height * currentOffset) - height, width, height, 0, 0, 0, 150);
         }
     }
-    // DRaw the text.
     drawText(currentOffset) {
         if (this.isSelected) {
             API.drawText(this.itemName, this.contentHolder.Point.X + 10, headerHeight + Math.round(height * currentOffset) - (Math.round(height / 2)) - 12, 0.4, 0, 0, 0, 255, 4, 0, false, false, 500);
@@ -326,7 +299,6 @@ class ContentItem {
         }
         this.drawDescription();
     }
-    // Draw the description text.
     drawDescription() {
         if (!this.isSelected) {
             return;

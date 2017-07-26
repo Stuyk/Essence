@@ -6,9 +6,6 @@ var handEnabled = false;
 API.onUpdate.connect(() => {
     drawCursor();
 });
-// #######################
-//  CURSOR FUNCTIONS
-// #######################
 function toggleCursor() {
     if (!cursorEnabled) {
         cursorEnabled = true;

@@ -67,7 +67,8 @@ namespace Essence.classes
                             [Z] INTEGER DEFAULT 0,
                             [Locked] INTEGER DEFAULT 0,
                             [IPL] NVARCHAR(2048) DEFAULT apa_v_mp_h_01_a,
-                            [Price] INTEGER DEFAULT 50000)";
+                            [Price] INTEGER DEFAULT 50000,
+                            [ForSale] BOOL DEFAULT TRUE)";
 
         // Contains Vehicle Information - Owner is the owner's Player Table ID.
         static string vehicleTable = @"CREATE TABLE IF NOT EXISTS

@@ -34,4 +34,3 @@ function checkAllDoors() {
         }
     }
 }
-//# sourceMappingURL=Doors.js.map

@@ -12,20 +12,13 @@ var motherSkin = 0;
 var skinBlend = "0.5";
 function mainMenu() {
     resource.SimpleUI.clearContent();
-    // Base Menu Holder
     var contentHolder = resource.SimpleUI.setupContent();
     var header = contentHolder.createHeader();
     header.setLocalImage("clientside/images/banners/fmsu.jpg");
-    // Items
     addFather(contentHolder);
     addMother(contentHolder);
-    //addMother(contentHolder);
-    // This will tell the client that the menu is ready.
     contentHolder.IsReady = true;
 }
-// ===============================
-// FATHER CODE
-// ===============================
 function addFather(contentHolder) {
     var item = contentHolder.addItem("Father");
     item.Description = "Which 'Father' face type would you like to blend.";
@@ -45,12 +38,10 @@ function getCurrentFatherValue(syncString, item) {
     }
 }
 function setupFatherFaceFunction(subitem, id) {
-    // Select Function
     var selectHolder = subitem.getSelectFunction();
     selectHolder.Function = setFatherFace;
     selectHolder.Args = [id];
     subitem.SelectFunction = selectHolder;
-    // Hover Function
     var hoverHolder = subitem.getHoverFunction();
     hoverHolder.Function = updateFatherFace;
     hoverHolder.Args = [id];
@@ -63,9 +54,6 @@ function setFatherFace(args) {
     updateFatherFace(args);
     father = args[0];
 }
-// ===============================
-// Mother CODE
-// ===============================
 function addMother(contentHolder) {
     var item = contentHolder.addItem("Mother");
     item.Description = "Which 'Mother' face type would you like to blend.";
@@ -85,12 +73,10 @@ function getCurrentMotherValue(syncString, item) {
     }
 }
 function setupMotherFaceFunction(subitem, id) {
-    // Select Function
     var selectHolder = subitem.getSelectFunction();
     selectHolder.Function = resource.sandbox.setMotherFace;
     selectHolder.Args = [id];
     subitem.SelectFunction = selectHolder;
-    // Hover Function
     var hoverHolder = subitem.getHoverFunction();
     hoverHolder.Function = resource.sandbox.updateMotherFace;
     hoverHolder.Args = [id];

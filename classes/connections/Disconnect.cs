@@ -1,4 +1,5 @@
-﻿using Essence.classes.connections;
+﻿using Essence.classes.anticheat;
+using Essence.classes.connections;
 using Essence.classes.discord;
 using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
@@ -35,6 +36,15 @@ namespace Essence.classes
             // Used for players in interiors. Logs them out outside the interior.
             if (player.hasData("LastPosition"))
                 player.position = player.getData("LastPosition");
+
+            if (player.hasData("Anticheat"))
+            {
+                AnticheatInfo info = player.getData("Anticheat");
+                info.isOnline = false;
+                info.LastPosition = player.position;
+            }
+
+            
             // Update player data just as they disconnect.
             instance.updatePlayerPosition();
             instance.PlayerClothing.savePlayerClothes();

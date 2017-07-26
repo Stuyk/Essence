@@ -6,7 +6,6 @@ var holdCounter = 0;
 var vehicleMenuButtons = new Array();
 var playerMenuButtons = new Array();
 var playerAnimationMenuButtons = new Array();
-// All of our interaction options go in here.
 API.onResourceStart.connect(() => {
     vehicleLeftMenus();
     vehicleCenterMenus();
@@ -48,7 +47,7 @@ function animationCenterMenus() {
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf - 100), new Size(200, 50), "ANIM_GESTURE_SHRUG_HARD", "Shrug"));
     var interact = new InteractionButton(new Point(widthHalf - 100, heightHalf - 25), new Size(200, 50), "ANIM_STOP", "Stop Animation");
     interact.setRGB(255, 0, 0);
-    playerAnimationMenuButtons.push(interact); // Middle
+    playerAnimationMenuButtons.push(interact);
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 50), new Size(200, 50), "ANIM_CROUCH", "Crouch"));
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 125), new Size(200, 50), "ANIM_GESTURE_POINT", "Point"));
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 200), new Size(200, 50), "ANIM_GESTURE_DAMN", "Damn"));
@@ -59,29 +58,23 @@ API.onKeyDown.connect((sender, e) => {
     if (API.isChatOpen()) {
         return;
     }
-    // Check if the player is currently logged in.
     if (!API.hasEntitySyncedData(API.getLocalPlayer(), "ESS_LoggedIn")) {
         return;
     }
-    // This will toggle the player's inventory on or off.'
     if (e.KeyCode == Keys.I) {
         resource.Inventory.toggleInventory();
     }
 });
 API.onUpdate.connect(() => {
-    // Make sure the chat isn't open. This can be replaced with a true or false for 'drawing' a menu.
     if (API.isChatOpen()) {
         return;
     }
-    // Check if the player is currently logged in.
     if (!API.hasEntitySyncedData(API.getLocalPlayer(), "ESS_LoggedIn")) {
         return;
     }
     API.dxDrawTexture("clientside/images/crosshair/crosshair.png", new Point(widthHalf - 5, heightHalf - 5), new Size(10, 10), 0);
-    // We're going to use disabled controls here. So I'm disabling the vehicle horn since it's a control for E.
-    API.disableControlThisFrame(86); // Horn
-    API.disableControlThisFrame(51); // E
-    // When you hold E it adds to the counter. Once it's over 200, it turns on isInteracting();
+    API.disableControlThisFrame(86);
+    API.disableControlThisFrame(51);
     if (API.isDisabledControlPressed(51)) {
         holdCounter += 5;
         if (holdCounter > 200) {
@@ -91,12 +84,10 @@ API.onUpdate.connect(() => {
             rayCastForItems();
         }
     }
-    // When E is released it will put the counter back down to 0.
     if (API.isDisabledControlJustReleased(51)) {
         holdCounter = 0;
         API.showCursor(false);
     }
-    // This just ensures the cursor goes away if anything goes wrong.
     if (holdCounter <= 100) {
         if (API.isCursorShown()) {
             API.showCursor(false);
@@ -107,7 +98,6 @@ function rayCastForItems() {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     var aimPos = API.getPlayerAimCoords(API.getLocalPlayer());
     var rayCast = API.createRaycast(playerPos, aimPos, 16, null);
-    // Check if our raycast hits anything.
     if (!rayCast.didHitAnything) {
         radiusForItems(aimPos);
         return;
@@ -120,12 +110,10 @@ function rayCastForItems() {
         radiusForItems(aimPos);
         return;
     }
-    // Check if it's a dropped object.
     if (!API.hasEntitySyncedData(rayCast.hitEntity, "DROPPED_OBJECT")) {
         radiusForItems(aimPos);
         return;
     }
-    // Check if they're close enough.
     if (playerPos.DistanceTo(API.getEntityPosition(rayCast.hitEntity)) >= 5) {
         return;
     }
@@ -142,9 +130,7 @@ function radiusForItems(aimpos) {
         }
     }
 }
-// This handles which menu our player is going to see.
 function isInteracting() {
-    // If the cursor isn't shown you, show it.
     if (!API.isCursorShown()) {
         API.showCursor(true);
     }
@@ -154,29 +140,22 @@ function isInteracting() {
             return;
         }
     }
-    // If the player is in a vehicle, show the vehicle menu.
     if (API.isPlayerInAnyVehicle(API.getLocalPlayer())) {
         showVehicleMenu();
         return;
     }
 }
-// This is our main vehicle draw function.
 function showVehicleMenu() {
-    // We loop through each 'InteractionButton' class item in our list and we call the drawFunction. Because it's in onUpdate it's fast enough to do this.
     for (var i = 0; i < vehicleMenuButtons.length; i++) {
         vehicleMenuButtons[i].draw();
     }
 }
-// Animation Menu
 function showAnimationMenu() {
-    // We loop through each 'InteractionButton' class item in our list and we call the drawFunction. Because it's in onUpdate it's fast enough to do this.
     for (var i = 0; i < playerAnimationMenuButtons.length; i++) {
         playerAnimationMenuButtons[i].draw();
     }
 }
-// This is our InteractionButton class.
 class InteractionButton {
-    // We need a new Point(x, y) which is the starting point of our button. We need a new Size(width, height) of 
     constructor(pos, size, clientEvent, action) {
         this.position = pos;
         this.size = size;

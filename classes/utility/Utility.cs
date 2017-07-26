@@ -6,6 +6,7 @@ using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -95,6 +96,21 @@ namespace Essence.classes.utility
             string[] varNames = { "Owner" };
             string[] data = { id };
             db.compileInsertQuery(tableName, varNames, data);
+        }
+
+        public static string getOwnerNameById(int id)
+        {
+            string[] varNames = { "ID" };
+            string before = "SELECT Name FROM Players WHERE";
+            object[] data = { id };
+            DataTable result = db.compileSelectQuery(before, varNames, data);
+
+            if (result.Rows.Count <= 0)
+            {
+                return "NOT-FOUND";
+            }
+
+            return result.Rows[0]["Name"].ToString();
         }
     }
 }

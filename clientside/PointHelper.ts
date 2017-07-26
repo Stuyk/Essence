@@ -92,9 +92,9 @@ class BlipTextPoint {
 
     // Used to interact with pretty much everything ever.
     triggerServerEvent() {
-        if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
-            return;
-        }
+        //if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
+        //    return;
+        //}
 
         API.triggerServerEvent(this.id, this.id);
     }
@@ -144,7 +144,7 @@ function checkIfNearPointOnce() {
                 continue;
             }
 
-            if (list[i].Position.DistanceTo(playerPos) <= 5) {
+            if (list[i].Position.DistanceTo2D(playerPos) <= 5) {
                 list[i].triggerServerEvent();
                 return;
             }

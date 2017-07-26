@@ -65,11 +65,7 @@ class BlipTextPoint {
     get Enabled() {
         return this.enabled;
     }
-    // Used to interact with pretty much everything ever.
     triggerServerEvent() {
-        if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
-            return;
-        }
         API.triggerServerEvent(this.id, this.id);
     }
 }
@@ -80,7 +76,6 @@ API.onUpdate.connect(() => {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     drawText();
 });
-// Draws the text if the player is near it.
 function drawText() {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     for (var i = 0; i < list.length; i++) {
@@ -90,7 +85,6 @@ function drawText() {
         }
     }
 }
-// Adds a new point to the list.
 function addNewPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension) {
     var newPoint = new BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension);
     list.push(newPoint);
@@ -111,14 +105,13 @@ function checkIfNearPointOnce() {
             if (!list[i].Interactable) {
                 continue;
             }
-            if (list[i].Position.DistanceTo(playerPos) <= 5) {
+            if (list[i].Position.DistanceTo2D(playerPos) <= 5) {
                 list[i].triggerServerEvent();
                 return;
             }
         }
     }
 }
-// Toggles all of the points off.
 function togglePointHelpers() {
     for (var i = 0; i < list.length; i++) {
         if (list[i].Enabled) {

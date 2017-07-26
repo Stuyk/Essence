@@ -24,9 +24,6 @@ class LockPick {
         API.dxDrawTexture("clientside/images/lockpick/lockpick_0.png", new Point(halfScreenWidth - 290, halfScreenHeight - 290), new Size(580, 580), this.outside);
         API.dxDrawTexture("clientside/images/lockpick/lockpick_1.png", new Point(halfScreenWidth - 237, halfScreenHeight - 237), new Size(474, 474), this.inside);
         API.dxDrawTexture("clientside/images/lockpick/lockpick_2.png", new Point(halfScreenWidth - 143, halfScreenHeight - 143), new Size(286, 286), this.score);
-        //API.drawText("Outside: " + this.outside, 50, 50, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
-        //API.drawText("Inside: " + this.inside, 50, 100, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
-        //API.drawText("Score: " + this.score, 50, 150, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
     }
     getOutside() {
         if (!API.hasEntitySyncedData(API.getLocalPlayer(), "Lockpick_Value")) {
@@ -48,7 +45,6 @@ class LockPick {
         API.triggerServerEvent("Check_Lockpick_Score", this.inside);
     }
     controls() {
-        //API.disableAllControlsThisFrame();
         var mouse = API.getCursorPositionMaintainRatio();
         var newPos = Math.atan2(mouse.Y - halfScreenHeight, mouse.X - halfScreenWidth);
         newPos = newPos * (180 / Math.PI);

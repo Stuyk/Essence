@@ -1,4 +1,5 @@
-﻿using GrandTheftMultiplayer.Server.API;
+﻿using Essence.classes.doors;
+using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
 using GrandTheftMultiplayer.Shared;
@@ -28,6 +29,12 @@ namespace Essence.classes.commands
         public void cmdForceRegistration(Client player, string username, string password, string playername)
         {
             Register.cmdRegister(player, username, password, playername);
+        }
+
+        [Command("doorlock")]
+        public void cmdDoorLock(Client player)
+        {
+            DoorManager.ToggleDoor(player);
         }
     }
 }
