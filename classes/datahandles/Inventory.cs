@@ -74,7 +74,7 @@ namespace Essence.classes.datahandles
                         else
                         {
                             Item item = new Item(this.client, this.player, itemId, ItemType, ItemQuantity, ItemData);
-                            items.Add(item.ID,item);
+                            items.Add(item.Id,item);
                             addedToInventory = true;
                             break;
                         }
@@ -82,7 +82,7 @@ namespace Essence.classes.datahandles
                     else
                     {
                         Item item = new Item(this.client, this.player, itemId, ItemType, ItemQuantity, ItemData);
-                        items.Add(item.ID,item);
+                        items.Add(item.Id,item);
                         addedToInventory = true;
                         break;
                     } 
@@ -92,7 +92,7 @@ namespace Essence.classes.datahandles
                 if (!addedToInventory)
                 {
                     Item item = new Item(this.client, this.player, itemId, ItemType, ItemQuantity, ItemData);
-                    items.Add(item.ID,item);
+                    items.Add(item.Id,item);
                     addedToInventory = true;
                 }
             }
@@ -108,9 +108,7 @@ namespace Essence.classes.datahandles
                 bool consumable = false;
                 
                 if((int)i.Type <= 400)
-                {
                     consumable = true;
-                }
 
                 //Data for in item box
                 string data = "";
@@ -124,7 +122,7 @@ namespace Essence.classes.datahandles
                 }
                 API.shared.consoleOutput(data);
                 // Type of Item, Amount of Item, is It Consumeable?
-                API.shared.triggerClientEvent(client, "Add_Inventory_Item", i.ID, i.Type.ToString("g"), i.Quantity, consumable, data);
+                API.shared.triggerClientEvent(client, "Add_Inventory_Item", i.Id, i.Type.ToString("g"), i.Quantity, consumable, data);
             }
         }
 
@@ -142,21 +140,21 @@ namespace Essence.classes.datahandles
             //Check if item already in inventory and stackable (if empty data string item is stackable)
             if(this.items.Count <= 0)
             {
-                this.items.Add(item.ID, item);
-                API.shared.consoleOutput("0 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
+                this.items.Add(item.Id, item);
+                API.shared.consoleOutput("0 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.Id + "]");
                 return;
             }
 
             foreach (KeyValuePair<int, Item> entry in this.items)
             {
                 Item i = entry.Value;
-                API.shared.consoleOutput("1 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
+                API.shared.consoleOutput("1 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.Id + "]");
                 if (i.Type == item.Type)
                 {
-                    API.shared.consoleOutput("2 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
+                    API.shared.consoleOutput("2 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.Id + "]");
                     if (i.Data.Length <= 0)
                     {
-                        API.shared.consoleOutput("3 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
+                        API.shared.consoleOutput("3 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.Id + "]");
                         //Stack the item
                         i.Quantity += item.Quantity;
 
@@ -166,15 +164,15 @@ namespace Essence.classes.datahandles
                     }
                     else
                     {
-                        API.shared.consoleOutput("4 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
-                        this.items.Add(item.ID, item);
+                        API.shared.consoleOutput("4 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.Id + "]");
+                        this.items.Add(item.Id, item);
                         break;
                     }
                 }
                 else
                 {
-                    API.shared.consoleOutput("5 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.ID + "]");
-                    this.items.Add(item.ID, item);
+                    API.shared.consoleOutput("5 = Adding item to player inventory: " + item.Type.ToString() + " [" + item.Id + "]");
+                    this.items.Add(item.Id, item);
                     break;
                 }
             }

@@ -44,7 +44,7 @@ namespace Essence.classes.jobs
             point.BlipType = 477;
             point.Text = "Long Range Trucking";
             point.DrawLabel = true;
-            point.ID = "JOB_LONG_RANGE_TRUCKING";
+            point.Id = "JOB_LONG_RANGE_TRUCKING";
             point.InteractionEnabled = true;
             point.Position = startPoint;
         }

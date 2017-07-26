@@ -71,21 +71,15 @@ namespace Essence.classes.inventory
         public static void PickupItem(Client player, params object[] arguments)
         {
             if (arguments.Length <= 0)
-            {
                 return;
-            }
 
             NetHandle netValue = (NetHandle)arguments[0];
 
             if (!API.shared.doesEntityExist(netValue))
-            {
                 return;
-            }
 
             if (player.position.DistanceTo(API.shared.getEntityPosition(netValue)) >= 5)
-            {
                 return;
-            }
 
             foreach (OverworldItem i in items)
             {
@@ -152,7 +146,7 @@ namespace Essence.classes.inventory
             {
                 Item i = entry.Value;
 
-                if (i.ID == id && i.Type == type && i.Quantity >= quantity) //Owns item & same Type & Enough to drop
+                if (i.Id == id && i.Type == type && i.Quantity >= quantity) //Owns item & same Type & Enough to drop
                 {
                     OverworldItem newOverworldItem;
 
@@ -227,7 +221,7 @@ namespace Essence.classes.inventory
 
             if(item.Quantity <= 0)
             {
-                inventory.CurrentItems.Remove(item.ID);
+                inventory.CurrentItems.Remove(item.Id);
             }
         }
 

@@ -24,7 +24,5 @@ namespace Essence.classes.events
         {
             Anticheat.checkHealth(player, oldValue);
         }
-
-        
     }
 }

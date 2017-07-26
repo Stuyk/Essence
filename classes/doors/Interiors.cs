@@ -119,9 +119,7 @@ namespace Essence.classes.doors
         public static Vector3 getInteriorByType(string type)
         {
             if (interiors.Keys.Contains(type))
-            {
                 return interiors[type];
-            }
             return new Vector3();
         }
     }

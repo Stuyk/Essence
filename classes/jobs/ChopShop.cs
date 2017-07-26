@@ -16,31 +16,15 @@ namespace Essence.classes.jobs
 {
     public class ChopShopSpawn : Script
     {
-        private Vector3 location;
-        private Vector3 rotation;
+        public Vector3 Location { get; set; }
+        public Vector3 Rotation { get; set; }
 
         public ChopShopSpawn() { }
 
         public ChopShopSpawn(Vector3 loc, Vector3 rot)
         {
-            location = loc;
-            rotation = rot;
-        }
-
-        public Vector3 Location
-        {
-            get
-            {
-                return location;
-            }
-        }
-
-        public Vector3 Rotation
-        {
-            get
-            {
-                return rotation;
-            }
+            Location = loc;
+            Rotation = rot;
         }
     }
 
@@ -70,7 +54,7 @@ namespace Essence.classes.jobs
             point.BlipType = 477;
             point.Text = "Chop Shop - Cars for Cash";
             point.DrawLabel = true;
-            point.ID = "JOB_CHOP_SHOP";
+            point.Id = "JOB_CHOP_SHOP";
             point.InteractionEnabled = true;
             point.Position = startPoint;
         }

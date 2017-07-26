@@ -18,560 +18,63 @@ namespace Essence.classes
     {
         Database db = new Database();
 
-        private int id;
-        private VehicleHash type;
-        private Vector3 lastPosition;
-        private Vector3 lastRotation;
-        private NetHandle vehicle;
-        private int colorA;
-        private int colorB;
-        private Tuple<int, int, int> primaryColor;
-        private Tuple<int, int, int> secondaryColor;
-        private int spoiler = 0;
-        private int frontBumper = 0;
-        private int rearBumper = 0;
-        private int sideSkirt = 0;
-        private int exhaust = 0;
-        private int frame = 0;
-        private int grille = 0;
-        private int hood = 0;
-        private int fender = 0;
-        private int rightFender = 0;
-        private int roof = 0;
-        private int engine = 0;
-        private int brakes = 0;
-        private int transmission = 0;
-        private int horns = 0;
-        private int suspension = 0;
-        private int armor = 0;
-        private int turbo = 0;
-        private int xenon = 0;
-        private int frontWheels = 0;
-        private int backWheels = 0;
-        private int plateHolders = 0;
-        private int trimDesign = 0;
-        private int ornaments = 0;
-        private int dialDesign = 0;
-        private int steeringWheel = 0;
-        private int shiftLever = 0;
-        private int plaques = 0;
-        private int hydraulics = 0;
-        private int livery = 0;
-        private int plate = 0;
-        private int windowTint = 0;
+        public VehicleHash Type { get; set; }
+        public NetHandle VehicleHandle { get; set; }
+        public Tuple<int, int, int> primaryColor;
+        public Tuple<int, int, int> secondaryColor;
+        public Vector3 LastPosition { get; set; }
+        public Vector3 LastRotation { get; set; }
+        public int Id { get; set; }
+        public int ColorA { get; set; }
+        public int ColorB { get; set; }
+        public int Spoiler { get; set; }
+        public int FrontBumper { get; set; }
+        public int RearBumper { get; set; }
+        public int SideSkirt { get; set; }
+        public int Exhaust { get; set; }
+        public int Frame { get; set; }
+        public int Grille { get; set; }
+        public int Hood { get; set; }
+        public int Fender { get; set; }
+        public int RightFender { get; set; }
+        public int Roof { get; set; }
+        public int Engine { get; set; }
+        public int Brakes { get; set; }
+        public int Transmission { get; set; }
+        public int Horns { get; set; }
+        public int Suspension { get; set; }
+        public int Armor { get; set; }
+        public int Turbo { get; set; }
+        public int Xenon { get; set; }
+        public int FrontWheels { get; set; }
+        public int BackWheels { get; set; }
+        public int PlateHolders { get; set; }
+        public int TrimDesign { get; set; }
+        public int Ornaments { get; set; }
+        public int DialDesign { get; set; }
+        public int SteeringWheel { get; set; }
+        public int ShiftLever { get; set; }
+        public int Plaques { get; set; }
+        public int Hydraulics { get; set; }
+        public int Livery { get; set; }
+        public int Plate { get; set; }
+        public int WindowTint { get; set; }
 
-        /** Get/Set the last position of the vehicle. */
-        public Vector3 LastPosition
-        {
-            set
-            {
-                lastPosition = value;
-            }
-            get
-            {
-                return lastPosition;
-            }
-        }
-
-        /** Get/Set the last position of the vehicle. */
-        public Vector3 LastRotation
-        {
-            set
-            {
-                lastRotation = value;
-            }
-            get
-            {
-                return lastRotation;
-            }
-        }
-
-        /**  Get/Set the ID of the vehicle in the database. */
-        public int ID
-        {
-            set
-            {
-                id = value;
-            }
-            get
-            {
-                return id;
-            }
-        }
-
-        /** Get/Set the nethandle of the vehicle */
-        public NetHandle Handle
-        {
-            set
-            {
-                vehicle = value;
-            }
-            get
-            {
-                return vehicle;
-            }
-        }
-
-        /** Get/Set the vehicle hash type. */
-        public VehicleHash Type
-        {
-            set
-            {
-                type = value;
-            }
-            get
-            {
-                return type;
-            }
-        }
-
-        /** Get/Set the vehicle main color. */
-        public int ColorA
-        {
-            set
-            {
-                colorA = value;
-            }
-            get
-            {
-                return colorA;
-            }
-        }
-
-        /** Get/Set the vehicle secondary color. */
-        public int ColorB
-        {
-            set
-            {
-                colorB = value;
-            }
-            get
-            {
-                return colorB;
-            }
-        }
-
-        public Tuple<int, int, int> PrimaryColor
-        {
-            set
-            {
-                primaryColor = value;
-            }
-            get
-            {
-                return primaryColor;
-            }
-        }
-
-        public Tuple<int, int, int> SecondaryColor
-        {
-            set
-            {
-                secondaryColor = value;
-            }
-            get
-            {
-                return secondaryColor;
-            }
-        }
-
-        public int Spoiler
-        {
-            set
-            {
-                spoiler = value;
-            }
-            get
-            {
-                return spoiler;
-            }
-        }
-
-        public int FrontBumper
-        {
-            set
-            {
-                frontBumper = value;
-            }
-            get
-            {
-                return frontBumper;
-            }
-        }
-
-        public int RearBumper
-        {
-            set
-            {
-                rearBumper = value;
-            }
-            get
-            {
-                return rearBumper;
-            }
-        }
-
-        public int SideSkirt
-        {
-            set
-            {
-                sideSkirt = value;
-            }
-            get
-            {
-                return sideSkirt;
-            }
-        }
-
-        public int Exhaust
-        {
-            set
-            {
-                exhaust = value;
-            }
-            get
-            {
-                return exhaust;
-            }
-        }
-
-        public int Frame
-        {
-            set
-            {
-                frame = value;
-            }
-            get
-            {
-                return frame;
-            }
-        }
-
-        public int Grille
-        {
-            set
-            {
-                grille = value;
-            }
-            get
-            {
-                return grille;
-            }
-        }
-
-        public int Hood
-        {
-            set
-            {
-                hood = value;
-            }
-            get
-            {
-                return hood;
-            }
-        }
-
-        public int Fender
-        {
-            set
-            {
-                fender = value;
-            }
-            get
-            {
-                return fender;
-            }
-        }
-
-        public int RightFender
-        {
-            set
-            {
-                rightFender = value;
-            }
-            get
-            {
-                return rightFender;
-            }
-        }
-
-        public int Roof
-        {
-            set
-            {
-                roof = value;
-            }
-            get
-            {
-                return roof;
-            }
-        }
-
-        public int Engine
-        {
-            set
-            {
-                engine = value;
-            }
-            get
-            {
-                return engine;
-            }
-        }
-
-        public int Brakes
-        {
-            set
-            {
-                brakes = value;
-            }
-            get
-            {
-                return brakes;
-            }
-        }
-
-        public int Transmission
-        {
-            set
-            {
-                transmission = value;
-            }
-            get
-            {
-                return transmission;
-            }
-        }
-
-        public int Horns
-        {
-            set
-            {
-                horns = value;
-            }
-            get
-            {
-                return horns;
-            }
-        }
-
-        public int Suspension
-        {
-            set
-            {
-                suspension = value;
-            }
-            get
-            {
-                return suspension;
-            }
-        }
-
-        public int Armor
-        {
-            set
-            {
-                armor = value;
-            }
-            get
-            {
-                return armor;
-            }
-        }
-
-        public int Turbo
-        {
-            set
-            {
-                turbo = value;
-            }
-            get
-            {
-                return turbo;
-            }
-        }
-
-
-        public int Xenon
-        {
-            set
-            {
-                xenon = value;
-            }
-            get
-            {
-                return xenon;
-            }
-        }
-
-        public int FrontWheels
-        {
-            set
-            {
-                frontWheels = value;
-            }
-            get
-            {
-                return frontWheels;
-            }
-        }
-
-        public int BackWheels
-        {
-            set
-            {
-                backWheels = value;
-            }
-            get
-            {
-                return backWheels;
-            }
-        }
-
-        public int PlateHolders
-        {
-            set
-            {
-                plateHolders = value;
-            }
-            get
-            {
-                return plateHolders;
-            }
-        }
-
-        public int TrimDesign
-        {
-            set
-            {
-                trimDesign = value;
-            }
-            get
-            {
-                return trimDesign;
-            }
-        }
-
-        public int Ornaments
-        {
-            set
-            {
-                ornaments = value;
-            }
-            get
-            {
-                return ornaments;
-            }
-        }
-
-        public int DialDesign
-        {
-            set
-            {
-                dialDesign = value;
-            }
-            get
-            {
-                return dialDesign;
-            }
-        }
-
-        public int SteeringWheel
-        {
-            set
-            {
-                steeringWheel = value;
-            }
-            get
-            {
-                return steeringWheel;
-            }
-        }
-
-        public int ShiftLever
-        {
-            set
-            {
-                shiftLever = value;
-            }
-            get
-            {
-                return shiftLever;
-            }
-        }
-
-        public int Plaques
-        {
-            set
-            {
-                plaques = value;
-            }
-            get
-            {
-                return plaques;
-            }
-        }
-
-        public int Hydraulics
-        {
-            set
-            {
-                hydraulics = value;
-            }
-            get
-            {
-                return hydraulics;
-            }
-        }
-
-        public int Livery
-        {
-            set
-            {
-                livery = value;
-            }
-            get
-            {
-                return livery;
-            }
-        }
-
-        public int Plate
-        {
-            set
-            {
-                plate = value;
-            }
-            get
-            {
-                return plate;
-            }
-        }
-
-        public int WindowTint
-        {
-            set
-            {
-                windowTint = value;
-            }
-            get
-            {
-                return windowTint;
-            }
-        }
+        public Tuple<int, int, int> PrimaryColor { get; set; }
+        public Tuple<int, int, int> SecondaryColor { get; set; }
 
         public Vehicle() { }
 
         public Vehicle(DataRow db)
         {
-            ID = Convert.ToInt32(db["Id"]);
+            Id = Convert.ToInt32(db["Id"]);
             Type = API.vehicleNameToModel(Convert.ToString(db["Type"]));
             LastPosition = new Vector3(Convert.ToSingle(db["X"]), Convert.ToSingle(db["Y"]), Convert.ToSingle(db["Z"]));
             LastRotation = new Vector3(Convert.ToSingle(db["RX"]), Convert.ToSingle(db["RY"]), Convert.ToSingle(db["RZ"]));
             ColorA = Convert.ToInt32(db["ColorA"]);
             ColorA = Convert.ToInt32(db["ColorB"]);
-            Handle = API.createVehicle(Type, LastPosition, LastRotation, colorA, colorB);
-            API.setVehicleEngineStatus(Handle, false);
+            VehicleHandle = API.createVehicle(Type, LastPosition, LastRotation, ColorA, ColorB);
+            API.setVehicleEngineStatus(VehicleHandle, false);
             loadVehicleModsFromTable(db);
             updateVehicleMods();
         }
@@ -616,11 +119,11 @@ namespace Essence.classes
         /** Used internally to update the vehicles last position for when a player logs out. */
         private void updateVehiclePosition()
         {
-            Vector3 vehPos = API.getEntityPosition(Handle);
-            Vector3 vehRot = API.getEntityRotation(Handle);
+            Vector3 vehPos = API.getEntityPosition(VehicleHandle);
+            Vector3 vehRot = API.getEntityRotation(VehicleHandle);
 
             string target = "UPDATE Vehicles SET";
-            string where = string.Format("WHERE Id='{0}'", ID);
+            string where = string.Format("WHERE Id='{0}'", Id);
             string[] variables = { "X", "Y", "Z", "RX", "RY", "RZ" };
             object[] arguments = { vehPos.X, vehPos.Y, vehPos.Z, vehRot.X, vehRot.Y, vehRot.Z };
             Payload.addNewPayload(target, where, variables, arguments);
@@ -628,40 +131,40 @@ namespace Essence.classes
 
         public void updateVehicleMods()
         {
-            API.setVehicleCustomPrimaryColor(vehicle, PrimaryColor.Item1, PrimaryColor.Item2, PrimaryColor.Item3);
-            API.setVehicleCustomSecondaryColor(vehicle, SecondaryColor.Item1, SecondaryColor.Item2, SecondaryColor.Item3);
-            API.setVehicleMod(vehicle, 0, Spoiler);
-            API.setVehicleMod(vehicle, 1, FrontBumper);
-            API.setVehicleMod(vehicle, 2, RearBumper);
-            API.setVehicleMod(vehicle, 3, SideSkirt);
-            API.setVehicleMod(vehicle, 4, Exhaust);
-            API.setVehicleMod(vehicle, 5, Frame);
-            API.setVehicleMod(vehicle, 6, Grille);
-            API.setVehicleMod(vehicle, 7, Hood);
-            API.setVehicleMod(vehicle, 8, Fender);
-            API.setVehicleMod(vehicle, 9, RightFender);
-            API.setVehicleMod(vehicle, 10, Roof);
-            API.setVehicleMod(vehicle, 11, Engine);
-            API.setVehicleMod(vehicle, 12, Brakes);
-            API.setVehicleMod(vehicle, 13, Transmission);
-            API.setVehicleMod(vehicle, 14, Horns);
-            API.setVehicleMod(vehicle, 15, Suspension);
-            API.setVehicleMod(vehicle, 16, Armor);
-            API.setVehicleMod(vehicle, 18, Turbo);
-            API.setVehicleMod(vehicle, 22, Xenon);
-            API.setVehicleMod(vehicle, 23, FrontWheels);
-            API.setVehicleMod(vehicle, 24, BackWheels);
-            API.setVehicleMod(vehicle, 25, PlateHolders);
-            API.setVehicleMod(vehicle, 27, TrimDesign);
-            API.setVehicleMod(vehicle, 28, Ornaments);
-            API.setVehicleMod(vehicle, 30, DialDesign);
-            API.setVehicleMod(vehicle, 33, SteeringWheel);
-            API.setVehicleMod(vehicle, 34, ShiftLever);
-            API.setVehicleMod(vehicle, 35, Plaques);
-            API.setVehicleMod(vehicle, 38, Hydraulics);
-            API.setVehicleMod(vehicle, 48, Livery);
-            API.setVehicleMod(vehicle, 62, Plate);
-            API.setVehicleMod(vehicle, 69, WindowTint);
+            API.setVehicleCustomPrimaryColor(VehicleHandle, PrimaryColor.Item1, PrimaryColor.Item2, PrimaryColor.Item3);
+            API.setVehicleCustomSecondaryColor(VehicleHandle, SecondaryColor.Item1, SecondaryColor.Item2, SecondaryColor.Item3);
+            API.setVehicleMod(VehicleHandle, 0, Spoiler);
+            API.setVehicleMod(VehicleHandle, 1, FrontBumper);
+            API.setVehicleMod(VehicleHandle, 2, RearBumper);
+            API.setVehicleMod(VehicleHandle, 3, SideSkirt);
+            API.setVehicleMod(VehicleHandle, 4, Exhaust);
+            API.setVehicleMod(VehicleHandle, 5, Frame);
+            API.setVehicleMod(VehicleHandle, 6, Grille);
+            API.setVehicleMod(VehicleHandle, 7, Hood);
+            API.setVehicleMod(VehicleHandle, 8, Fender);
+            API.setVehicleMod(VehicleHandle, 9, RightFender);
+            API.setVehicleMod(VehicleHandle, 10, Roof);
+            API.setVehicleMod(VehicleHandle, 11, Engine);
+            API.setVehicleMod(VehicleHandle, 12, Brakes);
+            API.setVehicleMod(VehicleHandle, 13, Transmission);
+            API.setVehicleMod(VehicleHandle, 14, Horns);
+            API.setVehicleMod(VehicleHandle, 15, Suspension);
+            API.setVehicleMod(VehicleHandle, 16, Armor);
+            API.setVehicleMod(VehicleHandle, 18, Turbo);
+            API.setVehicleMod(VehicleHandle, 22, Xenon);
+            API.setVehicleMod(VehicleHandle, 23, FrontWheels);
+            API.setVehicleMod(VehicleHandle, 24, BackWheels);
+            API.setVehicleMod(VehicleHandle, 25, PlateHolders);
+            API.setVehicleMod(VehicleHandle, 27, TrimDesign);
+            API.setVehicleMod(VehicleHandle, 28, Ornaments);
+            API.setVehicleMod(VehicleHandle, 30, DialDesign);
+            API.setVehicleMod(VehicleHandle, 33, SteeringWheel);
+            API.setVehicleMod(VehicleHandle, 34, ShiftLever);
+            API.setVehicleMod(VehicleHandle, 35, Plaques);
+            API.setVehicleMod(VehicleHandle, 38, Hydraulics);
+            API.setVehicleMod(VehicleHandle, 48, Livery);
+            API.setVehicleMod(VehicleHandle, 62, Plate);
+            API.setVehicleMod(VehicleHandle, 69, WindowTint);
         }
     }
 }

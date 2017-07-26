@@ -34,7 +34,7 @@ namespace Essence.classes
             point.BlipType = 75;
             point.Text = "Tattoo Shop";
             point.DrawLabel = true;
-            point.ID = "SHOP_TATTOO";
+            point.Id = "SHOP_TATTOO";
             point.InteractionEnabled = true;
         }
 

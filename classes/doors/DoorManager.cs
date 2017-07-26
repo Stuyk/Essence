@@ -33,9 +33,7 @@ namespace Essence.classes.doors
             DataTable table = db.executeQueryWithResult("SELECT * FROM Doors");
 
             if (table.Rows.Count <= 0)
-            {
                 return;
-            }
 
             int count = 0;
 
@@ -68,20 +66,19 @@ namespace Essence.classes.doors
         public static void EnterDoor(Client player, params object[] arguments)
         {
             if (arguments.Length <= 0)
-            {
                 return;
-            }
+
             // Setup to find our target door.
             DoorInfo targetDoor = null;
             string doorID = arguments[0].ToString().Replace("Door-", string.Empty);
             // Find our target door.
             for (int i = 0; i < doors.Count; i++)
             {
-                if (doors[i].Id.Replace("Door-", string.Empty) == doorID)
-                {
-                    targetDoor = doors[i];
-                    break;
-                }
+                if (doors[i].Id.Replace("Door-", string.Empty) != doorID)
+                    continue;
+
+                targetDoor = doors[i];
+                break;
             }
             // If our target door does not exist. Stop.
             if (targetDoor == null)
@@ -115,7 +112,7 @@ namespace Essence.classes.doors
         {
             if (!player.hasData("LastPosition"))
             {
-                // Something went wrong, figure out what to do.
+                // Something went wrong, figure out what to do. Probably teleport the player somewhere.
                 return;
             }
 

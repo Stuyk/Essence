@@ -29,9 +29,7 @@ namespace Essence.classes.utility
             int executionCount = 0;
             // No reason to execute queries if the length is zero.
             if (payloads.Count <= 0)
-            {
                 return;
-            }
             // Set our execution boolean to true to ensure no payloads make their way in.
             runningExecution = true;
             // Let's run a foreach Statement to our database.
@@ -71,9 +69,7 @@ namespace Essence.classes.utility
         private static void addFromQueue()
         {
             if (queuedPayloads.Count <= 0)
-            {
                 return;
-            }
 
             int count = 0;
 

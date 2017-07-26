@@ -29,12 +29,6 @@ namespace Essence.classes.datahandles
         public Chat()
         {
             API.onChatMessage += API_onChatMessage;
-            API.onResourceStart += API_onResourceStart;
-        }
-
-        private void API_onResourceStart()
-        {
-            
         }
 
         //Standard Chat Message
@@ -55,14 +49,10 @@ namespace Essence.classes.datahandles
             foreach (Client c in nearbyPlayers)
             {
                 if (!API.hasEntityData(c, "Instance"))
-                {
                     return;
-                }
 
-                if(c == player && self == false)
-                {
+                if (c == player && self == false)
                     return;
-                }
 
                 float distanceSenderToReceiver = player.position.DistanceTo(c.position);
                 string chatColor = calculateChatColor(distanceSenderToReceiver, shortRange);
@@ -81,9 +71,7 @@ namespace Essence.classes.datahandles
             foreach (Client c in nearbyPlayers)
             {
                 if (!API.hasEntityData(c, "Instance"))
-                {
-                    return;
-                }
+                    continue;
 
                 float distanceSenderToReceiver = player.position.DistanceTo(c.position);
                 string chatColor = calculateChatColor(distanceSenderToReceiver, shortRange);
@@ -103,13 +91,10 @@ namespace Essence.classes.datahandles
             foreach (Client c in nearbyPlayers)
             {
                 if (!API.hasEntityData(c, "Instance"))
-                {
-                    return;
-                }
+                    continue;
 
                 float distanceSenderToReceiver = player.position.DistanceTo(c.position);
                 string chatColor = calculateChatColor(distanceSenderToReceiver, longRange);
-
                 API.sendChatMessageToPlayer(c, chatColor, msg);
             }
         }
@@ -124,12 +109,9 @@ namespace Essence.classes.datahandles
             foreach (Client c in nearbyPlayers)
             {
                 if (!API.hasEntityData(c, "Instance"))
-                {
-                    return;
-                }
+                    continue;
 
                 string chatColor = roleplay;
-
                 API.sendChatMessageToPlayer(c, chatColor, msg);
             }
         }
@@ -144,12 +126,9 @@ namespace Essence.classes.datahandles
             foreach (Client c in nearbyPlayers)
             {
                 if (!API.hasEntityData(c, "Instance"))
-                {
-                    return;
-                }
+                    continue;
 
                 string chatColor = roleplay;
-
                 API.sendChatMessageToPlayer(c, chatColor, msg);
             }
         }
@@ -164,13 +143,10 @@ namespace Essence.classes.datahandles
             foreach (Client c in nearbyPlayers)
             {
                 if (!API.hasEntityData(c, "Instance"))
-                {
-                    return;
-                }
+                    continue;
 
                 float distanceSenderToReceiver = player.position.DistanceTo(c.position);
                 string chatColor = calculateChatColor(distanceSenderToReceiver, whisperRange);
-
                 API.sendChatMessageToPlayer(c, chatColor, msg);
             }
         }

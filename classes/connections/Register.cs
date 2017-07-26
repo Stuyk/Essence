@@ -1,4 +1,5 @@
-﻿using GrandTheftMultiplayer.Server.API;
+﻿using Essence.classes.utility;
+using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
@@ -14,26 +15,15 @@ using BCr = BCrypt.Net;
 
 namespace Essence.classes
 {
-    class Register : Script
+    public static class Register
     {
-        Database db = new Database();
+        public static Database db = new Database();
 
-        public Register()
-        {
-            // Nothing
-        }
-
-        [Command("forceRegistration")]
-        public void cmdForceReg(Client player, string user, string pass, string playername)
-        {
-            cmdRegister(player, user, pass, playername);
-        }
-
-        public void cmdRegister(Client player, params object[] arguments)
+        public static void cmdRegister(Client player, params object[] arguments)
         {
             if (arguments.Length <= 0)
             {
-                API.triggerClientEvent(player, "FailRegistration");
+                API.shared.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
@@ -41,26 +31,24 @@ namespace Essence.classes
             string password = arguments[1].ToString();
             string playername = arguments[2].ToString();
 
-            if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
-            {
+            if (API.shared.hasEntitySyncedData(player, "ESS_LoggedIn"))
                 return;
-            }
 
             if (username.Length <= 0)
             {
-                API.triggerClientEvent(player, "FailRegistration");
+                API.shared.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
             if (password.Length <= 0)
             {
-                API.triggerClientEvent(player, "FailRegistration");
+                API.shared.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
             if (username.Length <= 0)
             {
-                API.triggerClientEvent(player, "FailRegistration");
+                API.shared.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
@@ -71,7 +59,7 @@ namespace Essence.classes
 
             if (result.Rows.Count >= 1)
             {
-                API.triggerClientEvent(player, "FailRegistration");
+                API.shared.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
@@ -82,7 +70,7 @@ namespace Essence.classes
 
             if (result.Rows.Count >= 1)
             {
-                API.triggerClientEvent(player, "FailRegistration");
+                API.shared.triggerClientEvent(player, "FailRegistration");
                 return;
             }
 
@@ -100,21 +88,13 @@ namespace Essence.classes
             string playerID = Convert.ToString(result.Rows[0]["ID"]);
 
             // Setup clothing table for new player.
-            setupTableForPlayer(playerID, "Clothing");
+            Utility.setupTableForPlayer(playerID, "Clothing");
 
             // Setup skin table for new player.
-            setupTableForPlayer(playerID, "Skin");
+            Utility.setupTableForPlayer(playerID, "Skin");
 
             // Setup inventory table for new player.
-            API.triggerClientEvent(player, "FinishRegistration");
+            API.shared.triggerClientEvent(player, "FinishRegistration");
         }
-
-        private void setupTableForPlayer(string id, string tableName)
-        {
-            string[] varNames = { "Owner" };
-            string[] data = { id };
-            db.compileInsertQuery(tableName, varNames, data);
-        }
-
     }
 }

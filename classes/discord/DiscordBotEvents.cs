@@ -73,9 +73,7 @@ namespace Essence.classes.discord
         private void API_onEntityDataChange(NetHandle entity, string key, object oldValue)
         {
             if (API.getEntityType(entity) != EntityType.Player)
-            {
                 return;
-            }
 
             Client player = API.getPlayerFromHandle(entity);
 

@@ -89,9 +89,11 @@ namespace Essence.classes
 
             // Setup our anticheat info.
             AnticheatInfo = Anticheat.addPlayer(player);
+            AnticheatInfo.Model = player.model;
 
             // Login Console
             // Pass the login to the console.
+            API.triggerClientEvent(player, "FinishLogin");
             API.consoleOutput($"{player.name} has logged in.");
         }
 
@@ -124,9 +126,9 @@ namespace Essence.classes
             foreach (Vehicle vehInfo in Vehicles)
             {
                 // Update vehicle position before deleting.
-                vehInfo.LastPosition = API.getEntityPosition(vehInfo.Handle);
+                vehInfo.LastPosition = API.getEntityPosition(vehInfo.VehicleHandle);
                 // Delete the entity.
-                API.deleteEntity(vehInfo.Handle);
+                API.deleteEntity(vehInfo.VehicleHandle);
             }
         }
 

@@ -26,9 +26,7 @@ namespace Essence.classes.administration
         public void aCMD_AHelp(Client player)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             API.sendChatMessageToPlayer(player, string.Format("/atp, /akick, /aban, /acar, /adoor, /agun, /apos, /aheal, /aarmor, /saveCustom, /savePOS, /aHurt, /aKill, /adoor, /atph"));
         }
@@ -37,17 +35,13 @@ namespace Essence.classes.administration
         public void aCMD_Teleport(Client player, string target)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             foreach (Client p in API.getAllPlayers())
             {
-                if (p.name.ToLower().Contains(target.ToLower()))
-                {
-                    API.setEntityPosition(player, p.position);
-                    return;
-                }
+                if (!p.name.ToLower().Contains(target.ToLower()))
+                    continue;
+                API.setEntityPosition(player, p.position);
             }
             API.sendChatMessageToPlayer(player, $"{target} does not exist.");
         }
@@ -56,17 +50,13 @@ namespace Essence.classes.administration
         public void aCMD_TeleportToMe(Client player, string target)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             foreach (Client p in API.getAllPlayers())
             {
-                if (p.name.ToLower().Contains(target.ToLower()))
-                {
-                    API.setEntityPosition(p, player.position);
-                    return;
-                }
+                if (!p.name.ToLower().Contains(target.ToLower()))
+                    continue;
+                API.setEntityPosition(p, player.position);
             }
             API.sendChatMessageToPlayer(player, $"{target} does not exist.");
         }
@@ -75,17 +65,13 @@ namespace Essence.classes.administration
         public void aCMD_Kick(Client player, string target)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             foreach (Client p in API.getAllPlayers())
             {
-                if (p.name.ToLower() == target.ToLower())
-                {
-                    p.kick();
-                    return;
-                }
+                if (p.name.ToLower() != target.ToLower())
+                    continue;
+                p.kick();
             }
         }
 
@@ -93,18 +79,14 @@ namespace Essence.classes.administration
         public void aCMD_Ban(Client player, string target, string reason)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             foreach (Client p in API.getAllPlayers())
             {
-                if (p.name.ToLower() == target.ToLower())
-                {
-                    p.ban(reason);
-                    API.consoleOutput($"Banned {target} for {reason} by {player.name}");
+                if (p.name.ToLower() != target.ToLower())
                     return;
-                }
+                p.ban(reason);
+                API.consoleOutput($"Banned {target} for {reason} by {player.name}");
             }
         }
 
@@ -112,14 +94,10 @@ namespace Essence.classes.administration
         public void cmdCar(Client player, VehicleHash car)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
-            if (API.hasEntityData(player, "LastCar"))
-            {
+            if ((API.hasEntityData(player, "LastCar")))
                 API.deleteEntity(API.getEntityData(player, "LastCar"));
-            }
 
             NetHandle vehicle = API.createVehicle(car, player.position, new Vector3(), 0, 0);
             API.setEntityData(player, "LastCar", vehicle);
@@ -130,9 +108,7 @@ namespace Essence.classes.administration
         public void cmdGun(Client player, WeaponHash gun)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             API.givePlayerWeapon(player, gun, 999, true, true);
         }
@@ -141,9 +117,7 @@ namespace Essence.classes.administration
         public void aCMD_Pos(Client player, double value1, double value2, double value3)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             API.setEntityPosition(player, new Vector3(value1, value2, value3));
         }
@@ -152,9 +126,7 @@ namespace Essence.classes.administration
         public void aCMD_Health(Client player)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             AnticheatInfo info = player.getData("Anticheat");
             info.HealthChangedRecently = true;
@@ -165,9 +137,7 @@ namespace Essence.classes.administration
         public void aCMD_Armor(Client player)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             AnticheatInfo info = player.getData("Anticheat");
             info.ArmorChangedRecently = true;
@@ -178,9 +148,7 @@ namespace Essence.classes.administration
         public void aCMD_Hurt(Client player)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             player.health -= 10;
         }
@@ -189,9 +157,7 @@ namespace Essence.classes.administration
         public void aCMD_Kill(Client player)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             player.health = -1;
         }
@@ -200,17 +166,13 @@ namespace Essence.classes.administration
         public void aCMD_CreateDoor(Client player, int price = 50000)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
-            if (price <= 50000)
-            {
-                API.consoleOutput($"{price} is too low!");
+            if (price < 50000)
                 return;
-            }
 
             DoorManager.CreateDoor(player, price);
+            API.sendChatMessageToPlayer(player, "Door created.");
         }
 
 
@@ -218,9 +180,7 @@ namespace Essence.classes.administration
         public void cmdCustomSave(Client player, string filename)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             Vector3 groundLevel = new Vector3(player.position.X, player.position.Y, player.position.Z - 1);
             using (StreamWriter writer = new StreamWriter("resources/Essence/data/" + filename + "positions.txt", true))
@@ -240,9 +200,7 @@ namespace Essence.classes.administration
         public void cmdSavePosition(Client player, string location)
         {
             if (!Utility.isPlayerAdmin(player))
-            {
                 return;
-            }
 
             Vector3 groundLevel = new Vector3(player.position.X, player.position.Y, player.position.Z - 1);
             using (StreamWriter writer = new StreamWriter("SavedPositions.txt", true))

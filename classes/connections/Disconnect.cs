@@ -29,18 +29,19 @@ namespace Essence.classes
             ConnectionManager.AddClient(player.address);
 
             if (!API.hasEntityData(player, "Instance"))
-            {
-                API.consoleOutput(string.Format("Disconnected unknown user, {0}", player.name));
                 return;
-            }
-
-            DiscordBot.sendMessageToServer(string.Format("{0} has logged out from the server.", player.name));
 
             Player instance = (Player)API.getEntityData(player, "Instance");
+            // Used for players in interiors. Logs them out outside the interior.
+            if (player.hasData("LastPosition"))
+                player.position = player.getData("LastPosition");
+            // Update player data just as they disconnect.
             instance.updatePlayerPosition();
             instance.PlayerClothing.savePlayerClothes();
             instance.PlayerInventory.saveInventory();
             instance.removePlayerVehicles();
+
+            DiscordBot.sendMessageToServer(string.Format("{0} has logged out from the server.", player.name));
         }
 
         private void removePlayerVehicles(Player instance)

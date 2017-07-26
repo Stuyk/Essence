@@ -24,18 +24,12 @@ namespace Essence.classes.events
         {
             // Player doesn't have a faction, just remove the weapon for now.
             if (!player.hasData("Faction"))
-            {
                 API.removePlayerWeapon(player, player.currentWeapon);
-                return;
-            }
 
             FactionInfo info = player.getData("Faction");
 
             if (!Modules.isValidArmsForFaction(player, info))
-            {
                 API.removePlayerWeapon(player, player.currentWeapon);
-                return;
-            }
         }
     }
 }

@@ -59,10 +59,9 @@ namespace Essence.classes.events
         {
             for (int i = 0; i < events.Count; i++)
             {
-                if (events[i].EventName == eventName)
-                {
-                    return events[i];
-                }
+                if (events[i].EventName != eventName)
+                    continue;
+                return events[i];
             }
             return null;
         }

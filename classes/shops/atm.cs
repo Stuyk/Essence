@@ -34,7 +34,7 @@ namespace Essence.classes
             point.BlipType = 431;
             point.Text = "ATM";
             point.DrawLabel = true;
-            point.ID = "SHOP_ATM";
+            point.Id = "SHOP_ATM";
             point.InteractionEnabled = true;
         }
 

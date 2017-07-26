@@ -50,11 +50,11 @@ namespace Essence.classes.anticheat
         {
             foreach (AnticheatInfo info in AntiCheatPlayers)
             {
-                if (info.PlayerClient == player)
-                {
-                    info.CurrentStrikes = 0;
-                    return info;
-                }
+                if (info.PlayerClient != player)
+                    continue;
+
+                info.CurrentStrikes = 0;
+                return info;
             }
 
             AnticheatInfo antiInfo = new AnticheatInfo(player);
@@ -80,41 +80,38 @@ namespace Essence.classes.anticheat
 
         private static void strikeCheck(AnticheatInfo player)
         {
-            if (player.CurrentStrikes >= 5)
-            {
-                player.CurrentStrikes = 0;
-                player.PlayerClient.kick("Anticheat");
-            }
+            if (player.CurrentStrikes <= 4)
+                return;
+            // Kick the player because their strike count is exceeding 5.
+            player.CurrentStrikes = 0;
+            player.PlayerClient.kick("Anticheat");
         }
 
         public static void checkHealth(Client player, int oldValue)
         {
             if (!player.hasData("Anticheat"))
-            {
                 return;
-            }
-
+            // Get Anticheat Info
             AnticheatInfo info = player.getData("Anticheat");
-
-            if (player.health > oldValue)
+            // If their health is only going down, don't worry about it.
+            if (player.health < oldValue)
+                return;
+            // If their health is going up, we're checking it.
+            if (info.HealthChangedRecently)
             {
-                if (info.HealthChangedRecently)
-                {
-                    info.HealthChangedRecently = false;
-                    return;
-                } else {
-                    info.CurrentStrikes += 1;
-                    DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, possible health hacking.", player.name));
-                }
+                info.HealthChangedRecently = false;
+                return;
+            } else
+            {
+                info.CurrentStrikes += 1;
+                DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, possible health hacking.", player.name));
             }
         }
 
         private static void setHealth(Client player, int value)
         {
             if (!player.hasData("Anticheat"))
-            {
                 return;
-            }
 
             AnticheatInfo info = player.getData("Anticheat");
             info.HealthChangedRecently = true;
@@ -124,9 +121,7 @@ namespace Essence.classes.anticheat
         public static void checkArmor(Client player, int oldValue)
         {
             if (!player.hasData("Anticheat"))
-            {
                 return;
-            }
 
             AnticheatInfo info = player.getData("Anticheat");
 
@@ -148,9 +143,7 @@ namespace Essence.classes.anticheat
         private static void setArmor(Client player, int value)
         {
             if (!player.hasData("Anticheat"))
-            {
                 return;
-            }
 
             AnticheatInfo info = player.getData("Anticheat");
             info.ArmorChangedRecently = true;
@@ -159,15 +152,16 @@ namespace Essence.classes.anticheat
 
         private static void isModelHacking(AnticheatInfo player)
         {
-            if (player.PlayerClient.model != player.Model)
-            {
-                player.CurrentStrikes += 5;
-                DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, 5 strikes added for model change.", player.PlayerClient.name));
-            }
+            if (player.PlayerClient.model == player.Model)
+                return;
+
+            player.CurrentStrikes += 5;
+            DiscordBot.sendMessageToServer(string.Format("[Anticheat] {0}, 5 strikes added for model change.", player.PlayerClient.name));
         }
 
         private static void isPlayerTeleportHacking(AnticheatInfo player)
         {
+            // Has the player left a car recently.
             if (player.LeftCarRecently)
             {
                 player.LeftCarRecently = false;
@@ -196,10 +190,11 @@ namespace Essence.classes.anticheat
         {
             foreach (AnticheatInfo info in AntiCheatPlayers)
             {
-                if (info.PlayerClient == player)
-                {
-                    info.LeftCarRecently = true;
-                }
+                if (info.PlayerClient != player)
+                    continue;
+
+                info.LeftCarRecently = true;
+                return;
             }
         }
     }

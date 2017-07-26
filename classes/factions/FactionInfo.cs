@@ -9,9 +9,9 @@ namespace Essence.classes.factions
 {
     public class FactionInfo
     {
-        private int id;
-        private string name;
-        private WeaponModule weaponModule;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public WeaponModule ArmsModule { get; set; }
 
         public enum WeaponModule
         {
@@ -27,52 +27,5 @@ namespace Essence.classes.factions
         {
 
         }
-
-        /// <summary>
-        /// The weapon module assigned to this faction.
-        /// </summary>
-        public WeaponModule ArmsModule
-        {
-            get
-            {
-                return weaponModule;
-            }
-            set
-            {
-                weaponModule = value;
-            }
-        }
-
-        /// <summary>
-        /// The ID that this faction pulls from.
-        /// </summary>
-        public int ID
-        {
-            set
-            {
-                id = value;
-            }
-            get
-            {
-                return id;
-            }
-        }
-
-        /// <summary>
-        /// The name of this faction.
-        /// </summary>
-        public string Name
-        {
-            set
-            {
-                name = value;
-            }
-            get
-            {
-                return name;
-            }
-        }
-
-
     }
 }

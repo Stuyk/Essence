@@ -13,15 +13,15 @@ using System.Threading.Tasks;
 namespace Essence.classes.utility
 {
     public class PointInfo {
-        private int color;
-        private int blipType;
-        private Vector3 position;
-        private string text;
-        private bool drawLabel;
-        private string id;
-        private bool interactionEnabled;
-        private bool blipEnabled;
-        private bool stashType;
+        public int BlipColor { get; set; }
+        public int BlipType { get; set; }
+        public Vector3 Position { get; set; }
+        public string Text { get; set; }
+        public bool DrawLabel { get; set; }
+        public string Id { get; set; }
+        public bool InteractionEnabled { get; set; }
+        public bool BlipEnabled { get; set; }
+        public bool StashType { get; set; }
         public int Dimension { get; set; }
 
         /// <summary>
@@ -29,145 +29,16 @@ namespace Essence.classes.utility
         /// </summary>
         public PointInfo()
         {
-            color = 0;
-            blipType = 1;
-            position = new Vector3();
-            text = "You didn't set this shit up right.";
-            drawLabel = true;
-            id = "No_Label";
-            interactionEnabled = true;
-            blipEnabled = true;
-            stashType = false;
+            BlipColor = 0;
+            BlipType = 1;
+            Position = new Vector3();
+            Text = "You didn't set this shit up right.";
+            DrawLabel = true;
+            Id = "No_Label";
+            InteractionEnabled = true;
+            BlipEnabled = true;
+            StashType = false;
             Dimension = 0;
-        }
-
-        public bool StashType
-        {
-            set
-            {
-                stashType = value;
-            }
-            get
-            {
-                return stashType;
-            }
-        }
-
-        /// <summary>
-        /// Should we show the blip to the player?
-        /// </summary>
-        public bool BlipEnabled
-        {
-            set
-            {
-                blipEnabled = value;
-            }
-            get
-            {
-                return blipEnabled;
-            }
-        }
-
-        /// <summary>
-        /// The color our blip is going to be.
-        /// </summary>
-        public int BlipColor
-        {
-            set
-            {
-                color = value;
-            }
-            get
-            {
-                return color;
-            }
-        }
-
-        /// <summary>
-        /// The style / icon our blip is going to be.
-        /// </summary>
-        public int BlipType
-        {
-            set
-            {
-                blipType = value;
-            }
-            get
-            {
-                return blipType;
-            }
-        }
-        
-        /// <summary>
-        /// The position our blip should be located at.
-        /// </summary>
-        public Vector3 Position
-        {
-            set
-            {
-                position = value;
-            }
-            get
-            {
-                return position;
-            }
-        }
-
-        /// <summary>
-        /// The text that will show up if DrawLabel is true.
-        /// </summary>
-        public string Text
-        {
-            set
-            {
-                text = value;
-            }
-            get
-            {
-                return text;
-            }
-        }
-
-        /// <summary>
-        /// Should we draw text near this position for the player to see?
-        /// </summary>
-        public bool DrawLabel
-        {
-            set
-            {
-                drawLabel = value;
-            }
-            get
-            {
-                return drawLabel;
-            }
-        }
-
-        /// <summary>
-        /// A special ID assigned to this label, so if a player pressed E a event will trigger in EventManager if hooked up. See EventManager.cs for more on this.
-        /// </summary>
-        public string ID
-        {
-            set
-            {
-                id = value;
-            }
-            get
-            {
-                return id;
-            }
-        }
-
-        public bool InteractionEnabled
-        {
-            set
-            {
-                interactionEnabled = value;
-            }
-            get
-            {
-                return interactionEnabled;
-            }
         }
     }
 
@@ -195,7 +66,7 @@ namespace Essence.classes.utility
         {
             foreach (PointInfo point in points)
             {
-                if (point.ID == id)
+                if (point.Id == id)
                 {
                     point.Text = text;
                 }

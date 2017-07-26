@@ -46,7 +46,7 @@ namespace Essence.classes.doors
             info.BlipColor = 1;
             info.BlipType = 1;
             info.Text = $"House - {Id} - {Owner}";
-            info.ID = Id;
+            info.Id = Id;
             info.InteractionEnabled = true;
             info.DrawLabel = true;
             setupExitPointInfo();
@@ -60,7 +60,7 @@ namespace Essence.classes.doors
             info.BlipColor = 1;
             info.BlipType = 1;
             info.Text = $"~r~Exit";
-            info.ID = "Exit_Dynamic_Door";
+            info.Id = "Exit_Dynamic_Door";
             info.InteractionEnabled = true;
             info.DrawLabel = true;
             info.Dimension = CoreId;

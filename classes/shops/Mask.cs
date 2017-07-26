@@ -34,7 +34,7 @@ namespace Essence.classes
             point.BlipType = 362;
             point.Text = "Mask Shop";
             point.DrawLabel = true;
-            point.ID = "SHOP_MASK";
+            point.Id = "SHOP_MASK";
             point.InteractionEnabled = true;
         }
 

@@ -30,7 +30,7 @@ namespace Essence.classes.commands
 
             foreach (Vehicle vehInfo in instance.Vehicles)
             {
-                API.triggerClientEvent(player, "Temp_Blip", API.getEntityPosition(vehInfo.Handle));
+                API.triggerClientEvent(player, "Temp_Blip", API.getEntityPosition(vehInfo.VehicleHandle));
                 count++;
             }
 

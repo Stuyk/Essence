@@ -27,11 +27,9 @@ namespace Essence.classes.connections
 
         private void API_onPlayerBeginConnect(Client player, CancelEventArgs cancelConnection)
         {
-            if (ConnectionManager.CheckAddress(player.address))
-            {
-                API.kickPlayer(player, "Please wait up to 10 seconds since your last logout to rejoin.");
+            if (!ConnectionManager.CheckAddress(player.address))
                 return;
-            }
+            API.kickPlayer(player, "Please wait up to a minute before rejoining.");
         }
 
         private void API_onResourceStart()

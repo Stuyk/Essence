@@ -1,4 +1,5 @@
-﻿using GrandTheftMultiplayer.Server.API;
+﻿using Essence.classes.utility;
+using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
@@ -6,8 +7,10 @@ using GrandTheftMultiplayer.Shared;
 using GrandTheftMultiplayer.Shared.Math;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -71,11 +74,21 @@ namespace Essence.classes.datahandles
 
         public void loadPlayerClothes()
         {
-            /** Pull from the database. */
             string[] varNames = { "Owner" };
             string before = "SELECT * FROM Clothing WHERE";
             object[] data = { player.Id };
             DataTable result = db.compileSelectQuery(before, varNames, data);
+            // If there is no result, generate the table for the player.
+            if (result.Rows.Count <= 0)
+            {
+                // Setup skin table for player because it doesn't exist.
+                Utility.setupTableForPlayer($"{player.Id}", "Clothing");
+                result = db.compileSelectQuery(before, varNames, data);
+
+                if (result.Rows.Count <= 0)
+                    client.kick("~g~Please login again.");
+            }
+
             DataRow clothing = result.Rows[0];
 
             Mask = Convert.ToInt32(clothing["Mask"]);

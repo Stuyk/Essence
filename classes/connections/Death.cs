@@ -39,9 +39,7 @@ namespace Essence.classes.connections
         private void hitCheck(Client player, NetHandle entityKiller)
         {
             if (!API.hasEntityData(player, "Mission_Hit"))
-            {
                 return;
-            }
 
             Mission mission = API.getEntityData(player, "Mission_Hit");
 
@@ -75,26 +73,20 @@ namespace Essence.classes.connections
         private void kickOutOfMission(Client player)
         {
             if (!player.hasData("Mission"))
-            {
                 return;
-            }
 
             Mission mission = player.getData("Mission");
             API.triggerClientEvent(player, "endLockPickMiniGame");
 
 
             if (mission.RemoveFromMissionOnDeath)
-            {
                 mission.abandonMission(player, true);
-            }
         }
 
         private void resyncIfInMission(Client player)
         {
             if (!API.hasEntityData(player, "Mission"))
-            {
                 return;
-            }
 
             Mission mission = API.getEntityData(player, "Mission");
             mission.setPauseState(true);

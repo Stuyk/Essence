@@ -65,7 +65,7 @@ namespace Essence.classes.missions
             point.BlipType = 1;
             point.Text = string.Format("Contains - {0} ~n~ Quantity: {1}", stashinfo.Type.ToString(), stashinfo.Quantity.ToString());
             point.DrawLabel = true;
-            point.ID = stashinfo.ID.ToString();
+            point.Id = stashinfo.ID.ToString();
             point.InteractionEnabled = false;
             point.Position = stashinfo.Location;
             point.BlipEnabled = false;

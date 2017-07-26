@@ -15,6 +15,8 @@ namespace Essence.classes.utility
 {
     public static class Utility
     {
+        private static Database db = new Database();
+
         public static List<Vector3> pullLocationsFromFile(string path)
         {
             string[] lines = File.ReadAllLines(path);
@@ -88,5 +90,11 @@ namespace Essence.classes.utility
             }
         }
 
+        public static void setupTableForPlayer(string id, string tableName)
+        {
+            string[] varNames = { "Owner" };
+            string[] data = { id };
+            db.compileInsertQuery(tableName, varNames, data);
+        }
     }
 }

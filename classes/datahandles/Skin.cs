@@ -1,4 +1,5 @@
-﻿using GrandTheftMultiplayer.Server.API;
+﻿using Essence.classes.utility;
+using GrandTheftMultiplayer.Server.API;
 using GrandTheftMultiplayer.Server.Constant;
 using GrandTheftMultiplayer.Server.Elements;
 using GrandTheftMultiplayer.Server.Managers;
@@ -491,8 +492,6 @@ namespace Essence.classes.datahandles
             }
         }
 
-
-
         public Skin() { }
 
         public Skin(Client p, Player pClass)
@@ -554,10 +553,21 @@ namespace Essence.classes.datahandles
             string before = "SELECT * FROM Skin WHERE";
             object[] data = { player.Id };
             DataTable result = db.compileSelectQuery(before, varNames, data);
+            // If there is no result, generate the table for the player.
+            if (result.Rows.Count <= 0)
+            {
+                // Setup skin table for player because it doesn't exist.
+                Utility.setupTableForPlayer($"{player.Id}", "Skin");
+                result = db.compileSelectQuery(before, varNames, data);
+
+                if (result.Rows.Count <= 0)
+                    client.kick("~g~Please login again.");
+            }
+            // Grab our face data.
             DataRow face = result.Rows[0];
-
+            // Grab our gender.
             int gender = Convert.ToInt32(face["Model"]);
-
+            // Change the player's model.
             if (gender == 0)
             {
                 API.setPlayerSkin(client, (PedHash)1885233650);

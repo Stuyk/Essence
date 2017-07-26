@@ -17,17 +17,11 @@ using Essence.classes.discord;
 
 namespace Essence.classes
 {
-    public class Login : Script
+    public static class Login
     {
-        Database db = new Database();
+        private static Database db = new Database();
 
-        public Login()
-        {
-           
-        }
-
-
-        private void SetAllPlayerLoginsToZero()
+        private static void SetAllPlayerLoginsToZero()
         {
             /*
             string[] varNames = { "LoggedIn" };
@@ -38,37 +32,29 @@ namespace Essence.classes
             */
         }
 
-        [Command("forceLogin")]
-        public void cmdForceLogin(Client player, string user, string pass)
-        {
-            cmdLogin(player, user, pass);
-        }
-
-        public void cmdLogin(Client player, params object[] arguments)
+        public static void cmdLogin(Client player, params object[] arguments)
         {
             if (arguments.Length <= 0)
             {
-                API.triggerClientEvent(player, "FailLogin");
+                API.shared.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
             string username = arguments[0].ToString();
             string password = arguments[1].ToString();
 
-            if (API.hasEntitySyncedData(player, "ESS_LoggedIn"))
-            {
+            if (player.hasSyncedData("ESS_LoggedIn"))
                 return;
-            }
 
             if (username.Length <= 0)
             {
-                API.triggerClientEvent(player, "FailLogin");
+                API.shared.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
             if (password.Length <= 0)
             {
-                API.triggerClientEvent(player, "FailLogin");
+                API.shared.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
@@ -79,24 +65,18 @@ namespace Essence.classes
 
             if (result.Rows.Count <= 0)
             {
-                API.triggerClientEvent(player, "FailLogin");
+                API.shared.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
             bool verify = BCr.BCrypt.Verify(password, Convert.ToString(result.Rows[0]["Password"]));
             if (!verify)
             {
-                API.triggerClientEvent(player, "FailLogin");
+                API.shared.triggerClientEvent(player, "FailLogin");
                 return;
             }
 
             new Player(player, result.Rows[0]);
-            //API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_OUT, 2000);
-            API.delay(3000, true, () =>
-            {
-                API.triggerClientEvent(player, "FinishLogin");
-                //API.sendNativeToPlayer(player, (ulong)Hash.DO_SCREEN_FADE_IN, 5000);
-            });
         }
 
     }
