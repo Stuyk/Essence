@@ -509,10 +509,12 @@ function create_Hairstyles()
 		} else {
 			if ( vCost <= Pmoney){
 				//send buy command here
-				//get_curr_Vars();
+				get_curr_Vars();
 				API.playSoundFrontEnd("PROPERTY_PURCHASE", "HUD_AWARDS");
-				API.triggerServerEvent("BARBER_BUY", vCost, HairStylesItems[index][2], curr_hairColor, curr_hairhighlight);
-				CloseMenu();
+				API.triggerServerEvent("BARBER_BUY", vCost, HairStylesItems[index][2], curr_haircolor, curr_hairhighlight, curr_scalpCollection, curr_scalpOverlay);
+				
+				resetHairstylesMenu();
+				//CloseMenu();
 			}else {
 				API.playSoundFrontEnd("Pre_Screen_Stinger", "DLC_HEISTS_FAILED_SCREEN_SOUNDS");
 			}

@@ -30,6 +30,21 @@ namespace Essence.classes.utility
             return list;
         }
 
+        public static List<Array> pullPricesFromFile(string path)
+        {
+            string[] lines = File.ReadAllLines(path);
+            List<Array> Plist = new List<Array>();
+
+            foreach (string line in lines)
+            {
+                string[] result = line.Split(',');
+                int[,] prices = new int[, ] { { Convert.ToInt32(result[0]), Convert.ToInt32(result[1]), Convert.ToInt32(result[1]) } };
+                Plist.Add(prices);
+            }
+
+            return Plist;
+        }
+
         public static List<string> pullTypesFromFile(string path)
         {
             string[] lines = File.ReadAllLines(path);

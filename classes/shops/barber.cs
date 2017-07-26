@@ -17,7 +17,7 @@ namespace Essence.classes
     class BarberInfo : Script
     {
         private Vector3 location;
-
+  
         public BarberInfo() { }
 
         public BarberInfo(Vector3 loc)
@@ -55,6 +55,7 @@ namespace Essence.classes
     {
         private List<BarberInfo> barberInfos;
         private List<Vector3> locations;
+        private List<Array> prices;
 
         /** Returns a list of Barbers. */
         public List<BarberInfo> Barbers
@@ -68,6 +69,7 @@ namespace Essence.classes
         public Barber()
         {
             locations = new List<Vector3>();
+            prices = new List<Array>();
             barberInfos = new List<BarberInfo>();
             API.onResourceStart += API_onResourceStart;
         }
@@ -76,11 +78,18 @@ namespace Essence.classes
         {
             loadLocations();
             setupLocations();
+            //setup the hair prices.
+            loadPrices();
         }
 
         private void loadLocations()
         {
             locations = Utility.pullLocationsFromFile("resources/Essence/data/barbers.txt");
+        }
+
+        private void loadPrices()
+        {
+            prices = Utility.pullPricesFromFile("resources/Essence/data/barbers_hair.txt");
         }
 
         private void setupLocations()
@@ -95,6 +104,15 @@ namespace Essence.classes
             }
 
             API.consoleOutput(string.Format("Added {0} Barber locations.", count));
+        }
+
+        private void getPrice(int section, int item)
+        {
+
+            foreach (Array i in prices)
+            {
+
+            }
         }
 
         public void startBarberShop(Client player, params object[] arguments)
@@ -116,9 +134,13 @@ namespace Essence.classes
             int Hurr = Convert.ToInt32(arguments[1]);
             int HurrDye = Convert.ToInt32(arguments[2]);
             int HurrDye2 = Convert.ToInt32(arguments[3]);
+            string scalpc = Convert.ToString(arguments[4]);
+            string scalpo = Convert.ToString(arguments[5]);
             instance.PlayerSkin.Hair = Hurr;
             instance.PlayerSkin.HairColor = HurrDye;
             instance.PlayerSkin.HairHighlight = HurrDye2;
+            instance.PlayerSkin.ScalpCollection = scalpc;
+            instance.PlayerSkin.ScalpOverlay = scalpo;
             instance.PlayerSkin.savePlayerFace();
 
         }
