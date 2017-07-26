@@ -1,4 +1,5 @@
-API.onServerEventTrigger.connect(function (eventName, args) {
+"use strict";
+API.onServerEventTrigger.connect((eventName, args) => {
     switch (eventName) {
         case "ShowLogin":
             //resource.BrowserManager.showCEF("clientside/login.html")
@@ -54,4 +55,3 @@ API.onServerEventTrigger.connect(function (eventName, args) {
             return;
     }
 });
-//# sourceMappingURL=EventHandler.js.map

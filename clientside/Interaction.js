@@ -1,3 +1,4 @@
+"use strict";
 var screenRes = API.getScreenResolutionMaintainRatio();
 var widthHalf = Math.round(screenRes.Width / 2);
 var heightHalf = Math.round(screenRes.Height / 2);
@@ -6,7 +7,7 @@ var vehicleMenuButtons = new Array();
 var playerMenuButtons = new Array();
 var playerAnimationMenuButtons = new Array();
 // All of our interaction options go in here.
-API.onResourceStart.connect(function () {
+API.onResourceStart.connect(() => {
     vehicleLeftMenus();
     vehicleCenterMenus();
     vehicleRightMenus();
@@ -54,7 +55,7 @@ function animationCenterMenus() {
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 275), new Size(200, 50), "ANIM_HANDS_UP", "Hands Up"));
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 350), new Size(200, 50), "ANIM_SURRENDER", "Surrender"));
 }
-API.onKeyDown.connect(function (sender, e) {
+API.onKeyDown.connect((sender, e) => {
     if (API.isChatOpen()) {
         return;
     }
@@ -67,7 +68,7 @@ API.onKeyDown.connect(function (sender, e) {
         resource.Inventory.toggleInventory();
     }
 });
-API.onUpdate.connect(function () {
+API.onUpdate.connect(() => {
     // Make sure the chat isn't open. This can be replaced with a true or false for 'drawing' a menu.
     if (API.isChatOpen()) {
         return;
@@ -174,9 +175,9 @@ function showAnimationMenu() {
     }
 }
 // This is our InteractionButton class.
-var InteractionButton = (function () {
+class InteractionButton {
     // We need a new Point(x, y) which is the starting point of our button. We need a new Size(width, height) of 
-    function InteractionButton(pos, size, clientEvent, action) {
+    constructor(pos, size, clientEvent, action) {
         this.position = pos;
         this.size = size;
         this.clientEvent = clientEvent;
@@ -185,7 +186,7 @@ var InteractionButton = (function () {
         this.g = 0;
         this.b = 0;
     }
-    InteractionButton.prototype.draw = function () {
+    draw() {
         if (this.collision()) {
             API.drawRectangle(this.position.X, this.position.Y, this.size.Width, this.size.Height, 255, 255, 255, 100);
             this.drawtext();
@@ -195,23 +196,19 @@ var InteractionButton = (function () {
             API.drawRectangle(this.position.X, this.position.Y, this.size.Width, this.size.Height, this.r, this.g, this.b, 100);
             this.drawtext();
         }
-    };
-    Object.defineProperty(InteractionButton.prototype, "Argument", {
-        set: function (value) {
-            this.argument = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    InteractionButton.prototype.collision = function () {
+    }
+    set Argument(value) {
+        this.argument = value;
+    }
+    collision() {
         var mouse = API.getCursorPositionMaintainRatio();
         API.drawRectangle(mouse.X, mouse.Y, 5, 5, 255, 255, 255, 255);
         if (mouse.X > this.position.X && mouse.X < this.position.X + this.size.Width && mouse.Y > this.position.Y && mouse.Y < this.position.Y + this.size.Height) {
             return true;
         }
         return false;
-    };
-    InteractionButton.prototype.clicked = function () {
+    }
+    clicked() {
         if (API.isControlJustPressed(237)) {
             API.playSoundFrontEnd("CONTINUE", "HUD_FRONTEND_DEFAULT_SOUNDSET");
             if (this.argument != null) {
@@ -221,15 +218,13 @@ var InteractionButton = (function () {
                 API.triggerServerEvent(this.clientEvent);
             }
         }
-    };
-    InteractionButton.prototype.drawtext = function () {
+    }
+    drawtext() {
         API.drawText(this.action, Math.round(this.position.X + (this.size.Width / 2)), Math.round(this.position.Y + (this.size.Height / 2)) - 18, 0.5, 255, 255, 255, 255, 4, 1, false, false, 600);
-    };
-    InteractionButton.prototype.setRGB = function (r, g, b) {
+    }
+    setRGB(r, g, b) {
         this.r = r;
         this.g = g;
         this.b = b;
-    };
-    return InteractionButton;
-}());
-//# sourceMappingURL=Interaction.js.map
+    }
+}

@@ -32,7 +32,7 @@ class BlipTextPoint {
         }
     }
 
-    run() {
+    run(distanceScaling: number) {
         if (!this.enabled) {
             return;
         }
@@ -50,9 +50,15 @@ class BlipTextPoint {
             return;
         }
 
-        API.drawText(this.text, point.X, point.Y - 20, 0.5, 255, 255, 255, 255, 4, 1, true, true, 600);
+        if (distanceScaling <= 3)
+            distanceScaling = 3;
+
+        if (distanceScaling >= 6)
+            distanceScaling = 6;
+
+        API.drawText(this.text, point.X, point.Y - 20, ((distanceScaling) / 10), 255, 255, 255, 255, 4, 1, true, true, 600);
         if (this.interactable) {
-            API.dxDrawTexture(keyboardPath, new Point(Math.round(point.X - 25), Math.round(point.Y + 40)), new Size(50, 50), 0);
+            API.dxDrawTexture(keyboardPath, new Point(Math.round(point.X - 25), Math.round(point.Y + (distanceScaling * 5))), new Size(50, 50), 0);
         }
     }
 
@@ -108,7 +114,8 @@ function drawText() {
     var playerPos = API.getEntityPosition(API.getLocalPlayer());
     for (var i = 0; i < list.length; i++) {
         if (list[i].Position.DistanceTo(playerPos) <= 10) {
-            list[i].run();
+            list[i].run(list[i].Position.DistanceTo2D(playerPos));
+            continue;
         }
     }
 }
