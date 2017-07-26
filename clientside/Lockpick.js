@@ -1,17 +1,16 @@
-"use strict";
 var screenX = API.getScreenResolutionMaintainRatio().Width;
 var screenY = API.getScreenResolutionMaintainRatio().Height;
 var halfScreenWidth = Math.round(screenX / 2);
 var halfScreenHeight = Math.round(screenY / 2);
 var currentLockPick = null;
-class LockPick {
-    constructor() {
+var LockPick = (function () {
+    function LockPick() {
         this.inside = 0;
         this.outside = 0;
         this.score = 0;
         this.checkRate = Date.now() + 2000;
     }
-    drawLockPick() {
+    LockPick.prototype.drawLockPick = function () {
         if (this.score >= 100) {
             API.showCursor(false);
             currentLockPick = null;
@@ -27,27 +26,27 @@ class LockPick {
         //API.drawText("Outside: " + this.outside, 50, 50, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
         //API.drawText("Inside: " + this.inside, 50, 100, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
         //API.drawText("Score: " + this.score, 50, 150, 1.0, 255, 255, 255, 255, 4, 0, false, false, 600);
-    }
-    getOutside() {
+    };
+    LockPick.prototype.getOutside = function () {
         if (!API.hasEntitySyncedData(API.getLocalPlayer(), "Lockpick_Value")) {
             return;
         }
         this.outside = API.getEntitySyncedData(API.getLocalPlayer(), "Lockpick_Value");
-    }
-    getScore() {
+    };
+    LockPick.prototype.getScore = function () {
         if (!API.hasEntitySyncedData(API.getLocalPlayer(), "Lockpick_Score")) {
             return;
         }
         this.score = API.getEntitySyncedData(API.getLocalPlayer(), "Lockpick_Score");
-    }
-    check() {
+    };
+    LockPick.prototype.check = function () {
         if (this.checkRate > Date.now) {
             return;
         }
         this.checkRate = Date.now() + 2000;
         API.triggerServerEvent("Check_Lockpick_Score", this.inside);
-    }
-    controls() {
+    };
+    LockPick.prototype.controls = function () {
         //API.disableAllControlsThisFrame();
         var mouse = API.getCursorPositionMaintainRatio();
         var newPos = Math.atan2(mouse.Y - halfScreenHeight, mouse.X - halfScreenWidth);
@@ -60,9 +59,10 @@ class LockPick {
             newPos = newPos - 360;
         }
         this.inside = Math.floor(newPos);
-    }
-}
-API.onUpdate.connect(() => {
+    };
+    return LockPick;
+}());
+API.onUpdate.connect(function () {
     if (currentLockPick != null) {
         currentLockPick.drawLockPick();
     }
@@ -76,3 +76,4 @@ function newLockPickMiniGame() {
     currentLockPick = new LockPick();
     API.showCursor(true);
 }
+//# sourceMappingURL=Lockpick.js.map

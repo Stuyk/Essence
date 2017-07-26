@@ -1,6 +1,5 @@
-"use strict";
 var actionCooldown = Date.now() + 3000;
-API.onKeyDown.connect((sender, e) => {
+API.onKeyDown.connect(function (sender, e) {
     if (API.isChatOpen()) {
         return;
     }
@@ -12,3 +11,4 @@ API.onKeyDown.connect((sender, e) => {
         resource.PointHelper.checkIfNearPointOnce();
     }
 });
+//# sourceMappingURL=Player.js.map

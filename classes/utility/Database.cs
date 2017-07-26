@@ -164,6 +164,8 @@ namespace Essence.classes
                             [Hair] INTEGER DEFAULT 0,
                             [HairColor] INTEGER DEFAULT 0,
                             [HairHighLight] INTEGER DEFAULT 0,
+                            [ScalpCollection] TEXT DEFAULT '',
+                            [ScalpOverlay] TEXT DEFAULT '',
                             [FacialHair] INTEGER DEFAULT -1,
                             [FacialHairColor] INTEGER DEFAULT 1,
                             [FacialHairOpacity] FLOAT DEFAULT 1,

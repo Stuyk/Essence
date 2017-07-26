@@ -1,9 +1,8 @@
-"use strict";
 var list = new Array();
 var keyboardPath = "clientside/images/keyboard_e.png";
 var actionCooldown = Date.now() + 3000;
-class BlipTextPoint {
-    constructor(position, type, color, text, draw, id, interactable, blipEnabled, dimension) {
+var BlipTextPoint = (function () {
+    function BlipTextPoint(position, type, color, text, draw, id, interactable, blipEnabled, dimension) {
         this.position = position;
         this.type = type;
         this.color = color;
@@ -21,7 +20,7 @@ class BlipTextPoint {
             API.setBlipName(this.blip, this.text);
         }
     }
-    run() {
+    BlipTextPoint.prototype.run = function () {
         if (!this.enabled) {
             return;
         }
@@ -39,37 +38,62 @@ class BlipTextPoint {
         if (this.interactable) {
             API.dxDrawTexture(keyboardPath, new Point(Math.round(point.X - 25), Math.round(point.Y + 40)), new Size(50, 50), 0);
         }
-    }
-    set Text(value) {
-        this.text = value;
-    }
-    get Position() {
-        return this.position;
-    }
-    get Blip() {
-        return this.blip;
-    }
-    get ID() {
-        return this.id;
-    }
-    get Interactable() {
-        return this.interactable;
-    }
-    set Enabled(value) {
-        this.enabled = value;
-    }
-    get Enabled() {
-        return this.enabled;
-    }
+    };
+    Object.defineProperty(BlipTextPoint.prototype, "Text", {
+        set: function (value) {
+            this.text = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BlipTextPoint.prototype, "Position", {
+        get: function () {
+            return this.position;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BlipTextPoint.prototype, "Blip", {
+        get: function () {
+            return this.blip;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BlipTextPoint.prototype, "ID", {
+        get: function () {
+            return this.id;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BlipTextPoint.prototype, "Interactable", {
+        get: function () {
+            return this.interactable;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(BlipTextPoint.prototype, "Enabled", {
+        get: function () {
+            return this.enabled;
+        },
+        set: function (value) {
+            this.enabled = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     // Used to interact with pretty much everything ever.
-    triggerServerEvent() {
+    BlipTextPoint.prototype.triggerServerEvent = function () {
         if (API.getEntityDimension(API.getLocalPlayer()) !== this.dimension) {
             return;
         }
         API.triggerServerEvent(this.id, this.id);
-    }
-}
-API.onUpdate.connect(() => {
+    };
+    return BlipTextPoint;
+}());
+API.onUpdate.connect(function () {
     if (list.length <= 0) {
         return;
     }
@@ -124,3 +148,4 @@ function togglePointHelpers() {
         }
     }
 }
+//# sourceMappingURL=PointHelper.js.map

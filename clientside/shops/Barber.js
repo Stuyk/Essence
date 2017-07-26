@@ -329,6 +329,8 @@ function get_curr_Vars()
 	curr_hair = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIR");
 	curr_haircolor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIRCOLOR");
 	curr_hairhighlight = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_HAIRHIGHLIGHT");
+	curr_scalpCollection = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_SCALP_COLLECTION");
+	curr_scalpOverlay = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_SCALP_OVERLAY");	
 	curr_beard = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR");
 	curr_beardcolor = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_COLOR");	
 	curr_beardopacity = API.getEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_OPACITY");	
@@ -356,6 +358,8 @@ function reset_curr_Vars()
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_Hair", curr_hair);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_HairColor", curr_haircolor);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_HairHighlight", curr_hairhighlight);
+	API.getEntitySyncedData(API.getLocalPlayer(), "ESS_SCALP_COLLECTION", curr_scalpCollection);
+	API.getEntitySyncedData(API.getLocalPlayer(), "ESS_SCALP_OVERLAY", curr_scalpOverlay);		
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR", curr_beard);
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_COLOR", curr_beardcolor);	
 	API.setEntitySyncedData(API.getLocalPlayer(), "ESS_FACIAL_HAIR_OPACITY", curr_beardopacity);

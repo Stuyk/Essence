@@ -1,4 +1,3 @@
-"use strict";
 var screenRes = API.getScreenResolutionMaintainRatio();
 var widthHalf = Math.round(screenRes.Width / 2);
 var heightHalf = Math.round(screenRes.Height / 2);
@@ -7,7 +6,7 @@ var vehicleMenuButtons = new Array();
 var playerMenuButtons = new Array();
 var playerAnimationMenuButtons = new Array();
 // All of our interaction options go in here.
-API.onResourceStart.connect(() => {
+API.onResourceStart.connect(function () {
     vehicleLeftMenus();
     vehicleCenterMenus();
     vehicleRightMenus();
@@ -55,7 +54,7 @@ function animationCenterMenus() {
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 275), new Size(200, 50), "ANIM_HANDS_UP", "Hands Up"));
     playerAnimationMenuButtons.push(new InteractionButton(new Point(widthHalf - 100, heightHalf + 350), new Size(200, 50), "ANIM_SURRENDER", "Surrender"));
 }
-API.onKeyDown.connect((sender, e) => {
+API.onKeyDown.connect(function (sender, e) {
     if (API.isChatOpen()) {
         return;
     }
@@ -68,7 +67,7 @@ API.onKeyDown.connect((sender, e) => {
         resource.Inventory.toggleInventory();
     }
 });
-API.onUpdate.connect(() => {
+API.onUpdate.connect(function () {
     // Make sure the chat isn't open. This can be replaced with a true or false for 'drawing' a menu.
     if (API.isChatOpen()) {
         return;
@@ -175,9 +174,9 @@ function showAnimationMenu() {
     }
 }
 // This is our InteractionButton class.
-class InteractionButton {
+var InteractionButton = (function () {
     // We need a new Point(x, y) which is the starting point of our button. We need a new Size(width, height) of 
-    constructor(pos, size, clientEvent, action) {
+    function InteractionButton(pos, size, clientEvent, action) {
         this.position = pos;
         this.size = size;
         this.clientEvent = clientEvent;
@@ -186,7 +185,7 @@ class InteractionButton {
         this.g = 0;
         this.b = 0;
     }
-    draw() {
+    InteractionButton.prototype.draw = function () {
         if (this.collision()) {
             API.drawRectangle(this.position.X, this.position.Y, this.size.Width, this.size.Height, 255, 255, 255, 100);
             this.drawtext();
@@ -196,19 +195,23 @@ class InteractionButton {
             API.drawRectangle(this.position.X, this.position.Y, this.size.Width, this.size.Height, this.r, this.g, this.b, 100);
             this.drawtext();
         }
-    }
-    set Argument(value) {
-        this.argument = value;
-    }
-    collision() {
+    };
+    Object.defineProperty(InteractionButton.prototype, "Argument", {
+        set: function (value) {
+            this.argument = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    InteractionButton.prototype.collision = function () {
         var mouse = API.getCursorPositionMaintainRatio();
         API.drawRectangle(mouse.X, mouse.Y, 5, 5, 255, 255, 255, 255);
         if (mouse.X > this.position.X && mouse.X < this.position.X + this.size.Width && mouse.Y > this.position.Y && mouse.Y < this.position.Y + this.size.Height) {
             return true;
         }
         return false;
-    }
-    clicked() {
+    };
+    InteractionButton.prototype.clicked = function () {
         if (API.isControlJustPressed(237)) {
             API.playSoundFrontEnd("CONTINUE", "HUD_FRONTEND_DEFAULT_SOUNDSET");
             if (this.argument != null) {
@@ -218,13 +221,15 @@ class InteractionButton {
                 API.triggerServerEvent(this.clientEvent);
             }
         }
-    }
-    drawtext() {
+    };
+    InteractionButton.prototype.drawtext = function () {
         API.drawText(this.action, Math.round(this.position.X + (this.size.Width / 2)), Math.round(this.position.Y + (this.size.Height / 2)) - 18, 0.5, 255, 255, 255, 255, 4, 1, false, false, 600);
-    }
-    setRGB(r, g, b) {
+    };
+    InteractionButton.prototype.setRGB = function (r, g, b) {
         this.r = r;
         this.g = g;
         this.b = b;
-    }
-}
+    };
+    return InteractionButton;
+}());
+//# sourceMappingURL=Interaction.js.map

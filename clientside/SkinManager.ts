@@ -40,6 +40,9 @@ function setPedCharacter(ent: LocalHandle) {
         var Hair = API.getEntitySyncedData(ent, "ESS_Hair");
         var HairColor = API.getEntitySyncedData(ent, "ESS_HairColor");
         var HairHighlight = API.getEntitySyncedData(ent, "ESS_HairHighlight");
+        //scalp
+        var ScalpCollection = API.getEntitySyncedData(ent, "ESS_Scalp_Collection");
+        var ScalpOverlay = API.getEntitySyncedData(ent, "ESS_Scalp_Overlay");
         // Facial Hair
         var FacialHair = API.getEntitySyncedData(ent, "ESS_Facial_Hair");
         var FacialHairColor = API.getEntitySyncedData(ent, "ESS_Facial_Hair_Color");
@@ -106,6 +109,8 @@ function setPedCharacter(ent: LocalHandle) {
         API.callNative("_SET_PED_HAIR_COLOR", ent, HairColor, HairHighlight);
         // Facepaint
         API.callNative("SET_PED_HEAD_OVERLAY", ent, 4, Facepaint, FacepaintOpacity);
+        // Scalp
+        API.callNative("_SET_PED_FACIAL_DECORATION", ent, API.getHashKey(ScalpCollection), API.getHashKey(ScalpOverlay));
         // FaceList (e.g. nose length, chin shape, etc)
         for (var i = 0; i < 21; i++) {
             API.callNative("_SET_PED_FACE_FEATURE", ent, i, parseFloat(FaceList[i]));

@@ -38,6 +38,8 @@ namespace Essence.classes.datahandles
         private int hair;
         private int hairColor;
         private int hairHighlight;
+        private string scalpCollection;
+        private string scalpOverlay;
         private int facialHair;
         private int facialHairColor;
         private float facialHairOpacity;
@@ -241,6 +243,30 @@ namespace Essence.classes.datahandles
             {
                 hairHighlight = value;
                 API.setEntitySyncedData(client, "ESS_HairHighlight", value);
+            }
+        }
+        public string ScalpCollection
+        {
+            get
+            {
+                return scalpCollection;
+            }
+            set
+            {
+                scalpCollection = value;
+                API.setEntitySyncedData(client, "ESS_Scalp_Collection", value);
+            }
+        }
+        public string ScalpOverlay
+        {
+            get
+            {
+                return scalpOverlay;
+            }
+            set
+            {
+                scalpOverlay = value;
+                API.setEntitySyncedData(client, "ESS_Scalp_Overlay", value);
             }
         }
         public int FacialHair
@@ -490,6 +516,8 @@ namespace Essence.classes.datahandles
             hair = 0;
             hairColor = 0;
             hairHighlight = 0;
+            scalpCollection = "";
+            scalpOverlay = "";
             facialHair = 0;
             facialHairColor = 0;
             facialHairOpacity = 0;
@@ -513,9 +541,9 @@ namespace Essence.classes.datahandles
         public void savePlayerFace()
         {
             string before = "UPDATE Skin SET";
-            string[] varNames = { "Mother", "Father", "MotherSkin", "FatherSkin", "FaceBlend", "SkinBlend", "Hair", "HairColor", "HairHighlight", "Blemishes", "FacialHair", "FacialHairColor", "FacialHairOpacity", "Eyebrows", "EyebrowsColor", "EyebrowsOpacity", "Ageing", "Makeup", "MakeupOpacity", "Complexion", "SunDamage", "Lipstick", "Moles", "ChestHair", "ChestHairColor", "ChestHairOpacity", "BodyBlemishes", "EyeColor", "LipstickColor", "LipstickOpacity", "Makeup", "MakeupOpacity", "Facepaint", "FacepaintOpacity", "Face0", "Face1", "Face2", "Face3", "Face4", "Face5", "Face6", "Face7", "Face8", "Face9", "Face10", "Face11", "Face12", "Face13", "Face14", "Face15", "Face16", "Face17", "Face18", "Face19", "Face20" };
+            string[] varNames = { "Mother", "Father", "MotherSkin", "FatherSkin", "FaceBlend", "SkinBlend", "Hair", "HairColor", "HairHighlight", "ScalpCollection", "ScalpOverlay", "Blemishes", "FacialHair", "FacialHairColor", "FacialHairOpacity", "Eyebrows", "EyebrowsColor", "EyebrowsOpacity", "Ageing", "Makeup", "MakeupOpacity", "Complexion", "SunDamage", "Lipstick", "Moles", "ChestHair", "ChestHairColor", "ChestHairOpacity", "BodyBlemishes", "EyeColor", "LipstickColor", "LipstickOpacity", "Makeup", "MakeupOpacity", "Facepaint", "FacepaintOpacity", "Face0", "Face1", "Face2", "Face3", "Face4", "Face5", "Face6", "Face7", "Face8", "Face9", "Face10", "Face11", "Face12", "Face13", "Face14", "Face15", "Face16", "Face17", "Face18", "Face19", "Face20" };
             string after = string.Format("WHERE Owner='{0}'", player.Id);
-            object[] args = { mother, father, motherSkin, fatherSkin, faceBlend, skinBlend, hair, hairColor, hairHighlight, blemishes, facialHair, facialHairColor, facialHairOpacity, eyebrows, eyebrowsColor, eyebrowsOpacity, ageing, makeup, makeupOpacity, complexion, sunDamage, lipstick, moles, chestHair, chestHairColor, chestHairOpacity, bodyBlemishes, eyeColor, lipstickColor, lipstickOpacity, makeup, makeupOpacity, facepaint, facepaintOpacity, faceList[0], faceList[1], faceList[2], faceList[3], faceList[4], faceList[5], faceList[6], faceList[7], faceList[8], faceList[9], faceList[10], faceList[11], faceList[12], faceList[13], faceList[14], faceList[15], faceList[16], faceList[17], faceList[18], faceList[19], faceList[20] };
+            object[] args = { mother, father, motherSkin, fatherSkin, faceBlend, skinBlend, hair, hairColor, hairHighlight, scalpCollection, scalpOverlay, blemishes, facialHair, facialHairColor, facialHairOpacity, eyebrows, eyebrowsColor, eyebrowsOpacity, ageing, makeup, makeupOpacity, complexion, sunDamage, lipstick, moles, chestHair, chestHairColor, chestHairOpacity, bodyBlemishes, eyeColor, lipstickColor, lipstickOpacity, makeup, makeupOpacity, facepaint, facepaintOpacity, faceList[0], faceList[1], faceList[2], faceList[3], faceList[4], faceList[5], faceList[6], faceList[7], faceList[8], faceList[9], faceList[10], faceList[11], faceList[12], faceList[13], faceList[14], faceList[15], faceList[16], faceList[17], faceList[18], faceList[19], faceList[20] };
             db.compileQuery(before, after, varNames, args);
         }
 
@@ -559,6 +587,9 @@ namespace Essence.classes.datahandles
             Hair = Convert.ToInt32(face["Hair"]);
             HairColor = Convert.ToInt32(face["HairColor"]);
             HairHighlight = Convert.ToInt32(face["HairHighlight"]);
+
+            ScalpCollection = Convert.ToString(face["ScalpCollection"]);
+            ScalpOverlay = Convert.ToString(face["ScalpOverlay"]);
 
             FacialHair = Convert.ToInt32(face["FacialHair"]);
             FacialHairColor = Convert.ToInt32(face["FacialHairColor"]);
@@ -655,6 +686,8 @@ namespace Essence.classes.datahandles
             API.sendNativeToPlayer(requester, (ulong)Hash.SET_PED_HEAD_OVERLAY, client.handle, 7, BodyBlemishes, 0.9);
             // Hair Color
             API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_HAIR_COLOR, client.handle, HairColor, HairHighlight);
+            // Scalp Texture
+            API.sendNativeToPlayer(requester, (ulong)Hash._SET_PED_FACIAL_DECORATION, client.handle, API.getHashKey(ScalpCollection), API.getHashKey(ScalpOverlay));
             // FaceList (e.g. nose length, chin shape, etc)
             for (var i = 0; i < 21; i++)
             {

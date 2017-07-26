@@ -1,9 +1,8 @@
-"use strict";
 var cursorPath = "clientside/images/cursor/cursor.png";
 var handPath = "clientside/images/cursor/hand.png";
 var cursorEnabled = false;
 var handEnabled = false;
-API.onUpdate.connect(() => {
+API.onUpdate.connect(function () {
     drawCursor();
 });
 // #######################
@@ -39,3 +38,4 @@ function drawCursor() {
         API.dxDrawTexture(cursorPath, new Point(Math.round(mouse.X), Math.round(mouse.Y)), new Size(12, 19), 0);
     }
 }
+//# sourceMappingURL=Utility.js.map

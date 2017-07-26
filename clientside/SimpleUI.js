@@ -1,11 +1,10 @@
-"use strict";
 // Default sizes.
 var height = 50;
 var width = 500;
 var headerHeight = 100;
 // Current Menu Draw
 var contentHolder = null;
-API.onKeyDown.connect((sender, e) => {
+API.onKeyDown.connect(function (sender, e) {
     if (contentHolder === null) {
         return;
     }
@@ -28,7 +27,7 @@ API.onKeyDown.connect((sender, e) => {
         contentHolder.ContentItems[contentHolder.CurrentSelection].nextContent();
     }
 });
-API.onUpdate.connect(() => {
+API.onUpdate.connect(function () {
     if (contentHolder != null) {
         API.disableAllControlsThisFrame();
         contentHolder.draw();
@@ -47,15 +46,16 @@ function getContentHolder() {
 function clearContent() {
     contentHolder = null;
 }
-class ContentHolder {
-    constructor(point = new Point(0, 0)) {
+var ContentHolder = (function () {
+    function ContentHolder(point) {
+        if (point === void 0) { point = new Point(0, 0); }
         this.point = point;
         this.contentHeader = null;
         this.contentItems = new Array();
         this.currentSelection = 0;
         this.isReady = false;
     }
-    draw() {
+    ContentHolder.prototype.draw = function () {
         if (!this.isReady) {
             return;
         }
@@ -76,11 +76,15 @@ class ContentHolder {
         else {
             this.drawAll();
         }
-    }
-    set IsReady(value) {
-        this.isReady = value;
-    }
-    drawAll() {
+    };
+    Object.defineProperty(ContentHolder.prototype, "IsReady", {
+        set: function (value) {
+            this.isReady = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ContentHolder.prototype.drawAll = function () {
         for (var i = 0; i < this.contentItems.length; i++) {
             if (i === this.currentSelection) {
                 this.contentItems[i].draw(i + 1);
@@ -91,8 +95,8 @@ class ContentHolder {
                 this.contentItems[i].IsSelected = false;
             }
         }
-    }
-    drawToMaximum() {
+    };
+    ContentHolder.prototype.drawToMaximum = function () {
         for (var i = this.contentItems.length - 10; i < this.contentItems.length; i++) {
             if (i === this.currentSelection) {
                 this.contentItems[i].draw(i - this.contentItems.length + 11);
@@ -103,8 +107,8 @@ class ContentHolder {
                 this.contentItems[i].IsSelected = false;
             }
         }
-    }
-    drawToAmount(amount) {
+    };
+    ContentHolder.prototype.drawToAmount = function (amount) {
         for (var i = this.currentSelection; i < this.currentSelection + 10; i++) {
             if (i === this.currentSelection) {
                 this.contentItems[i].draw(1);
@@ -115,17 +119,17 @@ class ContentHolder {
                 this.contentItems[i].IsSelected = false;
             }
         }
-    }
-    createHeader() {
+    };
+    ContentHolder.prototype.createHeader = function () {
         this.contentHeader = new ContentHeader(this);
         return this.contentHeader;
-    }
-    addItem(itemName) {
+    };
+    ContentHolder.prototype.addItem = function (itemName) {
         var contentItem = new ContentItem(this, itemName);
         this.contentItems.push(contentItem);
         return contentItem;
-    }
-    scrollDown() {
+    };
+    ContentHolder.prototype.scrollDown = function () {
         if (this.currentSelection <= 0) {
             this.currentSelection = this.contentItems.length - 1;
         }
@@ -133,8 +137,8 @@ class ContentHolder {
             this.currentSelection -= 1;
         }
         this.contentItems[this.currentSelection].runHoverFunction();
-    }
-    scrollUp() {
+    };
+    ContentHolder.prototype.scrollUp = function () {
         if (this.currentSelection + 1 >= this.contentItems.length) {
             this.currentSelection = 0;
         }
@@ -142,44 +146,58 @@ class ContentHolder {
             this.currentSelection += 1;
         }
         this.contentItems[this.currentSelection].runHoverFunction();
-    }
-    get CurrentSelection() {
-        return this.currentSelection;
-    }
-    get Point() {
-        return this.point;
-    }
-    get ContentItems() {
-        return this.contentItems;
-    }
-}
-class ContentHeader {
-    constructor(contentHolder) {
+    };
+    Object.defineProperty(ContentHolder.prototype, "CurrentSelection", {
+        get: function () {
+            return this.currentSelection;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ContentHolder.prototype, "Point", {
+        get: function () {
+            return this.point;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ContentHolder.prototype, "ContentItems", {
+        get: function () {
+            return this.contentItems;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    return ContentHolder;
+}());
+var ContentHeader = (function () {
+    function ContentHeader(contentHolder) {
         this.contentHolder = contentHolder;
         this.path = null;
         this.dict = null;
         this.texture = null;
     }
     // Set the header a png or jpg.
-    setLocalImage(path) {
+    ContentHeader.prototype.setLocalImage = function (path) {
         this.path = path;
-    }
+    };
     // Set the header to a game texture.
-    setGameTexture(dict, texture) {
+    ContentHeader.prototype.setGameTexture = function (dict, texture) {
         this.dict = dict;
         this.texture = texture;
-    }
-    draw() {
+    };
+    ContentHeader.prototype.draw = function () {
         if (this.dict != null && this.texture != null) {
             API.drawGameTexture(this.dict, this.texture, this.contentHolder.Point.X, this.contentHolder.Point.Y, width, headerHeight, 0, 255, 255, 255, 255);
         }
         if (this.path != null) {
             API.dxDrawTexture(this.path, this.contentHolder.Point, new Size(width, headerHeight), 0);
         }
-    }
-}
-class ContentItem {
-    constructor(contentHolder, itemName) {
+    };
+    return ContentHeader;
+}());
+var ContentItem = (function () {
+    function ContentItem(contentHolder, itemName) {
         this.contentHolder = contentHolder;
         this.itemName = itemName;
         this.itemPrice = "-1";
@@ -195,21 +213,21 @@ class ContentItem {
         this.currentSelection = 0;
     }
     // Get the ID of this item.
-    getID() {
+    ContentItem.prototype.getID = function () {
         this.id = this.contentHolder.ContentItems.length + 1;
-    }
+    };
     // Used to turn on left and right scrolling, and add new items. Returns the item you just added.
-    addVariedContentItem(contentHolder, itemName) {
+    ContentItem.prototype.addVariedContentItem = function (contentHolder, itemName) {
         if (!this.isVariedContent) {
-            this.itemName = `< ${this.itemName} >`;
+            this.itemName = "< " + this.itemName + " >";
         }
         var item = new ContentItem(contentHolder, itemName);
         this.isVariedContent = true;
         this.variedContents.push(item);
         return item;
-    }
+    };
     // Next content display.
-    nextContent() {
+    ContentItem.prototype.nextContent = function () {
         if (!this.isVariedContent) {
             return;
         }
@@ -222,9 +240,9 @@ class ContentItem {
         }
         this.setTextToCurrentContent();
         this.runVariedHoverFunction();
-    }
+    };
     // Previous content display.
-    previousContent() {
+    ContentItem.prototype.previousContent = function () {
         if (!this.isVariedContent) {
             return;
         }
@@ -237,36 +255,44 @@ class ContentItem {
         }
         this.setTextToCurrentContent();
         this.runVariedHoverFunction();
-    }
+    };
     //
-    runVariedHoverFunction() {
+    ContentItem.prototype.runVariedHoverFunction = function () {
         this.variedContents[this.currentSelection].runHoverFunction();
-    }
+    };
     // Set the text from other content.
-    setTextToCurrentContent() {
-        this.itemName = `< ${this.variedContents[this.currentSelection].Text} >`;
-    }
-    // Is this item currently selected?
-    set IsSelected(value) {
-        this.isSelected = value;
-    }
-    // Set the item price of this item.
-    set ItemPrice(value) {
-        this.itemPrice = value;
-    }
+    ContentItem.prototype.setTextToCurrentContent = function () {
+        this.itemName = "< " + this.variedContents[this.currentSelection].Text + " >";
+    };
+    Object.defineProperty(ContentItem.prototype, "IsSelected", {
+        // Is this item currently selected?
+        set: function (value) {
+            this.isSelected = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ContentItem.prototype, "ItemPrice", {
+        // Set the item price of this item.
+        set: function (value) {
+            this.itemPrice = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     // Used to draw the text, images, etc.
-    draw(currentOffset) {
+    ContentItem.prototype.draw = function (currentOffset) {
         this.drawText(currentOffset);
         this.drawBackground(currentOffset);
-    }
+    };
     // Used for hovering.
-    runHoverFunction() {
+    ContentItem.prototype.runHoverFunction = function () {
         if (this.hoverFunction != null) {
             this.hoverFunction.run();
         }
-    }
+    };
     // Used when the F or Enter key is pressed.
-    runSelectFunction() {
+    ContentItem.prototype.runSelectFunction = function () {
         if (this.selectFunction != null) {
             this.selectFunction.run();
         }
@@ -275,46 +301,70 @@ class ContentItem {
                 this.variedContents[this.currentSelection].runSelectFunction();
             }
         }
-    }
-    // Current Selection
-    set CurrentSelection(value) {
-        this.currentSelection = value;
-    }
+    };
+    Object.defineProperty(ContentItem.prototype, "CurrentSelection", {
+        // Current Selection
+        set: function (value) {
+            this.currentSelection = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     // Used to set the text color.
-    setTextColor(r, g, b) {
+    ContentItem.prototype.setTextColor = function (r, g, b) {
         this.color = [r, g, b];
-    }
-    // Attach a FunctionHolder to this Item. Fires when it gets hovered.
-    set HoverFunction(value) {
-        this.hoverFunction = value;
-    }
-    // Attach a description to this Item
-    set Description(value) {
-        this.description = value;
-    }
-    // Attach a selective FunctionHolder to this item. Fires when the action key is pressed.
-    set SelectFunction(value) {
-        this.selectFunction = value;
-    }
-    // Get Text
-    get Text() {
-        return this.itemName;
-    }
-    // Get Price
-    get Price() {
-        return this.itemPrice;
-    }
+    };
+    Object.defineProperty(ContentItem.prototype, "HoverFunction", {
+        // Attach a FunctionHolder to this Item. Fires when it gets hovered.
+        set: function (value) {
+            this.hoverFunction = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ContentItem.prototype, "Description", {
+        // Attach a description to this Item
+        set: function (value) {
+            this.description = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ContentItem.prototype, "SelectFunction", {
+        // Attach a selective FunctionHolder to this item. Fires when the action key is pressed.
+        set: function (value) {
+            this.selectFunction = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ContentItem.prototype, "Text", {
+        // Get Text
+        get: function () {
+            return this.itemName;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ContentItem.prototype, "Price", {
+        // Get Price
+        get: function () {
+            return this.itemPrice;
+        },
+        enumerable: true,
+        configurable: true
+    });
     // Draw the background.
-    drawBackground(currentOffset) {
+    ContentItem.prototype.drawBackground = function (currentOffset) {
         if (this.isSelected) {
             API.drawRectangle(this.contentHolder.Point.X, headerHeight + (height * currentOffset) - height, width, height, 255, 255, 255, 150);
         }
         else {
             API.drawRectangle(this.contentHolder.Point.X, headerHeight + (height * currentOffset) - height, width, height, 0, 0, 0, 150);
         }
-    }
+    };
     // DRaw the text.
-    drawText(currentOffset) {
+    ContentItem.prototype.drawText = function (currentOffset) {
         if (this.isSelected) {
             API.drawText(this.itemName, this.contentHolder.Point.X + 10, headerHeight + Math.round(height * currentOffset) - (Math.round(height / 2)) - 12, 0.4, 0, 0, 0, 255, 4, 0, false, false, 500);
         }
@@ -325,9 +375,9 @@ class ContentItem {
             API.drawText("$" + this.itemPrice, width - 30, headerHeight + Math.round(height * currentOffset) - (Math.round(height / 2)) - 12, 0.4, this.color[0], this.color[1], this.color[2], 255, 4, 1, false, false, 500);
         }
         this.drawDescription();
-    }
+    };
     // Draw the description text.
-    drawDescription() {
+    ContentItem.prototype.drawDescription = function () {
         if (!this.isSelected) {
             return;
         }
@@ -335,28 +385,37 @@ class ContentItem {
             API.drawText(this.description, this.contentHolder.Point.X + 10, headerHeight + Math.round(height * 10) + 12, 0.4, this.color[0], this.color[1], this.color[2], 255, 4, 0, false, false, 500);
             API.drawRectangle(this.contentHolder.Point.X, headerHeight + Math.round(height * 10), width, height, 0, 0, 0, 200);
         }
-    }
-    getHoverFunction() {
+    };
+    ContentItem.prototype.getHoverFunction = function () {
         this.hoverFunction = new FunctionHolder();
         return this.hoverFunction;
-    }
-    getSelectFunction() {
+    };
+    ContentItem.prototype.getSelectFunction = function () {
         this.selectFunction = new FunctionHolder();
         return this.selectFunction;
-    }
-}
-class FunctionHolder {
-    constructor() {
+    };
+    return ContentItem;
+}());
+var FunctionHolder = (function () {
+    function FunctionHolder() {
         this.localFunction = null;
         this.localArgs = null;
     }
-    set Function(value) {
-        this.localFunction = value;
-    }
-    set Args(value) {
-        this.localArgs = value;
-    }
-    run() {
+    Object.defineProperty(FunctionHolder.prototype, "Function", {
+        set: function (value) {
+            this.localFunction = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(FunctionHolder.prototype, "Args", {
+        set: function (value) {
+            this.localArgs = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    FunctionHolder.prototype.run = function () {
         if (this.localFunction != null) {
             if (this.localArgs != null) {
                 this.localFunction(this.localArgs);
@@ -365,5 +424,7 @@ class FunctionHolder {
                 this.localFunction();
             }
         }
-    }
-}
+    };
+    return FunctionHolder;
+}());
+//# sourceMappingURL=SimpleUI.js.map
