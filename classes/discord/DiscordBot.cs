@@ -28,7 +28,7 @@ namespace Essence.classes.discord
 
         public async static void startBot()
         {
-            string token = "MzMxMjEzNDA0MjU1NjgyNTYx.DDshcA.OoaxhwGTm4y8ANGuvUoQj8X1tXQ";
+            string token = "<insert token>";
 
             try
             {
